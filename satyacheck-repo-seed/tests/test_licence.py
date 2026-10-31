@@ -209,9 +209,10 @@ class TestExpiredGives403:
 
     def test_no_licence_protected_403(self, licence_client):
         """No licence loaded → protected path returns 403."""
-        r = licence_client.get("/reports")
-        assert r.status_code == 403
-        assert r.json()["error"] == "LICENSE_EXPIRED"
+        for prefix in ["/reports", "/lookup", "/map", "/alerts", "/admin", "/challenges"]:
+            r = licence_client.get(prefix)
+            assert r.status_code == 403, f"Expected 403 for {prefix}, got {r.status_code}"
+            assert r.json()["error"] == "LICENSE_EXPIRED"
 
     def test_no_licence_health_200(self, licence_client):
         """No licence → /health still works."""
