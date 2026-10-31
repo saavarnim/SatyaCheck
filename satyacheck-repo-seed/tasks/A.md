@@ -6,7 +6,7 @@ Also: A is the **licence signer** (holds the private key).
   Reads: docs/01-api.md, docs/03-trust.md (Interfaces section only)
   Do: create EVERY file in the AGENTS.md repo map as a working stub: `config.py` with ALL constants named in docs/03, 04, 05 and env vars; `clock.py`; `main.py` that includes all five routers (empty stubs OK), the 422->400 handler, a licence-middleware hook that calls `licence.is_allowed(path)` (stub returns True), the privacy-safe logging middleware (docs/06 item 5), and the static mount LAST; `trust.py` with the dataclasses and function signatures (raise NotImplementedError); `requirements.txt` already exists. `tests/conftest.py` with TestClient + temp SQLite + clock override.
   Done when: `uvicorn app.main:app` starts and GET /health returns `{"ok":true}`. Push. Tell B in status/A.md: "T0 pushed".
-- [ ] **T1 Normalise + redact**
+- [x] **T1 Normalise + redact**
   Reads: docs/02-normalise.md. Files: app/normalise.py app/redact.py tests/test_normalise.py
   Done when: `pytest tests/test_normalise.py -q` passes.
 - [ ] **T2 DB + seed + POST /reports + GET /lookup (no trust yet)**
