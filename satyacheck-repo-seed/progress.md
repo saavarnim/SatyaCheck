@@ -23,8 +23,8 @@
 | **T2d** | GET /lookup basic (`routes_reports.py`) | **DONE** | NO_REPORTS, VERIFIED_BUSINESS, 400 |
 | **T3a** | Trust core (pure functions: voice, cohort, score) | **DONE** | Voice, cohort (union-find), scoring |
 | **T3b** | Verdict + masking (pure functions) | **DONE** | Verdict precedence, unmasking at 3 cohorts |
-| **T3c** | HMAC tokens + rate limit | **NEXT** | `app/identity.py`, `tests/test_identity.py` |
-| **T3d** | Wire trust + verdict + identity into routes | **Pending** | Integration in `app/routes_reports.py` |
+| **T3c** | HMAC tokens + rate limit | **DONE** | HMAC 16-hex, IPv4/v6 prefix, sliding window |
+| **T3d** | Wire trust + verdict + identity into routes | **NEXT** | Integration in `app/routes_reports.py` |
 | **T4** | Threshold tuning against `tools/fakegen.py` | **Pending** | `app/config.py` constants |
 | **T5** | Map & alerts APIs (`routes_map.py`) | **Pending** | GET /map, GET /alerts (SPIKE, NEW_TYPE) |
 | **T6** | Licence system (cryptography, middleware, cache) | **DONE** | 23/23 tests pass |
@@ -95,6 +95,16 @@
   - Added `resolve_display_value` unmasking at $\ge 3$ cohorts or when indicator belongs to a verified business.
   - Created unit test suite in `tests/test_verdict.py` (10 tests covering full verdict ordering, all 4 masking types, and cohort unmasking thresholds).
 - **Test Status:** 110/110 pytest tests passing.
-- **Next Task:** T3c (HMAC tokens + rate limiting unit tests in `tests/test_identity.py`).
+
+### [T3c] HMAC Pseudonymisation & Rate Limiting Unit Tests (2026-10-31)
+- **Files Modified/Created:** `tests/test_identity.py`, `tasks/A.md`, `status/A.md`
+- **Actions:**
+  - Validated deterministic HMAC-SHA256 16-hex token derivation for pseudonymous reporter tokens and IP tokens.
+  - Verified network prefix masking for IPv4 (`/24`) and IPv6 (`/48`).
+  - Tested header-based identity resolution (`X-Device-Id` and `X-Forwarded-For`) vs body-based identity under `TRUST_BODY_IDENTITY=True`.
+  - Tested in-memory sliding window rate limits: 30 submissions/hour per reporter and 10 submissions/hour per reporter per indicator, with expiry of records older than 1 hour.
+  - Created unit test suite in `tests/test_identity.py` (10 tests passing).
+- **Test Status:** 120/120 pytest tests passing.
+- **Next Task:** T3d (Wire trust engine + verdict + identity into `/reports` and `/lookup`).
 
 ---
