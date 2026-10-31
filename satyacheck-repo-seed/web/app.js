@@ -473,10 +473,17 @@ function setupReportView() {
     }
 
     // Occurred at ISO timestamp based on selected time chip
-    const d = new Date();
-    if (reportSelectedTime === "today") d.setHours(d.getHours() - 3);
-    else if (reportSelectedTime === "yesterday") d.setDate(d.getDate() - 1);
-    const occurredAt = d.toISOString();
+    let occurredAt = null;
+    if (reportSelectedTime === "today") {
+      const d = new Date();
+      d.setHours(d.getHours() - 3);
+      occurredAt = d.toISOString();
+    } else if (reportSelectedTime === "yesterday") {
+      const d = new Date();
+      d.setDate(d.getDate() - 1);
+      occurredAt = d.toISOString();
+    }
+
 
     const payload = {
       report_id: "REP-" + Math.random().toString(36).substring(2, 10).toUpperCase(),

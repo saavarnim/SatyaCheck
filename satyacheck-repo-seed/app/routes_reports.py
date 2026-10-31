@@ -100,8 +100,8 @@ async def post_report(
     occurred_dt = _parse_iso_datetime(payload.occurred_at, default=now)
     if occurred_dt is None:
         return JSONResponse(status_code=400, content={"error": "INVALID_REQUEST"})
-    # occurred_at must not be in the future (with 60-second clock skew grace)
-    if occurred_dt > (now + timedelta(seconds=60)):
+    # occurred_at must not be in the future (with 5-minute clock skew grace per docs/02)
+    if occurred_dt > (now + timedelta(minutes=5)):
         return JSONResponse(status_code=400, content={"error": "INVALID_REQUEST"})
 
     reported_dt = _parse_iso_datetime(payload.reported_at, default=now)
