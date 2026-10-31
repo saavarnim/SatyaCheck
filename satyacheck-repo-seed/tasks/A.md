@@ -2,7 +2,7 @@
 Owner of: app/main.py app/config.py app/clock.py app/db.py app/models.py app/normalise.py app/redact.py app/trust.py app/verdict.py app/routes_reports.py tests/conftest.py tests/test_normalise.py tests/test_trust.py tests/test_scenarios.py tests/test_wording.py
 Also: A is the **licence signer** (holds the private key).
 
-- [ ] **T0 Scaffold** (15-20 min, DO FIRST, push immediately so B can start)
+- [x] **T0 Scaffold** (15-20 min, DO FIRST, push immediately so B can start)
   Reads: docs/01-api.md, docs/03-trust.md (Interfaces section only)
   Do: create EVERY file in the AGENTS.md repo map as a working stub: `config.py` with ALL constants named in docs/03, 04, 05 and env vars; `clock.py`; `main.py` that includes all five routers (empty stubs OK), the 422->400 handler, a licence-middleware hook that calls `licence.is_allowed(path)` (stub returns True), the privacy-safe logging middleware (docs/06 item 5), and the static mount LAST; `trust.py` with the dataclasses and function signatures (raise NotImplementedError); `requirements.txt` already exists. `tests/conftest.py` with TestClient + temp SQLite + clock override.
   Done when: `uvicorn app.main:app` starts and GET /health returns `{"ok":true}`. Push. Tell B in status/A.md: "T0 pushed".
