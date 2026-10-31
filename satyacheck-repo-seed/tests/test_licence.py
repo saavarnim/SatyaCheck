@@ -150,8 +150,9 @@ def licence_client(test_db, monkeypatch, keypair):
     monkeypatch.setattr(db_mod, "engine", test_engine)
     monkeypatch.setattr(db_mod, "SessionLocal", TestingSession)
 
-    # Skip seed (verified.json has a field mismatch not related to licence)
-    monkeypatch.setattr(db_mod, "_seed", lambda: None)
+    # Skip seed if present
+    if hasattr(db_mod, "_seed"):
+        monkeypatch.setattr(db_mod, "_seed", lambda: None)
 
     # Create licence_state table in the test DB
     LicenceState.__table__.create(bind=test_engine, checkfirst=True)
@@ -223,7 +224,12 @@ class TestExpiredGives403:
         """/license GET works when expired."""
         r = licence_client.get("/license")
         assert r.status_code == 200
-        assert r.json()["status"] == "EXPIRED"
+        data = r.json()
+        assert data["status"] == "EXPIRED"
+        assert "licensee" in data
+        assert "expires_at" in data
+        assert "seconds_remaining" in data
+        assert data["seconds_remaining"] == 0
 
     def test_no_licence_post_license_accessible(self, licence_client):
         """/license POST is accessible when expired (may return 400 for bad body)."""
