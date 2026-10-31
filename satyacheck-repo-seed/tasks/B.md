@@ -14,7 +14,7 @@ Start with T6 while A does T0/T1 (licence needs nothing from A except the main.p
 - [x] **T5 Map + alerts** (after A pushes T0; test with fake units until A's T3 lands)
   Reads: docs/04-map-alerts.md. Files: app/routes_map.py tests/test_map_alerts.py
   Done when: `pytest tests/test_map_alerts.py -q` passes.
-- [ ] **T7 Challenges + reset + admin routes**
+- [x] **T7 Challenges + reset + admin routes**
   Reads: docs/01-api.md (challenges, reset, admin). Files: app/routes_challenges.py tests/test_challenges.py (reset lives in this file too)
   Done when: challenge makes lookup challenged=true and never KNOWN_SCAM; reset clears reports; upheld/rejected flows work.
 - [ ] **T8b Frontend: map, alerts, about + dispute form, licence-expired screen**

@@ -29,8 +29,8 @@
 | **T5** | Map & alerts APIs (`routes_map.py`) | **DONE** | GET /map, GET /alerts (SPIKE, NEW_TYPE) |
 | **T6** | Licence system (cryptography, middleware, cache) | **DONE** | 23/23 tests pass |
 | **T6b** | Public HTTPS deployment | **Pending** | Render / fly / Railway |
-| **T7** | Challenges & admin routes | **NEXT** | POST /challenges, GET/POST admin |
-| **T8** | Frontend (HTML, CSS, JS, Leaflet map) | **Pending** | `web/` plain static files |
+| **T7** | Challenges & admin routes | **DONE** | POST /challenges, GET/POST admin, reset |
+| **T8** | Frontend (HTML, CSS, JS, Leaflet map) | **NEXT** | `web/` plain static files, EN/HI i18n |
 | **T9** | README, demo script, video | **Pending** | Documentation & submission |
 | **T10** | Privacy audit & performance verification | **Pending** | docs/06-privacy.md checklist |
 
@@ -144,6 +144,29 @@
     - Returns empty list `{"alerts": []}` when no conditions are met.
   - Implemented comprehensive test suite in `tests/test_map_alerts.py` (8/8 tests covering default clustering, exclusion of 8-day-old/month-old units, radius filtering, severity categorization, invalid parameter handling, SPIKE thresholds, and NEW_TYPE detection with/without history).
 - **Test Status:** 133/133 pytest tests passing.
-- **Next Task:** T7 (Challenges, Reset, and Admin Routes in `app/routes_challenges.py`).
+
+### [T7] Challenges, Reset, and Admin Routes (2026-10-31)
+- **Files Modified/Created:** `app/routes_challenges.py`, `tests/test_challenges.py`, `tasks/B.md`, `status/B.md`, `progress.md`
+- **Actions:**
+  - Implemented `POST /challenges`:
+    - Normalises identifier and validates claimant details (`claimant_name`, `contact_email`, `proof_note`).
+    - Enforces 7-day cooldown (409 `CHALLENGE_BLOCKED`) if the indicator had a challenge rejected within the last 7 days.
+    - Idempotently returns existing `challenge_id` (`CH-xxxxxx`) with 201 if a challenge is already `under_review`.
+    - Creates `Challenge` row with status `under_review`.
+    - Integrated with `GET /lookup` to mark `challenged=true` and cap the indicator verdict at `SUSPICIOUS` (preventing `KNOWN_SCAM`).
+  - Implemented `GET /admin/challenges`:
+    - Authenticated via `X-Admin-Token == ADMIN_TOKEN` (returns 403 otherwise).
+    - Lists all active `under_review` disputes with claimant information and timestamps.
+  - Implemented `POST /admin/challenges/{id}/resolve`:
+    - Protected by `X-Admin-Token`. Accepts `decision: "upheld" | "rejected"`.
+    - If `upheld`: adds indicator to `verified_indicators` with `source='review'`, resulting in immediate `VERIFIED_BUSINESS` lookup status and unmasked display.
+    - If `rejected`: closes dispute and blocks subsequent challenges for 7 days.
+  - Implemented `POST /admin/reset`:
+    - Returns 403 `DEMO_MODE_REQUIRED` unless `DEMO_MODE=true`.
+    - When enabled, deletes all reports, indicators, challenges, and review-verified indicators, while preserving seed areas (25) and seed verified indicators (19).
+    - Resets in-memory sliding window rate limits.
+  - Created test suite in `tests/test_challenges.py` (7/7 tests passing covering challenge submission, verdict capping, idempotency, admin token validation, resolution flows, 7-day rejection cooldown, and demo reset behavior).
+- **Test Status:** 140/140 pytest tests passing.
+- **Next Task:** T8 (Frontend: Shell, i18n English/Hindi, Check view, Report flow, Leaflet Map, Alerts view in `web/`).
 
 ---
