@@ -3,6 +3,9 @@ import os
 
 # ── Database ─────────────────────────────────────────────────────────────────
 DATABASE_URL: str = os.getenv("DATABASE_URL", "sqlite:///./satyacheck.db")
+if DATABASE_URL.startswith("postgres://"):
+    DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
+
 
 # ── HMAC salts (required in production; defaults only for local dev) ─────────
 REPORTER_SALT: str = os.getenv("REPORTER_SALT", "dev-reporter-salt")
