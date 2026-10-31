@@ -219,11 +219,31 @@ def _update_last_seen(dt: datetime):
 
 
 # ---------------------------------------------------------------------------
-# Refresh cache from DB
+# Refresh cache from DB + bootstrap
 # ---------------------------------------------------------------------------
+
+_bootstrapped = False
+
+
+def _bootstrap_if_needed():
+    global _bootstrapped
+    if _bootstrapped:
+        return
+    _bootstrapped = True
+    bootstrap = os.getenv("LICENSE_BOOTSTRAP", "")
+    if bootstrap:
+        try:
+            data = json.loads(bootstrap)
+            existing = _load_row()
+            if existing is None or existing.licensee is None:
+                store_licence(data["licensee"], data["expires_at"], data["signature"])
+        except Exception:
+            pass
+
 
 def refresh_cache(force: bool = False):
     """Reload licence state from DB into the in-memory cache."""
+    _bootstrap_if_needed()
     if not force and not _cache.is_stale():
         return
     row = _load_row()
@@ -381,18 +401,9 @@ def get_licence_status() -> dict:
 def init_licence():
     """Create table, load bootstrap licence if present, populate cache."""
     _ensure_table()
-
-    # LICENSE_BOOTSTRAP: env var with licence JSON string
-    bootstrap = os.getenv("LICENSE_BOOTSTRAP", "")
-    if bootstrap:
-        try:
-            data = json.loads(bootstrap)
-            existing = _load_row()
-            if existing is None or existing.licensee is None:
-                store_licence(data["licensee"], data["expires_at"], data["signature"])
-        except Exception:
-            pass  # silently ignore bad bootstrap
-
+    global _bootstrapped
+    _bootstrapped = False
+    _bootstrap_if_needed()
     refresh_cache(force=True)
 
 

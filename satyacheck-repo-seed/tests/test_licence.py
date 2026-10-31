@@ -415,3 +415,42 @@ class TestAlreadyExpired400:
         r = licence_client.post("/license", json=body)
         assert r.status_code == 400
         assert r.json()["error"] == "ALREADY_EXPIRED"
+
+
+class TestLicenseBootstrap:
+    """LICENSE_BOOTSTRAP env var loads a licence on first boot."""
+
+    def test_bootstrap_licence_loads_on_boot(self, licence_client, monkeypatch, keypair):
+        import app.licence as lm
+        lm.reset_cache()
+        lm._bootstrapped = False
+
+        priv, pub = keypair
+        now = licence_client._fake_now[0]
+        expires_at = (now + timedelta(days=10)).isoformat()
+        sig = sign("Bootstrap Licensee", expires_at, priv)
+        payload = json.dumps({
+            "licensee": "Bootstrap Licensee",
+            "expires_at": expires_at,
+            "signature": sig,
+        })
+
+        monkeypatch.setenv("LICENSE_BOOTSTRAP", payload)
+
+        # Clear existing licence row in DB
+        db = lm.SessionLocal()
+        try:
+            db.query(lm.LicenceState).delete()
+            db.commit()
+        finally:
+            db.close()
+
+        # Trigger bootstrap load
+        lm.init_licence()
+
+        r = licence_client.get("/license")
+        assert r.status_code == 200
+        data = r.json()
+        assert data["status"] == "ACTIVE"
+        assert data["licensee"] == "Bootstrap Licensee"
+
