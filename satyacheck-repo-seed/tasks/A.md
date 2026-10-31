@@ -4,7 +4,7 @@ Whoever has quota can take any slice: change the Owner and push. A is the licenc
 - [x] T0 Scaffold
 - [x] T1 Normalise + redact (`normalise.py`, `redact.py`, `test_normalise.py`)
 - [x] **T2a** DB engine, session, models. Reads: docs/01-api.md (Tables). Files: app/db.py app/models.py. Done: tables create on a temp SQLite.
-- [ ] **T2b** Seed loader. Files: app/seed.py. Uses T1 normaliser on data/verified.json. Idempotent. Done: seeding twice gives 25 areas and 19 verified rows.
+- [x] **T2b** Seed loader. Files: app/seed.py. Uses T1 normaliser on data/verified.json. Idempotent. Done: seeding twice gives 25 areas and 19 verified rows.
 - [ ] **T2c** POST /reports. Reads: docs/01-api.md (POST /reports), docs/02-normalise.md. Files: app/routes_reports.py (+ tests/test_reports.py). Done: 4 phone formats make one indicator; `12345` gives 400; duplicate report_id returns 201 unchanged.
 - [ ] **T2d** GET /lookup basic. File: app/routes_reports.py. Done: unreported valid gives 200 NO_REPORTS; `1930` gives VERIFIED_BUSINESS; invalid gives 400.
 - [ ] **T3a** Trust core, PURE functions, no DB. Reads: docs/03-trust.md. Files: app/trust.py tests/test_trust.py. Done: voice/cohort/score tests pass.
