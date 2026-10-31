@@ -1,23 +1,15 @@
-# Person A tasks: backend core (trust + reports + lookup)
-Owner of: app/main.py app/config.py app/clock.py app/db.py app/models.py app/normalise.py app/redact.py app/trust.py app/verdict.py app/routes_reports.py tests/conftest.py tests/test_normalise.py tests/test_trust.py tests/test_scenarios.py tests/test_wording.py
-Also: A is the **licence signer** (holds the private key).
+# Person A tasks (small slices: one file, one test, finish in one session)
+Whoever has quota can take any slice: change the Owner and push. A is the licence signer.
 
-- [x] **T0 Scaffold** (15-20 min, DO FIRST, push immediately so B can start)
-  Reads: docs/01-api.md, docs/03-trust.md (Interfaces section only)
-  Do: create EVERY file in the AGENTS.md repo map as a working stub: `config.py` with ALL constants named in docs/03, 04, 05 and env vars; `clock.py`; `main.py` that includes all five routers (empty stubs OK), the 422->400 handler, a licence-middleware hook that calls `licence.is_allowed(path)` (stub returns True), the privacy-safe logging middleware (docs/06 item 5), and the static mount LAST; `trust.py` with the dataclasses and function signatures (raise NotImplementedError); `requirements.txt` already exists. `tests/conftest.py` with TestClient + temp SQLite + clock override.
-  Done when: `uvicorn app.main:app` starts and GET /health returns `{"ok":true}`. Push. Tell B in status/A.md: "T0 pushed".
-- [x] **T1 Normalise + redact**
-  Reads: docs/02-normalise.md. Files: app/normalise.py app/redact.py tests/test_normalise.py
-  Done when: `pytest tests/test_normalise.py -q` passes.
-- [ ] **T2 DB + seed + POST /reports + GET /lookup (no trust yet)**
-  Reads: docs/01-api.md. Files: app/db.py app/models.py app/routes_reports.py
-  Do: tables, idempotent seed from data/*.json (normalise verified values with T1 code), POST /reports (validation, tokens via HMAC, rate limit hook, duplicate report_id), GET /lookup returning NO_REPORTS / VERIFIED_BUSINESS / 400 and basic counts (verdict via a temporary rule).
-  Done when: posting the 4 phone formats yields one indicator; 12345 -> 400; 1930 lookup -> VERIFIED_BUSINESS.
-- [ ] **T3 Trust + verdict + masking + rate limit**
-  Reads: docs/03-trust.md. Files: app/trust.py app/verdict.py (+ wire into routes_reports.py) tests/test_trust.py
-  Done when: tests for cohorts, masking, verdict order pass. Push; note in status "T3 pushed, trust real".
-- [ ] **T4 Scenario tests + tuning**
-  Reads: docs/03-trust.md "tests" section. Files: tests/test_scenarios.py tests/test_wording.py tools/scenarios.py
-  Do: build the attack/genuine scenarios against the live API, tune ONLY constants in config.py, record the confounder result for the README.
-  Done when: every scenario in docs/03 passes.
-- [ ] **T10 Final audit** (hour ~10): run docs/06-privacy.md checklist, perf test, log audit. Fix leaks.
+- [x] T0 Scaffold
+- [x] T1 Normalise + redact (`normalise.py`, `redact.py`, `test_normalise.py`)
+- [ ] **T2a** DB engine, session, models. Reads: docs/01-api.md (Tables). Files: app/db.py app/models.py. Done: tables create on a temp SQLite.
+- [ ] **T2b** Seed loader. Files: app/seed.py. Uses T1 normaliser on data/verified.json. Idempotent. Done: seeding twice gives 25 areas and 19 verified rows.
+- [ ] **T2c** POST /reports. Reads: docs/01-api.md (POST /reports), docs/02-normalise.md. Files: app/routes_reports.py (+ tests/test_reports.py). Done: 4 phone formats make one indicator; `12345` gives 400; duplicate report_id returns 201 unchanged.
+- [ ] **T2d** GET /lookup basic. File: app/routes_reports.py. Done: unreported valid gives 200 NO_REPORTS; `1930` gives VERIFIED_BUSINESS; invalid gives 400.
+- [ ] **T3a** Trust core, PURE functions, no DB. Reads: docs/03-trust.md. Files: app/trust.py tests/test_trust.py. Done: voice/cohort/score tests pass.
+- [ ] **T3b** Verdict + masking, PURE. Reads: docs/03-trust.md. Files: app/verdict.py tests/test_verdict.py. Done: verdict-order and masking tests (1, 2, 3 cohorts, 4 types) pass.
+- [ ] **T3c** HMAC tokens + rate limit. Reads: docs/03-trust.md (Rate limit, Identity). Files: app/identity.py tests/test_identity.py.
+- [ ] **T3d** Wire trust + verdict + identity into /reports and /lookup. Files: app/routes_reports.py. Done: 22 accounts on one prefix is 1 cohort; 3 independent reporters unmask.
+- [ ] **T4** Tune constants against tools/fakegen.py. Files: app/config.py ONLY.
+- [ ] **T10** Final audit: docs/06-privacy.md checklist, log audit, perf test.
