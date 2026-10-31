@@ -76,7 +76,7 @@ def test_get_ip_prefix_invalid():
 
 def test_resolve_tokens_body_when_trusted(monkeypatch):
     """When TRUST_BODY_IDENTITY=True, body values are used."""
-    monkeypatch.setattr("app.identity.TRUST_BODY_IDENTITY", True)
+    monkeypatch.setattr("app.config.TRUST_BODY_IDENTITY", True)
     req = MagicMock()
     req.headers = {"X-Device-Id": "header_dev", "X-Forwarded-For": "1.2.3.4"}
 
@@ -92,7 +92,7 @@ def test_resolve_tokens_body_when_trusted(monkeypatch):
 
 def test_resolve_tokens_headers_when_body_not_trusted(monkeypatch):
     """When TRUST_BODY_IDENTITY=False, headers are used even if body is supplied."""
-    monkeypatch.setattr("app.identity.TRUST_BODY_IDENTITY", False)
+    monkeypatch.setattr("app.config.TRUST_BODY_IDENTITY", False)
     req = MagicMock()
     req.headers = {"X-Device-Id": "device_header_xyz", "X-Forwarded-For": "203.0.113.195, 198.51.100.1"}
 

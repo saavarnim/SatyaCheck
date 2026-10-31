@@ -19,7 +19,8 @@ from app.identity import resolve_reporter_and_ip_tokens, check_and_record_rate_l
 from app.models import Area, Indicator, Report, VerifiedIndicator, Challenge
 from app.normalise import normalise, normalise_channel, normalise_scam_type, InvalidIdentifier
 from app.redact import redact
-from app.verdict import mask_display_value
+from app.trust import EventRow, compute_indicator_trust
+from app.verdict import mask_display_value, verdict, resolve_display_value
 
 router = APIRouter()
 
@@ -259,10 +260,30 @@ async def get_lookup(
         .all()
     )
     report_count = len(reports)
-    distinct_reporters = len(set(r.reporter_token for r in reports))
 
-    # Top scam_type
-    if reports:
+    # Convert reports to EventRow and compute trust
+    events = [
+        EventRow(
+            indicator_id=r.indicator_id,
+            occurred_at=r.occurred_at,
+            reporter_token=r.reporter_token,
+            ip_token=r.ip_token,
+            pincode=r.pincode,
+            scam_type=r.scam_type,
+            channel=r.channel,
+            note=r.note_redacted or "",
+        )
+        for r in reports
+    ]
+    trust = compute_indicator_trust(events)
+    distinct_reporters = trust.cohort_count
+
+    # Top scam_type: most common among trusted units (docs/01)
+    if trust.units:
+        from collections import Counter
+        scam_counts = Counter(u.scam_type for u in trust.units if u.scam_type and u.scam_type != "other")
+        top_scam_type = scam_counts.most_common(1)[0][0] if scam_counts else "other"
+    elif reports:
         from collections import Counter
         scam_counts = Counter(r.scam_type for r in reports if r.scam_type and r.scam_type != "other")
         top_scam_type = scam_counts.most_common(1)[0][0] if scam_counts else "other"
@@ -270,37 +291,25 @@ async def get_lookup(
         top_scam_type = "other"
 
     # Verdict determination per docs/03
-    if is_verified:
-        v_str = "VERIFIED_BUSINESS"
-    elif report_count == 0:
-        v_str = "NO_REPORTS"
-    elif is_challenged:
-        v_str = "SUSPICIOUS"
-    elif distinct_reporters >= 3:
-        v_str = "KNOWN_SCAM"
-    else:
-        v_str = "SUSPICIOUS"
+    v_str = verdict(trust, is_verified=is_verified, has_active_challenge=is_challenged)
 
-    # Display value masking: unmasked if verified or distinct_reporters >= 3
-    if is_verified or distinct_reporters >= 3:
-        disp_val = canon_val
-    else:
-        disp_val = mask_display_value(type, canon_val)
+    # Display value: unmasked if verified or distinct_reporters >= 3
+    disp_val = resolve_display_value(type, canon_val, cohort_count=distinct_reporters, is_verified=is_verified)
 
     # First and last seen in IST (+05:30)
     first_seen = to_ist_iso(reports[0].occurred_at) if reports else None
     last_seen = to_ist_iso(reports[-1].occurred_at) if reports else None
 
-    # Evidence: up to 5 latest items with {occurred_at, channel, scam_type, pincode} ONLY
-    latest_reports = sorted(reports, key=lambda r: r.occurred_at, reverse=True)[:5]
+    # Evidence: up to 5 latest trusted units as {occurred_at, channel, scam_type, pincode} ONLY (docs/01)
+    latest_units = sorted(trust.units, key=lambda u: u.occurred_at, reverse=True)[:5]
     evidence = [
         {
-            "occurred_at": to_ist_iso(r.occurred_at),
-            "channel": r.channel,
-            "scam_type": r.scam_type,
-            "pincode": r.pincode,
+            "occurred_at": to_ist_iso(u.occurred_at),
+            "channel": u.channel,
+            "scam_type": u.scam_type,
+            "pincode": u.pincode,
         }
-        for r in latest_reports
+        for u in latest_units
     ]
 
     return {

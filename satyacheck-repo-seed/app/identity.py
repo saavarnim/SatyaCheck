@@ -8,13 +8,7 @@ from datetime import datetime, timedelta
 from typing import Optional
 from fastapi import Request
 
-from app.config import (
-    REPORTER_SALT,
-    IP_SALT,
-    TRUST_BODY_IDENTITY,
-    RATE_PER_HOUR,
-    RATE_PER_INDICATOR_HOUR,
-)
+from app import config
 
 
 def hash_token(salt: str, value: str) -> str:
@@ -54,7 +48,7 @@ def resolve_reporter_and_ip_tokens(
     Else reporter token from header X-Device-Id and ip token from /24 (IPv4) or /48 (IPv6)
     of first X-Forwarded-For hop (or client host).
     """
-    if TRUST_BODY_IDENTITY and body_reporter_id and body_ip_prefix:
+    if config.TRUST_BODY_IDENTITY and body_reporter_id and body_ip_prefix:
         reporter_raw = body_reporter_id
         ip_raw = body_ip_prefix
     else:
@@ -67,10 +61,10 @@ def resolve_reporter_and_ip_tokens(
             client_ip = request.client.host
         else:
             client_ip = "127.0.0.1"
-        ip_raw = body_ip_prefix if (TRUST_BODY_IDENTITY and body_ip_prefix) else get_ip_prefix(client_ip)
+        ip_raw = body_ip_prefix if (config.TRUST_BODY_IDENTITY and body_ip_prefix) else get_ip_prefix(client_ip)
 
-    reporter_token = hash_token(REPORTER_SALT, reporter_raw)
-    ip_token = hash_token(IP_SALT, ip_raw)
+    reporter_token = hash_token(config.REPORTER_SALT, reporter_raw)
+    ip_token = hash_token(config.IP_SALT, ip_raw)
     return reporter_token, ip_token
 
 
@@ -96,13 +90,13 @@ def check_and_record_rate_limit(
 
     # Clean and check reporter submissions
     rep_times = [t for t in _reporter_history.get(reporter_token, []) if t > one_hour_ago]
-    if len(rep_times) >= RATE_PER_HOUR:
+    if len(rep_times) >= config.RATE_PER_HOUR:
         return False
 
     # Clean and check per-indicator submissions
     ind_key = (reporter_token, indicator_id)
     ind_times = [t for t in _indicator_history.get(ind_key, []) if t > one_hour_ago]
-    if len(ind_times) >= RATE_PER_INDICATOR_HOUR:
+    if len(ind_times) >= config.RATE_PER_INDICATOR_HOUR:
         return False
 
     # Record current timestamp

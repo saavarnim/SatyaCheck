@@ -24,8 +24,8 @@
 | **T3a** | Trust core (pure functions: voice, cohort, score) | **DONE** | Voice, cohort (union-find), scoring |
 | **T3b** | Verdict + masking (pure functions) | **DONE** | Verdict precedence, unmasking at 3 cohorts |
 | **T3c** | HMAC tokens + rate limit | **DONE** | HMAC 16-hex, IPv4/v6 prefix, sliding window |
-| **T3d** | Wire trust + verdict + identity into routes | **NEXT** | Integration in `app/routes_reports.py` |
-| **T4** | Threshold tuning against `tools/fakegen.py` | **Pending** | `app/config.py` constants |
+| **T3d** | Wire trust + verdict + identity into routes | **DONE** | Integration in `app/routes_reports.py` |
+| **T4** | Threshold tuning against `tools/fakegen.py` | **NEXT** | `app/config.py` constants |
 | **T5** | Map & alerts APIs (`routes_map.py`) | **Pending** | GET /map, GET /alerts (SPIKE, NEW_TYPE) |
 | **T6** | Licence system (cryptography, middleware, cache) | **DONE** | 23/23 tests pass |
 | **T6b** | Public HTTPS deployment | **Pending** | Render / fly / Railway |
@@ -105,6 +105,20 @@
   - Tested in-memory sliding window rate limits: 30 submissions/hour per reporter and 10 submissions/hour per reporter per indicator, with expiry of records older than 1 hour.
   - Created unit test suite in `tests/test_identity.py` (10 tests passing).
 - **Test Status:** 120/120 pytest tests passing.
-- **Next Task:** T3d (Wire trust engine + verdict + identity into `/reports` and `/lookup`).
+
+### [T3d] Wire Trust Engine, Verdict, and Identity into Routes (2026-10-31)
+- **Files Modified/Created:** `app/routes_reports.py`, `app/identity.py`, `tests/test_scenarios.py`, `tasks/A.md`, `status/A.md`
+- **Actions:**
+  - Integrated `compute_indicator_trust` into `GET /lookup` by transforming database reports into `EventRow` models.
+  - Wired `verdict()` and `resolve_display_value()` into `GET /lookup`.
+  - Derived `evidence` from the aggregated `TrustedUnit` list (sorted descending by `occurred_at`, limited to 5).
+  - Derived `top_scam_type` from `TrustedUnit`s.
+  - Refactored `app/identity.py` to reference `config.TRUST_BODY_IDENTITY` dynamically for testing and runtime control.
+  - Implemented end-to-end integration scenario tests in `tests/test_scenarios.py`:
+    - 22 bot accounts reporting from one IP prefix group into exactly 1 cohort: stays `SUSPICIOUS`, display_value remains masked, exactly 1 `TrustedUnit`.
+    - 3 independent reporters on different networks with distinct notes produce 3 cohorts: reaches `KNOWN_SCAM` and unmasks the display_value.
+    - 1 reporter submitting 6 reports contributes 1 voice and 1 cohort.
+- **Test Status:** 123/123 pytest tests passing.
+- **Next Task:** T4 (Tune constants against `tools/fakegen.py`).
 
 ---
