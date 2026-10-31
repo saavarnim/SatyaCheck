@@ -2,4 +2,4 @@
 Format:  [T#] done|wip | LEFT OFF AT: ... | NEEDS (from other person/files): ... | ASSUMED: ...
 
 [T6] wip | T6 part 1 pushed: app/licence.py (canonical_bytes, sign, verify, parse_expiry), tools/gen_keys.py, tools/sign_licence.py, tests/test_licence.py — 10/10 tests pass. Part 2 (routes, middleware, DB caching) remains.
-[T6] wip | LEFT OFF AT: 5. POST /license signature, expiry, short replaces long
+[T6] wip | LEFT OFF AT: 6. last_seen persistence and clock-rollback
