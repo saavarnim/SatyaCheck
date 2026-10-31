@@ -21,8 +21,8 @@
 | **T2b** | Seed loader (`app/seed.py`) | **DONE** | Commit `[T2b] seed loader wired` |
 | **T2c** | POST /reports (`routes_reports.py`, `tests/test_reports.py`) | **DONE** | Validation, HMAC, duplicates, rate limit |
 | **T2d** | GET /lookup basic (`routes_reports.py`) | **DONE** | NO_REPORTS, VERIFIED_BUSINESS, 400 |
-| **T3a** | Trust core (pure functions: voice, cohort, score) | **NEXT** | `app/trust.py`, `tests/test_trust.py` |
-| **T3b** | Verdict + masking (pure functions) | **Pending** | `app/verdict.py`, `tests/test_verdict.py` |
+| **T3a** | Trust core (pure functions: voice, cohort, score) | **DONE** | Voice, cohort (union-find), scoring |
+| **T3b** | Verdict + masking (pure functions) | **NEXT** | `app/verdict.py`, `tests/test_verdict.py` |
 | **T3c** | HMAC tokens + rate limit | **Pending** | `app/identity.py`, `tests/test_identity.py` |
 | **T3d** | Wire trust + verdict + identity into routes | **Pending** | Integration in `app/routes_reports.py` |
 | **T4** | Threshold tuning against `tools/fakegen.py` | **Pending** | `app/config.py` constants |
@@ -73,6 +73,18 @@
   - Implemented evidence extraction (up to 5 latest events with `occurred_at`, `channel`, `scam_type`, `pincode`).
   - Added test suite in `tests/test_lookup.py` (5 tests passing).
 - **Test Status:** 93/93 pytest tests passing.
-- **Next Task:** T3a (Trust engine core pure functions).
+
+### [T3a] Trust Core Pure Functions (2026-10-31)
+- **Files Modified/Created:** `app/trust.py`, `tests/test_trust.py`, `tasks/A.md`, `status/A.md`
+- **Actions:**
+  - Implemented `compute_indicator_trust(events)` as pure function per `docs/03-trust.md`.
+  - Implemented voice deduplication: groups reports by `reporter_token`, keeping earliest event and longest note.
+  - Implemented disjoint-set union-find cohort formation merging on shared `ip_token` or character 3-gram Jaccard similarity $\ge 0.80$ (for notes $\ge 15$ characters).
+  - Implemented cohort weighting: 1.0 for notes $\ge 15$ chars, 0.9 otherwise; total confidence score = sum of cohort weights.
+  - Implemented `TrustedUnit` generation per cohort for map/alert aggregation.
+  - Added `all_trusted_units(db)` helper.
+  - Added unit test suite in `tests/test_trust.py` (7 tests covering voice deduplication, IP-based merging, note similarity merging, Hindi/multilingual similarity, and independent cohorts).
+- **Test Status:** 100/100 pytest tests passing.
+- **Next Task:** T3b (Verdict ordering and masking pure functions & unit tests).
 
 ---
