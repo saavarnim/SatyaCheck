@@ -20,8 +20,8 @@
 | **T2a** | DB engine, session, models (`app/db.py`, `app/models.py`) | **DONE** | Commit `[T2a] db engine, session, models` |
 | **T2b** | Seed loader (`app/seed.py`) | **DONE** | Commit `[T2b] seed loader wired` |
 | **T2c** | POST /reports (`routes_reports.py`, `tests/test_reports.py`) | **DONE** | Validation, HMAC, duplicates, rate limit |
-| **T2d** | GET /lookup basic (`routes_reports.py`) | **NEXT** | NO_REPORTS, VERIFIED_BUSINESS, 400 |
-| **T3a** | Trust core (pure functions: voice, cohort, score) | **Pending** | `app/trust.py`, `tests/test_trust.py` |
+| **T2d** | GET /lookup basic (`routes_reports.py`) | **DONE** | NO_REPORTS, VERIFIED_BUSINESS, 400 |
+| **T3a** | Trust core (pure functions: voice, cohort, score) | **NEXT** | `app/trust.py`, `tests/test_trust.py` |
 | **T3b** | Verdict + masking (pure functions) | **Pending** | `app/verdict.py`, `tests/test_verdict.py` |
 | **T3c** | HMAC tokens + rate limit | **Pending** | `app/identity.py`, `tests/test_identity.py` |
 | **T3d** | Wire trust + verdict + identity into routes | **Pending** | Integration in `app/routes_reports.py` |
@@ -60,6 +60,19 @@
   - Implemented in-memory sliding window rate limiting (429 `SLOW_DOWN`).
   - Added full test suite in `tests/test_reports.py` (9 tests covering 4 phone formats mapping to one indicator, invalid input 400, duplicate report idempotency, note PII scrubbing, and 429 rate limiting).
 - **Test Status:** 88/88 pytest tests passing.
-- **Next Task:** T2d (GET /lookup basic endpoint).
+
+### [T2d] GET /lookup Basic Endpoint (2026-10-31)
+- **Files Modified/Created:** `app/routes_reports.py`, `app/verdict.py`, `app/clock.py`, `tests/test_lookup.py`, `tasks/A.md`, `status/A.md`
+- **Actions:**
+  - Implemented `GET /lookup?type=&value=` returning full JSON schema per `docs/01-api.md`.
+  - Added lookup for `verified_indicators` returning `VERIFIED_BUSINESS` (e.g. `1930`).
+  - Added valid unreported indicator lookup returning HTTP 200 with `verdict: "NO_REPORTS"` (never 404).
+  - Enforced HTTP 400 for invalid identifiers (e.g., `12345`).
+  - Implemented `to_ist_iso` in `app/clock.py` converting UTC timestamps to IST (`+05:30`) for public outputs.
+  - Implemented `mask_display_value` in `app/verdict.py` (phone, UPI, URL, sender_id rules).
+  - Implemented evidence extraction (up to 5 latest events with `occurred_at`, `channel`, `scam_type`, `pincode`).
+  - Added test suite in `tests/test_lookup.py` (5 tests passing).
+- **Test Status:** 93/93 pytest tests passing.
+- **Next Task:** T3a (Trust engine core pure functions).
 
 ---

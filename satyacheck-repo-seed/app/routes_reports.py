@@ -12,12 +12,14 @@ from pydantic import BaseModel, ConfigDict
 from sqlalchemy.orm import Session
 
 from app import clock
+from app.clock import to_ist_iso
 from app.config import IDENTIFIER_TYPES
 from app.db import get_db
 from app.identity import resolve_reporter_and_ip_tokens, check_and_record_rate_limit
-from app.models import Area, Indicator, Report
+from app.models import Area, Indicator, Report, VerifiedIndicator, Challenge
 from app.normalise import normalise, normalise_channel, normalise_scam_type, InvalidIdentifier
 from app.redact import redact
+from app.verdict import mask_display_value
 
 router = APIRouter()
 
@@ -189,6 +191,126 @@ async def post_report(
 
 
 @router.get("/lookup")
-async def get_lookup():
-    """GET /lookup stub – implemented in T2d."""
-    raise NotImplementedError("T2d")
+async def get_lookup(
+    type: Optional[str] = None,
+    value: Optional[str] = None,
+    pincode: Optional[str] = None,
+    db: Session = Depends(get_db),
+):
+    """Lookup indicator scam intelligence and verdict (docs/01-api.md)."""
+    # 1. Validate type and value query params
+    if not type or type not in IDENTIFIER_TYPES:
+        return JSONResponse(status_code=400, content={"error": "INVALID_REQUEST"})
+    if not value or not isinstance(value, str):
+        return JSONResponse(status_code=400, content={"error": "INVALID_REQUEST"})
+
+    # 2. Normalise value
+    try:
+        canon_val = normalise(type, value)
+    except (InvalidIdentifier, Exception):
+        return JSONResponse(status_code=400, content={"error": "INVALID_REQUEST"})
+
+    # 3. Check verified_indicators table
+    verified_row = (
+        db.query(VerifiedIndicator)
+        .filter_by(type=type, canonical_value=canon_val)
+        .first()
+    )
+    is_verified = verified_row is not None
+
+    # 4. Check indicators table
+    indicator = (
+        db.query(Indicator)
+        .filter_by(type=type, canonical_value=canon_val)
+        .first()
+    )
+
+    if indicator is None:
+        if is_verified:
+            v_str = "VERIFIED_BUSINESS"
+            disp_val = canon_val
+        else:
+            v_str = "NO_REPORTS"
+            disp_val = mask_display_value(type, canon_val)
+        return {
+            "verdict": v_str,
+            "report_count": 0,
+            "distinct_reporters": 0,
+            "first_seen": None,
+            "last_seen": None,
+            "scam_type": "other",
+            "display_value": disp_val,
+            "evidence": [],
+            "challenged": False,
+        }
+
+    # 5. Indicator exists -> retrieve reports and active challenges
+    challenge = (
+        db.query(Challenge)
+        .filter_by(indicator_id=indicator.id, status="under_review")
+        .first()
+    )
+    is_challenged = challenge is not None
+
+    reports = (
+        db.query(Report)
+        .filter_by(indicator_id=indicator.id)
+        .order_by(Report.occurred_at.asc())
+        .all()
+    )
+    report_count = len(reports)
+    distinct_reporters = len(set(r.reporter_token for r in reports))
+
+    # Top scam_type
+    if reports:
+        from collections import Counter
+        scam_counts = Counter(r.scam_type for r in reports if r.scam_type and r.scam_type != "other")
+        top_scam_type = scam_counts.most_common(1)[0][0] if scam_counts else "other"
+    else:
+        top_scam_type = "other"
+
+    # Verdict determination per docs/03
+    if is_verified:
+        v_str = "VERIFIED_BUSINESS"
+    elif report_count == 0:
+        v_str = "NO_REPORTS"
+    elif is_challenged:
+        v_str = "SUSPICIOUS"
+    elif distinct_reporters >= 3:
+        v_str = "KNOWN_SCAM"
+    else:
+        v_str = "SUSPICIOUS"
+
+    # Display value masking: unmasked if verified or distinct_reporters >= 3
+    if is_verified or distinct_reporters >= 3:
+        disp_val = canon_val
+    else:
+        disp_val = mask_display_value(type, canon_val)
+
+    # First and last seen in IST (+05:30)
+    first_seen = to_ist_iso(reports[0].occurred_at) if reports else None
+    last_seen = to_ist_iso(reports[-1].occurred_at) if reports else None
+
+    # Evidence: up to 5 latest items with {occurred_at, channel, scam_type, pincode} ONLY
+    latest_reports = sorted(reports, key=lambda r: r.occurred_at, reverse=True)[:5]
+    evidence = [
+        {
+            "occurred_at": to_ist_iso(r.occurred_at),
+            "channel": r.channel,
+            "scam_type": r.scam_type,
+            "pincode": r.pincode,
+        }
+        for r in latest_reports
+    ]
+
+    return {
+        "verdict": v_str,
+        "report_count": report_count,
+        "distinct_reporters": distinct_reporters,
+        "first_seen": first_seen,
+        "last_seen": last_seen,
+        "scam_type": top_scam_type,
+        "display_value": disp_val,
+        "evidence": evidence,
+        "challenged": is_challenged,
+    }
