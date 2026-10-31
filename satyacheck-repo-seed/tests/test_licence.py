@@ -132,7 +132,7 @@ def licence_client(test_db, monkeypatch, keypair):
     import app.db as db_mod
     from app.main import app
     from app.db import get_db
-    from app.models import Base, LicenceState
+    from app.licence import LicenceState
     from fastapi.testclient import TestClient
     from sqlalchemy.orm import sessionmaker
 

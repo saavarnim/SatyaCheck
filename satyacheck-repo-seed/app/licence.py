@@ -20,10 +20,26 @@ from typing import Optional
 from nacl.exceptions import BadSignatureError
 from nacl.signing import SigningKey, VerifyKey
 
+from sqlalchemy import Column, DateTime, Integer, MetaData, String
+from sqlalchemy.orm import declarative_base
+
 import app.clock as clock
 from app.config import LICENCE_PROTECTED_PREFIXES, LICENCE_PUBLIC_KEY
 from app.db import engine, SessionLocal
-from app.models import LicenceState
+
+licence_metadata = MetaData()
+LicenceBase = declarative_base(metadata=licence_metadata)
+
+
+class LicenceState(LicenceBase):
+    __tablename__ = "licence_state"
+
+    id = Column(Integer, primary_key=True, default=1)
+    licensee = Column(String, nullable=True)
+    expires_at = Column(DateTime(timezone=True), nullable=True)
+    signature = Column(String, nullable=True)
+    last_seen_server_time = Column(DateTime(timezone=True), nullable=True)
+
 
 # ---------------------------------------------------------------------------
 # Constants
@@ -93,6 +109,14 @@ def parse_expiry(expires_at: str) -> datetime:
 # In-memory cache
 # ---------------------------------------------------------------------------
 
+def _ensure_utc(dt: Optional[datetime]) -> Optional[datetime]:
+    if dt is None:
+        return None
+    if dt.tzinfo is None:
+        return dt.replace(tzinfo=timezone.utc)
+    return dt.astimezone(timezone.utc)
+
+
 class _LicenceCache:
     """Thread-safe in-memory licence state cache."""
 
@@ -118,9 +142,9 @@ class _LicenceCache:
                 self.last_seen_server_time = None
             else:
                 self.licensee = row.licensee
-                self.expires_at = row.expires_at
+                self.expires_at = _ensure_utc(row.expires_at)
                 self.signature = row.signature
-                self.last_seen_server_time = row.last_seen_server_time
+                self.last_seen_server_time = _ensure_utc(row.last_seen_server_time)
             self.last_refresh = _time.monotonic()
 
 
@@ -133,17 +157,20 @@ _cache = _LicenceCache()
 
 def _ensure_table():
     """Lazily create the licence_state table if it doesn't exist."""
-    LicenceState.__table__.create(bind=engine, checkfirst=True)
+    licence_metadata.create_all(bind=engine, checkfirst=True)
 
 
 def _load_row() -> Optional[LicenceState]:
     """Load the single licence row from DB."""
+    _ensure_table()
     db = SessionLocal()
     try:
         row = db.query(LicenceState).filter_by(id=1).first()
         if row is not None:
             db.expunge(row)
         return row
+    except Exception:
+        return None
     finally:
         db.close()
 
@@ -151,6 +178,7 @@ def _load_row() -> Optional[LicenceState]:
 def _save_row(licensee: str, expires_at_dt: datetime, signature: str,
               last_seen: Optional[datetime] = None):
     """Upsert the single licence row."""
+    _ensure_table()
     db = SessionLocal()
     try:
         row = db.query(LicenceState).filter_by(id=1).first()
@@ -169,12 +197,15 @@ def _save_row(licensee: str, expires_at_dt: datetime, signature: str,
 
 def _update_last_seen(dt: datetime):
     """Persist last_seen_server_time (keep max)."""
+    _ensure_table()
     db = SessionLocal()
     try:
         row = db.query(LicenceState).filter_by(id=1).first()
         if row is not None:
-            if row.last_seen_server_time is None or dt > row.last_seen_server_time:
-                row.last_seen_server_time = dt
+            current_last_seen = _ensure_utc(row.last_seen_server_time)
+            dt_utc = _ensure_utc(dt)
+            if current_last_seen is None or (dt_utc is not None and dt_utc > current_last_seen):
+                row.last_seen_server_time = dt_utc
                 db.commit()
             else:
                 db.rollback()
@@ -367,15 +398,17 @@ def init_licence():
 
 def set_last_seen_server_time(dt: datetime):
     """Directly set last_seen_server_time in DB and cache (for tests)."""
+    _ensure_table()
+    dt_utc = _ensure_utc(dt)
     db = SessionLocal()
     try:
         row = db.query(LicenceState).filter_by(id=1).first()
         if row is not None:
-            row.last_seen_server_time = dt
+            row.last_seen_server_time = dt_utc
             db.commit()
     finally:
         db.close()
-    _cache.last_seen_server_time = dt
+    _cache.last_seen_server_time = dt_utc
 
 
 def reset_cache():
