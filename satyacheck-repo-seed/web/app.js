@@ -195,6 +195,7 @@ function setupCheckView() {
   const input = document.getElementById("input-check-value");
   const chips = document.querySelectorAll("#check-type-chips .chip");
   const form = document.getElementById("form-check");
+  const btn = document.getElementById("btn-submit-check");
 
   chips.forEach((chip) => {
     chip.addEventListener("click", () => {
@@ -217,14 +218,13 @@ function setupCheckView() {
     }
   });
 
-  form.addEventListener("submit", async () => {
+  async function executeCheck() {
     const val = input.value.trim();
     if (!val) return;
 
     let type = checkSelectedType;
     if (type === "auto") type = detectIdentifierType(val);
 
-    const btn = document.getElementById("btn-submit-check");
     btn.disabled = true;
     btn.textContent = "...";
 
@@ -238,7 +238,19 @@ function setupCheckView() {
       btn.disabled = false;
       renderTranslations();
     }
+  }
+
+  form.addEventListener("submit", (e) => {
+    if (e && e.preventDefault) e.preventDefault();
+    executeCheck();
   });
+
+  if (btn) {
+    btn.addEventListener("click", (e) => {
+      if (e && e.preventDefault) e.preventDefault();
+      executeCheck();
+    });
+  }
 }
 
 function renderLookupResult(data, type, rawValue) {
@@ -246,10 +258,20 @@ function renderLookupResult(data, type, rawValue) {
   container.style.display = "block";
 
   if (data.error) {
+    let help = "Please enter a valid phone number, UPI ID, link or SMS sender.";
+    if (type === "phone") {
+      help = "Please enter a valid 10-digit Indian phone number starting with 6-9 (e.g. +91 98765 43210) or toll-free (1800/1860).";
+    } else if (type === "upi") {
+      help = "Please enter a valid UPI ID (e.g. username@okhdfcbank).";
+    } else if (type === "url") {
+      help = "Please enter a valid web link with domain (e.g. secure-kyc.in).";
+    } else if (type === "sender_id") {
+      help = "SMS Sender ID must be 3 to 6 uppercase letters (e.g. HDFCBK).";
+    }
     container.innerHTML = `
       <div class="advice-box" style="border-left: 4px solid var(--verdict-known); margin-top: 20px;">
-        <h4 style="color: var(--verdict-known);">Invalid Request</h4>
-        <p>Please enter a valid phone number, UPI ID, link or SMS sender.</p>
+        <h4 style="color: var(--verdict-known); margin-bottom: 6px;">Invalid Format for ${type.toUpperCase()}</h4>
+        <p style="font-size: 0.95rem; color: var(--text-main);">${help}</p>
       </div>
     `;
     return;
@@ -373,13 +395,58 @@ function setupReportView() {
     });
   });
 
-  // Auto-detect on identifier input
+  // Identifier type & input
   const idInput = document.getElementById("report-identifier-value");
   const idTypeSelect = document.getElementById("report-identifier-type");
-  idInput.addEventListener("input", () => {
-    const detected = detectIdentifierType(idInput.value);
-    idTypeSelect.value = detected;
+  let reportTypeManuallySelected = false;
+
+  idTypeSelect.addEventListener("change", () => {
+    reportTypeManuallySelected = true;
   });
+
+  idInput.addEventListener("input", () => {
+    if (!reportTypeManuallySelected) {
+      const detected = detectIdentifierType(idInput.value);
+      idTypeSelect.value = detected;
+    }
+  });
+
+  function validateReportIdentifier(type, val) {
+    if (!val) return "Identifier value cannot be empty.";
+    if (type === "phone") {
+      const digits = val.replace(/\D/g, "");
+      if (/^(1800|1860)\d{4,7}$/.test(digits) || /^19\d{2}$/.test(digits)) return null;
+      let d = digits;
+      if (d.length === 12 && d.startsWith("91")) d = d.substring(2);
+      else if (d.length === 11 && d.startsWith("0")) d = d.substring(1);
+      if (d.length !== 10) return "Phone number must be exactly 10 digits (e.g. +91 98765 43210).";
+      if (!"23456789".includes(d[0])) return "Phone number must start with digits 2 to 9.";
+      if (new Set(d).size === 1) return "Phone number cannot be all repeated digits.";
+      if (d === "1234567890" || d === "0123456789") return "Sequential numbers like 1234567890 are not accepted.";
+      return null;
+    }
+    if (type === "upi") {
+      const clean = val.toLowerCase().replace(/\s/g, "");
+      if (!/^[a-z0-9._-]{2,64}@[a-z][a-z0-9]{1,32}$/.test(clean)) {
+        return "Please enter a valid UPI ID with bank handle (e.g. name@okaxis).";
+      }
+      return null;
+    }
+    if (type === "url") {
+      if (!/[a-z0-9-]+\.[a-z]{2,}/i.test(val)) {
+        return "Please enter a valid website link or domain (e.g. secure-kyc.in).";
+      }
+      return null;
+    }
+    if (type === "sender_id") {
+      const clean = val.trim().replace(/^.*-/, "");
+      if (!/^[A-Za-z]{3,6}$/.test(clean)) {
+        return "SMS Sender ID must be 3 to 6 letters (e.g. HDFCBK or VM-SBIINB).";
+      }
+      return null;
+    }
+    return null;
+  }
 
   // Form submit
   const form = document.getElementById("form-report");
@@ -395,6 +462,13 @@ function setupReportView() {
 
     if (!idVal || !pincode) {
       alert("Please enter the identifier and select your area.");
+      return;
+    }
+
+    const formatError = validateReportIdentifier(idType, idVal);
+    if (formatError) {
+      alert(formatError);
+      idInput.focus();
       return;
     }
 
@@ -436,8 +510,14 @@ function setupReportView() {
         successBox.style.display = "block";
         document.getElementById("res-case-id").textContent = data.case_id || "RECORDED";
       } else {
-        const err = await res.json();
-        alert(err.error || "Submission failed. Please check your inputs.");
+        const err = await res.json().catch(() => ({}));
+        let msg = "Submission failed. Please check your inputs.";
+        if (err.error === "INVALID_REQUEST") {
+          msg = "Invalid format for " + idType.toUpperCase() + ". Please check your inputs and area.";
+        } else if (err.error === "SLOW_DOWN") {
+          msg = "Rate limit reached. Please wait a moment before reporting again.";
+        }
+        alert(msg);
       }
     } catch (e) {
       alert("Network error submitting report.");
@@ -450,6 +530,7 @@ function setupReportView() {
   // Report another button
   document.getElementById("btn-report-another").addEventListener("click", () => {
     form.reset();
+    reportTypeManuallySelected = false;
     form.style.display = "block";
     document.getElementById("report-success-container").style.display = "none";
   });
