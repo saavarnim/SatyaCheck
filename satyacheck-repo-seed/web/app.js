@@ -448,6 +448,47 @@ function setupReportView() {
     return null;
   }
 
+  // Screenshot attachment and preview handling
+  const screenshotCheck = document.getElementById("report-has-screenshot");
+  const uploadContainer = document.getElementById("screenshot-upload-container");
+  const fileInput = document.getElementById("report-screenshot-file");
+  const previewBox = document.getElementById("screenshot-preview-box");
+  const previewImg = document.getElementById("screenshot-preview-img");
+  const filenameLabel = document.getElementById("screenshot-filename");
+
+  if (screenshotCheck && uploadContainer) {
+    screenshotCheck.addEventListener("change", () => {
+      if (screenshotCheck.checked) {
+        uploadContainer.style.display = "block";
+        if (fileInput && (!fileInput.files || fileInput.files.length === 0)) {
+          fileInput.click();
+        }
+      } else {
+        uploadContainer.style.display = "none";
+        if (fileInput) fileInput.value = "";
+        if (previewBox) previewBox.style.display = "none";
+        if (previewImg) previewImg.src = "";
+        if (filenameLabel) filenameLabel.textContent = "";
+      }
+    });
+  }
+
+  if (fileInput) {
+    fileInput.addEventListener("change", () => {
+      if (fileInput.files && fileInput.files[0]) {
+        const file = fileInput.files[0];
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+          if (previewImg) previewImg.src = ev.target.result;
+          if (filenameLabel) filenameLabel.textContent = file.name;
+          if (previewBox) previewBox.style.display = "flex";
+          if (screenshotCheck) screenshotCheck.checked = true;
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+  }
+
   // Form submit
   const form = document.getElementById("form-report");
   form.addEventListener("submit", async (e) => {
@@ -458,7 +499,7 @@ function setupReportView() {
     const pincode = areaSelect.value;
     const note = document.getElementById("report-note").value.trim();
     const amountVal = document.getElementById("report-amount").value;
-    const hasScreenshot = document.getElementById("report-has-screenshot").checked;
+    const hasScreenshot = (screenshotCheck && screenshotCheck.checked) || Boolean(fileInput && fileInput.files && fileInput.files.length > 0);
 
     if (!idVal || !pincode) {
       alert("Please enter the identifier and select your area.");
@@ -484,9 +525,9 @@ function setupReportView() {
       occurredAt = d.toISOString();
     }
 
-
+    const reportUid = "REP-" + Math.random().toString(36).substring(2, 10).toUpperCase();
     const payload = {
-      report_id: "REP-" + Math.random().toString(36).substring(2, 10).toUpperCase(),
+      report_id: reportUid,
       identifier_type: idType,
       identifier_value: idVal,
       channel: reportSelectedChannel,
@@ -515,7 +556,14 @@ function setupReportView() {
         form.style.display = "none";
         const successBox = document.getElementById("report-success-container");
         successBox.style.display = "block";
-        document.getElementById("res-case-id").textContent = data.case_id || "RECORDED";
+        const reportIdEl = document.getElementById("res-report-id");
+        if (reportIdEl) {
+          reportIdEl.textContent = data.report_id || payload.report_id;
+        }
+        const caseIdEl = document.getElementById("res-case-id");
+        if (caseIdEl) {
+          caseIdEl.textContent = data.case_id || "RECORDED";
+        }
       } else {
         const err = await res.json().catch(() => ({}));
         let msg = "Submission failed. Please check your inputs.";
@@ -538,6 +586,30 @@ function setupReportView() {
   document.getElementById("btn-report-another").addEventListener("click", () => {
     form.reset();
     reportTypeManuallySelected = false;
+    if (uploadContainer) uploadContainer.style.display = "none";
+    if (fileInput) fileInput.value = "";
+    if (previewBox) previewBox.style.display = "none";
+    if (previewImg) previewImg.src = "";
+    if (filenameLabel) filenameLabel.textContent = "";
+    const reportIdEl = document.getElementById("res-report-id");
+    if (reportIdEl) reportIdEl.textContent = "";
+    const caseIdEl = document.getElementById("res-case-id");
+    if (caseIdEl) caseIdEl.textContent = "";
+
+    // Reset default grid and chip selections
+    reportSelectedChannel = "phone call";
+    document.querySelectorAll("#grid-channels .select-card").forEach((c, idx) => {
+      c.classList.toggle("active", idx === 0);
+    });
+    reportSelectedScamType = "digital-arrest";
+    document.querySelectorAll("#grid-scam-types .select-card").forEach((c, idx) => {
+      c.classList.toggle("active", idx === 0);
+    });
+    reportSelectedTime = "now";
+    document.querySelectorAll("#report-time-chips .chip").forEach((c, idx) => {
+      c.classList.toggle("active", idx === 0);
+    });
+
     form.style.display = "block";
     document.getElementById("report-success-container").style.display = "none";
   });

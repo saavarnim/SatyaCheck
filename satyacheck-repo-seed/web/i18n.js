@@ -110,7 +110,11 @@ export const translations = {
     // Success Screen
     reportSuccessTitle: "Report Received",
     reportSuccessMessage: "Thank you for alerting your community. Your report has been anonymously verified and added to the sightings graph.",
-    caseRefLabel: "Case Reference",
+    reportRefLabel: "Report Submission ID",
+    reportRefSub: "Unique tracking reference generated for this report submission",
+    caseRefLabel: "Community Cluster Case ID",
+    caseRefSub: "Cryptographic cluster grouping all reports for this specific number or account",
+    attachScreenshotTitle: "Attach Screenshot (Optional)",
     reportAnonNote: "Your report is anonymous. Only salted cryptographic tokens and pincode-level location are stored.",
     notPoliceComplaint: "Important: SatyaCheck is a community intelligence map, NOT a police FIR or formal complaint.",
 
@@ -292,7 +296,11 @@ export const translations = {
     // Success Screen
     reportSuccessTitle: "रिपोर्ट प्राप्त हुई",
     reportSuccessMessage: "समुदाय को सतर्क करने के लिए धन्यवाद। आपकी रिपोर्ट गुमनाम रूप से सत्यापित कर ली गई है।",
-    caseRefLabel: "केस संदर्भ",
+    reportRefLabel: "रिपोर्ट सबमिशन आईडी",
+    reportRefSub: "इस विशिष्ट रिपोर्ट सबमिशन के लिए उत्पन्न अद्वितीय संदर्भ",
+    caseRefLabel: "सामुदायिक क्लस्टर केस आईडी",
+    caseRefSub: "इस विशिष्ट नंबर या खाते की सभी रिपोर्टों का क्रिप्टोग्राफिक समूह",
+    attachScreenshotTitle: "स्क्रीनशॉट संलग्न करें (वैकल्पिक)",
     reportAnonNote: "आपकी रिपोर्ट पूर्णतः गोपनीय है। केवल सुरक्षित क्रिप्टोग्राफिक टोकन और पिनकोड स्तर का स्थान संग्रहीत किया जाता है।",
     notPoliceComplaint: "महत्वपूर्ण: सत्यचेक एक सामुदायिक खुफिया प्लेटफॉर्म है, यह पुलिस एफआईआर या औपचारिक शिकायत नहीं है।",
 

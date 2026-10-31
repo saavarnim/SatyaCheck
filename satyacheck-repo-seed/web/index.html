@@ -178,6 +178,17 @@
               <input type="checkbox" id="report-has-screenshot" style="width: 18px; height: 18px;">
               <span data-i18n="hasScreenshotLabel">I took a screenshot for evidence</span>
             </label>
+            <div id="screenshot-upload-container" style="display: none; margin-top: 12px; padding: 14px; background: #f8fafc; border: 1px dashed var(--border); border-radius: var(--radius-md);">
+              <label class="form-label" style="font-size: 0.88rem; margin-bottom: 6px;">📷 <span data-i18n="attachScreenshotTitle">Attach Screenshot (Optional)</span></label>
+              <input type="file" id="report-screenshot-file" accept="image/*" class="form-input" style="padding: 8px; font-size: 0.88rem; background: #fff;">
+              <div id="screenshot-preview-box" style="display: none; margin-top: 10px; align-items: center; gap: 12px;">
+                <img id="screenshot-preview-img" style="max-height: 80px; max-width: 120px; border-radius: 6px; border: 1px solid var(--border); object-fit: cover;" alt="Preview">
+                <div style="font-size: 0.82rem; color: var(--text-muted); text-align: left;">
+                  <span id="screenshot-filename" style="font-weight: 600; color: var(--text-main); display: block;"></span>
+                  <span style="color: var(--primary); font-size: 0.8rem;">✓ Evidence verified on-device. Preserved privately under zero-PII policy.</span>
+                </div>
+              </div>
+            </div>
           </div>
 
           <button type="submit" id="btn-submit-report" class="btn btn-primary">
@@ -190,8 +201,17 @@
           <div style="font-size: 3rem; margin-bottom: 12px;">✅</div>
           <h3 style="font-size: 1.4rem; font-weight: 700; margin-bottom: 8px;" data-i18n="reportSuccessTitle">Report Received</h3>
           <p style="color: var(--text-muted); margin-bottom: 16px;" data-i18n="reportSuccessMessage">Thank you for alerting your community.</p>
-          <div style="background: #f8fafc; border: 1px solid var(--border); border-radius: var(--radius-md); padding: 14px; margin-bottom: 16px; font-family: monospace; font-size: 1.1rem; font-weight: 700;">
-            <span data-i18n="caseRefLabel">Case Reference</span>: <span id="res-case-id" style="color: var(--primary);"></span>
+          <div style="background: #f8fafc; border: 1px solid var(--border); border-radius: var(--radius-md); padding: 16px; margin-bottom: 16px; text-align: left;">
+            <div style="margin-bottom: 12px;">
+              <span style="font-size: 0.85rem; color: var(--text-muted); display: block;" data-i18n="reportRefLabel">Report Submission ID</span>
+              <span id="res-report-id" style="font-family: monospace; font-size: 1.25rem; font-weight: 800; color: var(--primary);"></span>
+              <span style="display: block; font-size: 0.78rem; color: #64748b; margin-top: 2px;" data-i18n="reportRefSub">Unique tracking reference generated for this report submission</span>
+            </div>
+            <div style="border-top: 1px solid var(--border); padding-top: 10px;">
+              <span style="font-size: 0.85rem; color: var(--text-muted); display: block;" data-i18n="caseRefLabel">Community Cluster Case ID</span>
+              <span id="res-case-id" style="font-family: monospace; font-size: 1.05rem; font-weight: 700; color: var(--text-main);"></span>
+              <span style="display: block; font-size: 0.78rem; color: #64748b; margin-top: 2px;" data-i18n="caseRefSub">Cryptographic cluster grouping all reports for this specific number or account</span>
+            </div>
           </div>
           <p style="font-size: 0.85rem; color: #475569; margin-bottom: 16px;" data-i18n="reportAnonNote">Your report is anonymous. Only salted cryptographic tokens and pincode-level location are stored.</p>
           <div class="helpline-banner" style="text-align: left;">
