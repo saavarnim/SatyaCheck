@@ -28,7 +28,7 @@ def main() -> None:
     group = parser.add_mutually_exclusive_group(required=True)
     group.add_argument("--minutes", type=int, help="Minutes until expiry")
     group.add_argument("--days", type=int, help="Days until expiry")
-    parser.add_argument("-o", "--output", default=None,
+    parser.add_argument("-o", "--output", "--out", default=None,
                         help="Output file (default: stdout)")
     args = parser.parse_args()
 

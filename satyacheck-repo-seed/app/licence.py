@@ -256,8 +256,13 @@ def refresh_cache(force: bool = False):
 
 def _get_public_key_bytes() -> Optional[bytes]:
     """Return the 32-byte public key or None."""
-    # env/config: base64-encoded
-    pk_str = LICENCE_PUBLIC_KEY
+    pk_str = os.getenv("LICENCE_PUBLIC_KEY") or os.getenv("LICENSE_PUBLIC_KEY") or LICENCE_PUBLIC_KEY
+    if not pk_str:
+        try:
+            import app.licence_pubkey as lpk
+            pk_str = getattr(lpk, "PUBLIC_KEY_B64", "")
+        except ImportError:
+            pass
     if not pk_str:
         return None
     try:
