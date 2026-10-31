@@ -1,0 +1,14 @@
+.env
+*.db
+*.sqlite3
+__pycache__/
+*.pyc
+.venv/
+venv/
+.pytest_cache/
+private.key
+*.private
+.satyacheck/
+licence_*.json
+!licence.example.json
+.DS_Store

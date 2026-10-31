@@ -1,0 +1,116 @@
+[
+ {
+  "type": "phone",
+  "value": "1930",
+  "org": "National Cybercrime Helpline",
+  "source": "seed"
+ },
+ {
+  "type": "phone",
+  "value": "1909",
+  "org": "TRAI Do Not Disturb",
+  "source": "seed"
+ },
+ {
+  "type": "phone",
+  "value": "1800 1600",
+  "org": "HDFC Bank customer care",
+  "source": "seed"
+ },
+ {
+  "type": "phone",
+  "value": "1800 2600",
+  "org": "HDFC Bank customer care",
+  "source": "seed"
+ },
+ {
+  "type": "phone",
+  "value": "1800 1080",
+  "org": "ICICI Bank customer care",
+  "source": "seed"
+ },
+ {
+  "type": "phone",
+  "value": "1800 1234",
+  "org": "State Bank of India customer care",
+  "source": "seed"
+ },
+ {
+  "type": "phone",
+  "value": "1800 2100",
+  "org": "State Bank of India customer care",
+  "source": "seed"
+ },
+ {
+  "type": "phone",
+  "value": "1860 419 5555",
+  "org": "Axis Bank customer care",
+  "source": "seed"
+ },
+ {
+  "type": "phone",
+  "value": "1860 266 2666",
+  "org": "Kotak Mahindra Bank customer care",
+  "source": "seed"
+ },
+ {
+  "type": "sender_id",
+  "value": "HDFCBK",
+  "org": "HDFC Bank SMS sender",
+  "source": "seed"
+ },
+ {
+  "type": "sender_id",
+  "value": "ICICIB",
+  "org": "ICICI Bank SMS sender",
+  "source": "seed"
+ },
+ {
+  "type": "sender_id",
+  "value": "SBIINB",
+  "org": "State Bank of India SMS sender",
+  "source": "seed"
+ },
+ {
+  "type": "sender_id",
+  "value": "AXISBK",
+  "org": "Axis Bank SMS sender",
+  "source": "seed"
+ },
+ {
+  "type": "sender_id",
+  "value": "KOTAKB",
+  "org": "Kotak Mahindra Bank SMS sender",
+  "source": "seed"
+ },
+ {
+  "type": "url",
+  "value": "https://cybercrime.gov.in",
+  "org": "National Cyber Crime Reporting Portal",
+  "source": "seed"
+ },
+ {
+  "type": "url",
+  "value": "https://sancharsaathi.gov.in",
+  "org": "Sanchar Saathi",
+  "source": "seed"
+ },
+ {
+  "type": "phone",
+  "value": "+91 80 4100 2233",
+  "org": "Fresh Bakes, Indiranagar (made-up test entry)",
+  "source": "demo"
+ },
+ {
+  "type": "phone",
+  "value": "+91 80 2553 0190",
+  "org": "Koramangala Pharmacy (made-up test entry)",
+  "source": "demo"
+ },
+ {
+  "type": "upi",
+  "value": "freshbakes@okaxis",
+  "org": "Fresh Bakes (made-up test entry)",
+  "source": "demo"
+ }
+]
