@@ -174,21 +174,13 @@
           <div class="form-group">
             <label class="form-label" data-i18n="step7Loss">Did you lose money? (Optional)</label>
             <input type="number" id="report-amount" class="form-input" placeholder="Amount in ₹ INR (if any)" min="0" step="1">
-            <label style="display: flex; align-items: center; gap: 8px; margin-top: 10px; cursor: pointer; font-size: 0.9rem;">
-              <input type="checkbox" id="report-has-screenshot" style="width: 18px; height: 18px;">
-              <span data-i18n="hasScreenshotLabel">I took a screenshot for evidence</span>
-            </label>
-            <div id="screenshot-upload-container" style="display: none; margin-top: 12px; padding: 14px; background: #f8fafc; border: 1px dashed var(--border); border-radius: var(--radius-md);">
-              <label class="form-label" style="font-size: 0.88rem; margin-bottom: 6px;">📷 <span data-i18n="attachScreenshotTitle">Attach Screenshot (Optional)</span></label>
-              <input type="file" id="report-screenshot-file" accept="image/*" class="form-input" style="padding: 8px; font-size: 0.88rem; background: #fff;">
-              <div id="screenshot-preview-box" style="display: none; margin-top: 10px; align-items: center; gap: 12px;">
-                <img id="screenshot-preview-img" style="max-height: 80px; max-width: 120px; border-radius: 6px; border: 1px solid var(--border); object-fit: cover;" alt="Preview">
-                <div style="font-size: 0.82rem; color: var(--text-muted); text-align: left;">
-                  <span id="screenshot-filename" style="font-weight: 600; color: var(--text-main); display: block;"></span>
-                  <span style="color: var(--primary); font-size: 0.8rem;">✓ Evidence verified on-device. Preserved privately under zero-PII policy.</span>
-                </div>
+            <label style="display: flex; align-items: flex-start; gap: 10px; margin-top: 14px; cursor: pointer; font-size: 0.9rem;">
+              <input type="checkbox" id="report-has-screenshot" style="width: 18px; height: 18px; margin-top: 2px;">
+              <div>
+                <span data-i18n="hasScreenshotLabel" style="font-weight: 500;">I have a screenshot / evidence saved</span>
+                <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 3px;" data-i18n="hasScreenshotHint">Keep it safe on your device for cyber helpline 1930 reporting. For your privacy, SatyaCheck never collects images.</p>
               </div>
-            </div>
+            </label>
           </div>
 
           <button type="submit" id="btn-submit-report" class="btn btn-primary">
@@ -394,6 +386,6 @@
   <!-- Pinned Leaflet JS CDN -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
   <!-- Application JS -->
-  <script type="module" src="app.js"></script>
+  <script type="module" src="app.js?v=3"></script>
 </body>
 </html>

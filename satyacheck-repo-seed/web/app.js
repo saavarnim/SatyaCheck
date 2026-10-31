@@ -218,15 +218,19 @@ function setupCheckView() {
     }
   });
 
+  let isChecking = false;
+
   async function executeCheck() {
+    if (isChecking) return;
     const val = input.value.trim();
     if (!val) return;
 
     let type = checkSelectedType;
     if (type === "auto") type = detectIdentifierType(val);
 
+    isChecking = true;
     btn.disabled = true;
-    btn.textContent = "...";
+    btn.innerHTML = `⏳ <span style="margin-left: 6px;">${t("checkingBtn")}</span>`;
 
     try {
       const res = await apiFetch(`/lookup?type=${type}&value=${encodeURIComponent(val)}`);
@@ -235,8 +239,9 @@ function setupCheckView() {
     } catch (e) {
       alert("Network error checking identifier.");
     } finally {
+      isChecking = false;
       btn.disabled = false;
-      renderTranslations();
+      btn.innerHTML = `🔍 <span data-i18n="checkButton" style="margin-left: 6px;">${t("checkButton")}</span>`;
     }
   }
 
@@ -448,46 +453,8 @@ function setupReportView() {
     return null;
   }
 
-  // Screenshot attachment and preview handling
+  // Evidence checkbox
   const screenshotCheck = document.getElementById("report-has-screenshot");
-  const uploadContainer = document.getElementById("screenshot-upload-container");
-  const fileInput = document.getElementById("report-screenshot-file");
-  const previewBox = document.getElementById("screenshot-preview-box");
-  const previewImg = document.getElementById("screenshot-preview-img");
-  const filenameLabel = document.getElementById("screenshot-filename");
-
-  if (screenshotCheck && uploadContainer) {
-    screenshotCheck.addEventListener("change", () => {
-      if (screenshotCheck.checked) {
-        uploadContainer.style.display = "block";
-        if (fileInput && (!fileInput.files || fileInput.files.length === 0)) {
-          fileInput.click();
-        }
-      } else {
-        uploadContainer.style.display = "none";
-        if (fileInput) fileInput.value = "";
-        if (previewBox) previewBox.style.display = "none";
-        if (previewImg) previewImg.src = "";
-        if (filenameLabel) filenameLabel.textContent = "";
-      }
-    });
-  }
-
-  if (fileInput) {
-    fileInput.addEventListener("change", () => {
-      if (fileInput.files && fileInput.files[0]) {
-        const file = fileInput.files[0];
-        const reader = new FileReader();
-        reader.onload = (ev) => {
-          if (previewImg) previewImg.src = ev.target.result;
-          if (filenameLabel) filenameLabel.textContent = file.name;
-          if (previewBox) previewBox.style.display = "flex";
-          if (screenshotCheck) screenshotCheck.checked = true;
-        };
-        reader.readAsDataURL(file);
-      }
-    });
-  }
 
   // Form submit
   const form = document.getElementById("form-report");
@@ -499,7 +466,7 @@ function setupReportView() {
     const pincode = areaSelect.value;
     const note = document.getElementById("report-note").value.trim();
     const amountVal = document.getElementById("report-amount").value;
-    const hasScreenshot = (screenshotCheck && screenshotCheck.checked) || Boolean(fileInput && fileInput.files && fileInput.files.length > 0);
+    const hasScreenshot = Boolean(screenshotCheck && screenshotCheck.checked);
 
     if (!idVal || !pincode) {
       alert("Please enter the identifier and select your area.");
@@ -586,11 +553,6 @@ function setupReportView() {
   document.getElementById("btn-report-another").addEventListener("click", () => {
     form.reset();
     reportTypeManuallySelected = false;
-    if (uploadContainer) uploadContainer.style.display = "none";
-    if (fileInput) fileInput.value = "";
-    if (previewBox) previewBox.style.display = "none";
-    if (previewImg) previewImg.src = "";
-    if (filenameLabel) filenameLabel.textContent = "";
     const reportIdEl = document.getElementById("res-report-id");
     if (reportIdEl) reportIdEl.textContent = "";
     const caseIdEl = document.getElementById("res-case-id");
