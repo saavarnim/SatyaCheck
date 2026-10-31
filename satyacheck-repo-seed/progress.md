@@ -25,8 +25,8 @@
 | **T3b** | Verdict + masking (pure functions) | **DONE** | Verdict precedence, unmasking at 3 cohorts |
 | **T3c** | HMAC tokens + rate limit | **DONE** | HMAC 16-hex, IPv4/v6 prefix, sliding window |
 | **T3d** | Wire trust + verdict + identity into routes | **DONE** | Integration in `app/routes_reports.py` |
-| **T4** | Threshold tuning against `tools/fakegen.py` | **NEXT** | `app/config.py` constants |
-| **T5** | Map & alerts APIs (`routes_map.py`) | **Pending** | GET /map, GET /alerts (SPIKE, NEW_TYPE) |
+| **T4** | Threshold tuning & wording privacy audit | **DONE** | `app/config.py` constants & `test_wording.py` |
+| **T5** | Map & alerts APIs (`routes_map.py`) | **NEXT** | GET /map, GET /alerts (SPIKE, NEW_TYPE) |
 | **T6** | Licence system (cryptography, middleware, cache) | **DONE** | 23/23 tests pass |
 | **T6b** | Public HTTPS deployment | **Pending** | Render / fly / Railway |
 | **T7** | Challenges & admin routes | **Pending** | POST /challenges, GET/POST admin |
@@ -119,6 +119,15 @@
     - 3 independent reporters on different networks with distinct notes produce 3 cohorts: reaches `KNOWN_SCAM` and unmasks the display_value.
     - 1 reporter submitting 6 reports contributes 1 voice and 1 cohort.
 - **Test Status:** 123/123 pytest tests passing.
-- **Next Task:** T4 (Tune constants against `tools/fakegen.py`).
+
+### [T4] Threshold Tuning & Prohibited Wording Audit (2026-10-31)
+- **Files Modified/Created:** `tests/test_wording.py`, `tasks/A.md`, `status/A.md`, `progress.md`
+- **Actions:**
+  - Audited `app/config.py` constants (`NOTE_MIN_LEN=15`, `SIM_THRESHOLD=0.80`, `WEIGHT_NOTE=1.0`, `WEIGHT_NO_NOTE=0.9`, `KNOWN_MIN_COHORTS=3`, `KNOWN_MIN_SCORE=2.5`, `UNMASK_MIN=3`, `RATE_PER_HOUR=30`, `RATE_PER_INDICATOR_HOUR=10`, `MAP_DEFAULT_DAYS=7`, `MAP_DEFAULT_RADIUS_KM=2.0`). All verified consistent with specification.
+  - Implemented `tests/test_wording.py` enforcing strict privacy policy rule 7 from `docs/06-privacy.md`:
+    - Scans all Python files under `app/` to ensure prohibited words (`scammer`, `fraudster`, `criminal`, `culprit`) never appear in code.
+    - Tests live API responses (`/health`, `/lookup`) ensuring prohibited terms are never returned.
+- **Test Status:** 125/125 pytest tests passing.
+- **Next Task:** T5 (Map & Alerts APIs: `GET /map` and `GET /alerts` in `app/routes_map.py`).
 
 ---
