@@ -150,8 +150,9 @@ def licence_client(test_db, monkeypatch, keypair):
     monkeypatch.setattr(db_mod, "engine", test_engine)
     monkeypatch.setattr(db_mod, "SessionLocal", TestingSession)
 
-    # Skip seed (verified.json has a field mismatch not related to licence)
-    monkeypatch.setattr(db_mod, "_seed", lambda: None)
+    # Skip seed if present
+    if hasattr(db_mod, "_seed"):
+        monkeypatch.setattr(db_mod, "_seed", lambda: None)
 
     # Create licence_state table in the test DB
     LicenceState.__table__.create(bind=test_engine, checkfirst=True)
@@ -209,9 +210,10 @@ class TestExpiredGives403:
 
     def test_no_licence_protected_403(self, licence_client):
         """No licence loaded → protected path returns 403."""
-        r = licence_client.get("/reports")
-        assert r.status_code == 403
-        assert r.json()["error"] == "LICENSE_EXPIRED"
+        for prefix in ["/reports", "/lookup", "/map", "/alerts", "/admin", "/challenges"]:
+            r = licence_client.get(prefix)
+            assert r.status_code == 403, f"Expected 403 for {prefix}, got {r.status_code}"
+            assert r.json()["error"] == "LICENSE_EXPIRED"
 
     def test_no_licence_health_200(self, licence_client):
         """No licence → /health still works."""
@@ -222,7 +224,12 @@ class TestExpiredGives403:
         """/license GET works when expired."""
         r = licence_client.get("/license")
         assert r.status_code == 200
-        assert r.json()["status"] == "EXPIRED"
+        data = r.json()
+        assert data["status"] == "EXPIRED"
+        assert "licensee" in data
+        assert "expires_at" in data
+        assert "seconds_remaining" in data
+        assert data["seconds_remaining"] == 0
 
     def test_no_licence_post_license_accessible(self, licence_client):
         """/license POST is accessible when expired (may return 400 for bad body)."""
@@ -408,3 +415,42 @@ class TestAlreadyExpired400:
         r = licence_client.post("/license", json=body)
         assert r.status_code == 400
         assert r.json()["error"] == "ALREADY_EXPIRED"
+
+
+class TestLicenseBootstrap:
+    """LICENSE_BOOTSTRAP env var loads a licence on first boot."""
+
+    def test_bootstrap_licence_loads_on_boot(self, licence_client, monkeypatch, keypair):
+        import app.licence as lm
+        lm.reset_cache()
+        lm._bootstrapped = False
+
+        priv, pub = keypair
+        now = licence_client._fake_now[0]
+        expires_at = (now + timedelta(days=10)).isoformat()
+        sig = sign("Bootstrap Licensee", expires_at, priv)
+        payload = json.dumps({
+            "licensee": "Bootstrap Licensee",
+            "expires_at": expires_at,
+            "signature": sig,
+        })
+
+        monkeypatch.setenv("LICENSE_BOOTSTRAP", payload)
+
+        # Clear existing licence row in DB
+        db = lm.SessionLocal()
+        try:
+            db.query(lm.LicenceState).delete()
+            db.commit()
+        finally:
+            db.close()
+
+        # Trigger bootstrap load
+        lm.init_licence()
+
+        r = licence_client.get("/license")
+        assert r.status_code == 200
+        data = r.json()
+        assert data["status"] == "ACTIVE"
+        assert data["licensee"] == "Bootstrap Licensee"
+

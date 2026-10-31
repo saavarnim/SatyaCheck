@@ -189,7 +189,10 @@ def _save_row(licensee: str, expires_at_dt: datetime, signature: str,
         row.expires_at = expires_at_dt
         row.signature = signature
         if last_seen is not None:
-            row.last_seen_server_time = last_seen
+            dt_utc = _ensure_utc(last_seen)
+            curr = _ensure_utc(row.last_seen_server_time)
+            if curr is None or (dt_utc is not None and dt_utc > curr):
+                row.last_seen_server_time = dt_utc
         db.commit()
     finally:
         db.close()
@@ -216,11 +219,31 @@ def _update_last_seen(dt: datetime):
 
 
 # ---------------------------------------------------------------------------
-# Refresh cache from DB
+# Refresh cache from DB + bootstrap
 # ---------------------------------------------------------------------------
+
+_bootstrapped = False
+
+
+def _bootstrap_if_needed():
+    global _bootstrapped
+    if _bootstrapped:
+        return
+    _bootstrapped = True
+    bootstrap = os.getenv("LICENSE_BOOTSTRAP", "")
+    if bootstrap:
+        try:
+            data = json.loads(bootstrap)
+            existing = _load_row()
+            if existing is None or existing.licensee is None:
+                store_licence(data["licensee"], data["expires_at"], data["signature"])
+        except Exception:
+            pass
+
 
 def refresh_cache(force: bool = False):
     """Reload licence state from DB into the in-memory cache."""
+    _bootstrap_if_needed()
     if not force and not _cache.is_stale():
         return
     row = _load_row()
@@ -267,13 +290,9 @@ def is_allowed(path: str) -> bool:
 
     now = clock.now()
 
-    # Persist last_seen (at most every LAST_SEEN_WRITE_INTERVAL_S)
-    _maybe_persist_last_seen(now)
-
-    # Clock rollback check
+    # Clock rollback check: if now < last_seen - tolerance, treat as expired
     if _cache.last_seen_server_time is not None:
         if now < _cache.last_seen_server_time:
-            from datetime import timedelta
             drift = (_cache.last_seen_server_time - now).total_seconds()
             if drift > CLOCK_TOLERANCE_S:
                 return False
@@ -281,6 +300,9 @@ def is_allowed(path: str) -> bool:
     # Expiry check
     if now >= _cache.expires_at:
         return False
+
+    # Persist last_seen (at most every LAST_SEEN_WRITE_INTERVAL_S, always keep max)
+    _maybe_persist_last_seen(now)
 
     return True
 
@@ -290,7 +312,8 @@ def _maybe_persist_last_seen(now: datetime):
     elapsed = _time.monotonic() - _cache.last_persist
     if elapsed >= LAST_SEEN_WRITE_INTERVAL_S:
         _update_last_seen(now)
-        _cache.last_seen_server_time = now
+        if _cache.last_seen_server_time is None or now > _cache.last_seen_server_time:
+            _cache.last_seen_server_time = now
         _cache.last_persist = _time.monotonic()
 
 
@@ -357,9 +380,10 @@ def get_licence_status() -> dict:
     remaining = (_cache.expires_at - now).total_seconds()
     # Clock rollback → treat as expired
     if _cache.last_seen_server_time is not None:
-        drift = (_cache.last_seen_server_time - now).total_seconds()
-        if drift > CLOCK_TOLERANCE_S:
-            remaining = 0
+        if now < _cache.last_seen_server_time:
+            drift = (_cache.last_seen_server_time - now).total_seconds()
+            if drift > CLOCK_TOLERANCE_S:
+                remaining = 0
 
     status = "ACTIVE" if remaining > 0 else "EXPIRED"
     return {
@@ -377,18 +401,9 @@ def get_licence_status() -> dict:
 def init_licence():
     """Create table, load bootstrap licence if present, populate cache."""
     _ensure_table()
-
-    # LICENSE_BOOTSTRAP: env var with licence JSON string
-    bootstrap = os.getenv("LICENSE_BOOTSTRAP", "")
-    if bootstrap:
-        try:
-            data = json.loads(bootstrap)
-            existing = _load_row()
-            if existing is None or existing.licensee is None:
-                store_licence(data["licensee"], data["expires_at"], data["signature"])
-        except Exception:
-            pass  # silently ignore bad bootstrap
-
+    global _bootstrapped
+    _bootstrapped = False
+    _bootstrap_if_needed()
     refresh_cache(force=True)
 
 

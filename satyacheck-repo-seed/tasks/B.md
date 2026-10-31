@@ -2,7 +2,7 @@
 Owner of: app/licence.py app/licence_pubkey.py app/routes_licence.py app/routes_map.py app/routes_challenges.py tools/* web/* README.md render config tests/test_licence.py tests/test_map_alerts.py tests/test_challenges.py
 Start with T6 while A does T0/T1 (licence needs nothing from A except the main.py hook that T0 adds).
 
-- [ ] **T6 Licence** (start immediately)
+- [x] **T6 Licence** (start immediately)
   Reads: docs/05-licence.md. Files: app/licence.py app/routes_licence.py tools/gen_keys.py tools/sign_licence.py tests/test_licence.py (use a stand-in test app until A pushes T0, then rebase).
   Note: A (the signer) runs gen_keys.py and commits `app/licence_pubkey.py`. B only needs the public key.
   Done when: `pytest tests/test_licence.py -q` passes.
