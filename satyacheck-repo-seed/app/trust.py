@@ -7,6 +7,7 @@ from datetime import datetime
 from typing import Optional, Set
 
 from app.config import (
+    MAX_LOW_EFFORT_COHORTS,
     NOTE_MIN_LEN,
     SIM_THRESHOLD,
     WEIGHT_NOTE,
@@ -166,31 +167,42 @@ def compute_indicator_trust(events: list[EventRow]) -> IndicatorTrust:
         cohort_groups.setdefault(root, []).append(voices[idx])
 
     # 3. Calculate weights and TrustedUnits per cohort
-    cohort_units: list[TrustedUnit] = []
-    total_score = 0.0
+    # Separate into substantive (has a long note) and low-effort cohorts.
+    # At most MAX_LOW_EFFORT_COHORTS low-effort cohorts count toward the verdict.
+    substantive: list[tuple[list[_Voice], TrustedUnit]] = []
+    low_effort: list[tuple[list[_Voice], TrustedUnit]] = []
 
     for cohort_voices in cohort_groups.values():
-        # Weight per cohort
+        has_long_note = any(len(v.longest_note) >= NOTE_MIN_LEN for v in cohort_voices)
+        earliest_voice = min(cohort_voices, key=lambda v: v.earliest_event.occurred_at)
+        unit = TrustedUnit(
+            indicator_id=earliest_voice.indicator_id,
+            occurred_at=earliest_voice.earliest_event.occurred_at,
+            pincode=earliest_voice.earliest_event.pincode,
+            scam_type=earliest_voice.earliest_event.scam_type,
+            channel=earliest_voice.earliest_event.channel,
+        )
+        if has_long_note:
+            substantive.append((cohort_voices, unit))
+        else:
+            low_effort.append((cohort_voices, unit))
+
+    # Cap how many low-effort cohorts count toward the verdict
+    counted_low_effort = low_effort[:MAX_LOW_EFFORT_COHORTS]
+    counted_cohorts = substantive + counted_low_effort
+
+    total_score = 0.0
+    cohort_units: list[TrustedUnit] = []
+    for cohort_voices, unit in counted_cohorts:
         has_long_note = any(len(v.longest_note) >= NOTE_MIN_LEN for v in cohort_voices)
         total_score += WEIGHT_NOTE if has_long_note else WEIGHT_NO_NOTE
-
-        # Earliest voice in cohort
-        earliest_voice = min(cohort_voices, key=lambda v: v.earliest_event.occurred_at)
-        cohort_units.append(
-            TrustedUnit(
-                indicator_id=earliest_voice.indicator_id,
-                occurred_at=earliest_voice.earliest_event.occurred_at,
-                pincode=earliest_voice.earliest_event.pincode,
-                scam_type=earliest_voice.earliest_event.scam_type,
-                channel=earliest_voice.earliest_event.channel,
-            )
-        )
+        cohort_units.append(unit)
 
     # Sort units by occurred_at asc
     cohort_units.sort(key=lambda u: u.occurred_at)
 
     return IndicatorTrust(
-        cohort_count=len(cohort_groups),
+        cohort_count=len(counted_cohorts),
         score=round(total_score, 2),
         units=cohort_units,
     )

@@ -21,6 +21,7 @@ WEIGHT_NO_NOTE: float = 0.9      # cohort weight otherwise
 KNOWN_MIN_COHORTS: int = 3       # minimum cohorts to reach KNOWN_SCAM
 KNOWN_MIN_SCORE: float = 2.5     # minimum score to reach KNOWN_SCAM
 UNMASK_MIN: int = 3              # cohorts required to unmask display_value
+MAX_LOW_EFFORT_COHORTS: int = 1  # at most this many low-effort (no long note) cohorts count toward verdict
 
 # ── Rate-limit constants (docs/03) ───────────────────────────────────────────
 RATE_PER_HOUR: int = 30          # max submissions/hour per reporter_token
