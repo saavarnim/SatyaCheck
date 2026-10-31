@@ -1,1 +1,379 @@
-<!DOCTYPE html><html><body><h1>SatyaCheck</h1></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <title>SatyaCheck – Community Scam Map & Verification</title>
+  <meta name="description" content="Privacy-first community platform to check and report suspicious phone numbers, UPI IDs, links, and SMS headers.">
+  <link rel="stylesheet" href="app.css">
+  <!-- Pinned Leaflet 1.9.4 CDN per docs/07-frontend.md -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+</head>
+<body>
+
+  <!-- ── Header ─────────────────────────────────────────────────────────── -->
+  <header class="site-header">
+    <div class="header-container">
+      <a href="#/check" class="brand" id="brand-link">
+        <div class="brand-logo" aria-hidden="true">✓</div>
+        <div class="brand-text">
+          <h1 id="txt-app-title">SatyaCheck</h1>
+          <p id="txt-app-tagline">Community Scam Map</p>
+        </div>
+      </a>
+
+      <!-- Desktop Navigation -->
+      <nav class="desktop-nav" aria-label="Desktop Primary Navigation">
+        <a href="#/check" id="nav-d-check" class="active">🔍 <span data-i18n="navCheck">Check</span></a>
+        <a href="#/report" id="nav-d-report">📢 <span data-i18n="navReport">Report</span></a>
+        <a href="#/map" id="nav-d-map">🗺️ <span data-i18n="navMap">Map</span></a>
+        <a href="#/alerts" id="nav-d-alerts">⚠️ <span data-i18n="navAlerts">Alerts</span></a>
+        <a href="#/about" id="nav-d-about">ℹ️ <span data-i18n="navAbout">About</span></a>
+      </nav>
+
+      <div class="header-actions">
+        <button id="btn-lang-toggle" class="lang-btn" aria-label="Switch Language / भाषा बदलें">
+          🌐 <span id="txt-curr-lang">हिन्दी</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ── Main Content Area ──────────────────────────────────────────────── -->
+  <main class="main-container">
+
+    <!-- 1. CHECK VIEW -->
+    <section id="view-check" class="view-section active">
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title" data-i18n="checkHeading">Check Before You Trust</h2>
+          <p class="card-subtitle" data-i18n="checkSubheading">Instant community-verified check for unknown phone numbers, UPI IDs, links, or SMS headers.</p>
+        </div>
+
+        <form id="form-check" onsubmit="return false;">
+          <div class="search-box-wrapper">
+            <input type="text" id="input-check-value" class="search-input" data-i18n-ph="checkPlaceholder" placeholder="Paste a number, UPI ID, link or SMS sender..." autocomplete="off" spellcheck="false" required>
+          </div>
+
+          <!-- Type filter chips -->
+          <div class="chips-row" id="check-type-chips" role="radiogroup" aria-label="Identifier Type">
+            <button type="button" class="chip active" data-type="auto" id="chip-auto"><span data-i18n="typeAuto">Auto-detect</span></button>
+            <button type="button" class="chip" data-type="phone" id="chip-phone"><span data-i18n="typePhone">Phone</span></button>
+            <button type="button" class="chip" data-type="upi" id="chip-upi"><span data-i18n="typeUpi">UPI ID</span></button>
+            <button type="button" class="chip" data-type="url" id="chip-url"><span data-i18n="typeUrl">Link / URL</span></button>
+            <button type="button" class="chip" data-type="sender_id" id="chip-sender"><span data-i18n="typeSender">SMS Sender</span></button>
+          </div>
+
+          <button type="submit" id="btn-submit-check" class="btn btn-primary">
+            🔍 <span data-i18n="checkButton" style="margin-left: 6px;">Check Now</span>
+          </button>
+        </form>
+
+        <!-- Result Card (shown upon lookup) -->
+        <div id="check-result-container" style="display: none;"></div>
+
+        <!-- Quick CTA to report -->
+        <div style="margin-top: 20px; text-align: center;">
+          <a href="#/report" class="btn btn-secondary" id="btn-goto-report">
+            📢 <span data-i18n="reportCTA" style="margin-left: 6px;">Report a Scam</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Emergency Helpline Notice -->
+      <div class="helpline-banner">
+        <span style="font-size: 1.25rem;">🛡️</span>
+        <div id="txt-emergency-helpline" data-i18n="emergencyHelpline">
+          Lost money? Call national cyber helpline 1930 or visit cybercrime.gov.in immediately.
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. REPORT VIEW -->
+    <section id="view-report" class="view-section">
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title" data-i18n="reportHeading">Report a Scam Sighting</h2>
+          <p class="card-subtitle" data-i18n="reportSubheading">Help protect your community. Takes under 60 seconds. No login required.</p>
+        </div>
+
+        <form id="form-report">
+          <!-- Step 1: Channel -->
+          <div class="form-group">
+            <label class="form-label" data-i18n="step1Channel">1. How did they contact you?</label>
+            <div class="selection-grid" id="grid-channels">
+              <div class="select-card active" data-val="phone call"><span>📞</span> <span data-i18n="channel_call">Phone Call</span></div>
+              <div class="select-card" data-val="sms or whatsapp"><span>💬</span> <span data-i18n="channel_sms">SMS / WhatsApp</span></div>
+              <div class="select-card" data-val="upi request"><span>💳</span> <span data-i18n="channel_upi">UPI Request</span></div>
+              <div class="select-card" data-val="fake website"><span>🌐</span> <span data-i18n="channel_web">Fake Website</span></div>
+              <div class="select-card" data-val="qr code"><span>📱</span> <span data-i18n="channel_qr">QR Code</span></div>
+              <div class="select-card" data-val="something else"><span>❓</span> <span data-i18n="channel_other">Something Else</span></div>
+            </div>
+          </div>
+
+          <!-- Step 2: Scam Type -->
+          <div class="form-group">
+            <label class="form-label" data-i18n="step2Type">2. What type of scam was it?</label>
+            <div class="selection-grid" id="grid-scam-types">
+              <div class="select-card active" data-val="digital-arrest"><span>👮</span> <span data-i18n="scam_digital_arrest">Digital Arrest</span></div>
+              <div class="select-card" data-val="fake-kyc-link"><span>🔗</span> <span data-i18n="scam_fake_kyc">Fake KYC Link</span></div>
+              <div class="select-card" data-val="upi-refund-qr"><span>💸</span> <span data-i18n="scam_upi_refund">UPI Refund QR</span></div>
+              <div class="select-card" data-val="investment-group"><span>📈</span> <span data-i18n="scam_investment">Investment Group</span></div>
+              <div class="select-card" data-val="courier-customs"><span>📦</span> <span data-i18n="scam_courier">Courier / Customs</span></div>
+              <div class="select-card" data-val="job-offer"><span>💼</span> <span data-i18n="scam_job_offer">Job Offer</span></div>
+              <div class="select-card" data-val="lottery-prize"><span>🎁</span> <span data-i18n="scam_lottery">Lottery / Prize</span></div>
+              <div class="select-card" data-val="loan-app-harassment"><span>📱</span> <span data-i18n="scam_loan_app">Loan Harassment</span></div>
+              <div class="select-card" data-val="electricity-disconnection"><span>⚡</span> <span data-i18n="scam_electricity">Electricity Threat</span></div>
+              <div class="select-card" data-val="fake-customer-care"><span>🎧</span> <span data-i18n="scam_customer_care">Fake Customer Care</span></div>
+              <div class="select-card" data-val="otp-call"><span>🔢</span> <span data-i18n="scam_otp_call">OTP / PIN Call</span></div>
+              <div class="select-card" data-val="sextortion"><span>📹</span> <span data-i18n="scam_sextortion">Sextortion</span></div>
+              <div class="select-card" data-val="other"><span>⚠️</span> <span data-i18n="scam_other">Other Scam</span></div>
+            </div>
+          </div>
+
+          <!-- Step 3: Identifier -->
+          <div class="form-group">
+            <label class="form-label" data-i18n="step3Identifier">3. Identifier details</label>
+            <div style="display: flex; gap: 8px; margin-bottom: 8px;">
+              <select id="report-identifier-type" class="form-select" style="max-width: 150px;">
+                <option value="phone">Phone</option>
+                <option value="upi">UPI ID</option>
+                <option value="url">Link / URL</option>
+                <option value="sender_id">SMS Sender</option>
+              </select>
+              <input type="text" id="report-identifier-value" class="form-input" placeholder="e.g. 9876543210 or scam@okaxis" required>
+            </div>
+          </div>
+
+          <!-- Step 4: Area (Pincode) -->
+          <div class="form-group">
+            <label class="form-label" data-i18n="step4Area">4. Your general area (pincode)</label>
+            <select id="report-pincode" class="form-select" required>
+              <option value="">Select your area...</option>
+            </select>
+          </div>
+
+          <!-- Step 5: Time -->
+          <div class="form-group">
+            <label class="form-label" data-i18n="step5Time">5. When did this happen?</label>
+            <div class="chips-row" id="report-time-chips">
+              <button type="button" class="chip active" data-time="now"><span data-i18n="timeJustNow">Just now</span></button>
+              <button type="button" class="chip" data-time="today"><span data-i18n="timeToday">Earlier today</span></button>
+              <button type="button" class="chip" data-time="yesterday"><span data-i18n="timeYesterday">Yesterday</span></button>
+            </div>
+          </div>
+
+          <!-- Step 6: Note -->
+          <div class="form-group">
+            <label class="form-label" data-i18n="step6Note">6. Brief note (Optional)</label>
+            <textarea id="report-note" class="form-textarea" maxlength="300" placeholder="Briefly describe what they claimed..."></textarea>
+            <div class="privacy-tip" data-i18n="notePrivacyWarning">Privacy rule: Do NOT include your name, phone number, or bank details.</div>
+          </div>
+
+          <!-- Step 7: Loss & Screenshot -->
+          <div class="form-group">
+            <label class="form-label" data-i18n="step7Loss">Did you lose money? (Optional)</label>
+            <input type="number" id="report-amount" class="form-input" placeholder="Amount in ₹ INR (if any)" min="0" step="1">
+            <label style="display: flex; align-items: center; gap: 8px; margin-top: 10px; cursor: pointer; font-size: 0.9rem;">
+              <input type="checkbox" id="report-has-screenshot" style="width: 18px; height: 18px;">
+              <span data-i18n="hasScreenshotLabel">I took a screenshot for evidence</span>
+            </label>
+          </div>
+
+          <button type="submit" id="btn-submit-report" class="btn btn-primary">
+            <span data-i18n="submitReportBtn">Submit Anonymous Report</span>
+          </button>
+        </form>
+
+        <!-- Report Success Screen -->
+        <div id="report-success-container" style="display: none; text-align: center; padding: 20px 0;">
+          <div style="font-size: 3rem; margin-bottom: 12px;">✅</div>
+          <h3 style="font-size: 1.4rem; font-weight: 700; margin-bottom: 8px;" data-i18n="reportSuccessTitle">Report Received</h3>
+          <p style="color: var(--text-muted); margin-bottom: 16px;" data-i18n="reportSuccessMessage">Thank you for alerting your community.</p>
+          <div style="background: #f8fafc; border: 1px solid var(--border); border-radius: var(--radius-md); padding: 14px; margin-bottom: 16px; font-family: monospace; font-size: 1.1rem; font-weight: 700;">
+            <span data-i18n="caseRefLabel">Case Reference</span>: <span id="res-case-id" style="color: var(--primary);"></span>
+          </div>
+          <p style="font-size: 0.85rem; color: #475569; margin-bottom: 16px;" data-i18n="reportAnonNote">Your report is anonymous. Only salted cryptographic tokens and pincode-level location are stored.</p>
+          <div class="helpline-banner" style="text-align: left;">
+            <span style="font-size: 1.25rem;">⚠️</span>
+            <div data-i18n="notPoliceComplaint">Important: SatyaCheck is a community intelligence map, NOT a police FIR or formal complaint. Call 1930 for financial freeze.</div>
+          </div>
+          <button type="button" id="btn-report-another" class="btn btn-secondary" style="margin-top: 20px;">
+            Submit Another Report
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. MAP VIEW -->
+    <section id="view-map" class="view-section">
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title" data-i18n="mapHeading">Community Scam Activity Map</h2>
+          <p class="card-subtitle" data-i18n="mapSubheading">Aggregated independent sightings by locality over recent days.</p>
+        </div>
+
+        <div class="map-filters">
+          <div style="display: flex; align-items: center; gap: 6px;">
+            <label style="font-size: 0.85rem; font-weight: 600;" data-i18n="mapFilterDays">Days:</label>
+            <select id="map-filter-days" class="form-select" style="padding: 6px 10px; min-height: 36px;">
+              <option value="7" selected>7 days</option>
+              <option value="14">14 days</option>
+              <option value="30">30 days</option>
+            </select>
+          </div>
+
+          <div style="display: flex; align-items: center; gap: 6px;">
+            <label style="font-size: 0.85rem; font-weight: 600;" data-i18n="mapFilterRadius">Radius:</label>
+            <select id="map-filter-radius" class="form-select" style="padding: 6px 10px; min-height: 36px;">
+              <option value="" selected>All Areas</option>
+              <option value="2">2 km</option>
+              <option value="5">5 km</option>
+              <option value="10">10 km</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Leaflet Map Container -->
+        <div id="leaflet-map"></div>
+
+        <!-- Clusters list under map -->
+        <div class="card-header" style="margin-top: 14px;">
+          <h3 style="font-size: 1rem; font-weight: 700;" data-i18n="mapClustersList">Active Locality Clusters</h3>
+        </div>
+        <div id="map-clusters-list">
+          <p style="color: var(--text-muted); font-size: 0.88rem;">Loading map data...</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. ALERTS VIEW -->
+    <section id="view-alerts" class="view-section">
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title" data-i18n="alertsHeading">Emerging Threat Alerts</h2>
+          <p class="card-subtitle" data-i18n="alertsSubheading">Real-time anomaly detection for local spikes and newly emerging scam tactics.</p>
+        </div>
+
+        <div id="alerts-list-container">
+          <p style="color: var(--text-muted); font-size: 0.88rem;">Loading alerts...</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. ABOUT VIEW -->
+    <section id="view-about" class="view-section">
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title" data-i18n="aboutHeading">About SatyaCheck</h2>
+        </div>
+
+        <!-- Trust Engine explanation in 5 plain lines -->
+        <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 10px;" data-i18n="trustHeader">How Our Trust Engine Works</h3>
+        <ul style="padding-left: 20px; font-size: 0.92rem; color: #334155; margin-bottom: 24px; line-height: 1.7;">
+          <li data-i18n="trust1">A single report is a sighting, never an automatic verdict.</li>
+          <li data-i18n="trust2">Coordinated bot accounts on the same network or with copy-pasted notes are merged into a single cohort.</li>
+          <li data-i18n="trust3">An identifier reaches Known Scam only when multiple independent people on distinct networks corroborate it.</li>
+          <li data-i18n="trust4">Numbers are masked until enough independent sightings exist, preventing harassment.</li>
+          <li data-i18n="trust5">Legitimate businesses and helplines can verify their identity or dispute incorrect reports.</li>
+        </ul>
+
+        <!-- Privacy architecture -->
+        <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 10px;" data-i18n="privacyHeader">Our Privacy Architecture</h3>
+        <ul style="padding-left: 20px; font-size: 0.92rem; color: #334155; margin-bottom: 24px; line-height: 1.7;">
+          <li data-i18n="privacy1">We never ask for your name, phone number, or exact GPS coordinates.</li>
+          <li data-i18n="privacy2">Your device and network are pseudonymised using HMAC-SHA256 salted tokens.</li>
+          <li data-i18n="privacy3">Notes are automatically scrubbed for personal details and strictly capped at 300 characters.</li>
+          <li data-i18n="privacy4">No screenshots are ever uploaded to our servers.</li>
+        </ul>
+
+        <!-- Scam prevention knowledge base -->
+        <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 10px;" data-i18n="adviceHeader">Scam Prevention Knowledgebase</h3>
+        <div id="scam-advice-directory" style="font-size: 0.88rem; color: #334155; margin-bottom: 30px;"></div>
+
+        <!-- Dispute Challenge Form for Businesses -->
+        <div style="border-top: 1px solid var(--border); padding-top: 24px;">
+          <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 6px;" data-i18n="disputeHeader">Business Dispute & Verification Form</h3>
+          <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 16px;" data-i18n="disputeSubheading">If your business or organisation number is reported incorrectly, file an official dispute below.</p>
+
+          <form id="form-dispute">
+            <div class="form-group">
+              <label class="form-label" data-i18n="step3Identifier">Identifier details</label>
+              <div style="display: flex; gap: 8px;">
+                <select id="dispute-identifier-type" class="form-select" style="max-width: 150px;">
+                  <option value="phone">Phone</option>
+                  <option value="upi">UPI ID</option>
+                  <option value="url">Link / URL</option>
+                  <option value="sender_id">SMS Sender</option>
+                </select>
+                <input type="text" id="dispute-identifier-value" class="form-input" placeholder="e.g. 9876543210" required>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" data-i18n="disputeName">Claimant / Organisation Name</label>
+              <input type="text" id="dispute-name" class="form-input" placeholder="e.g. Apex Hospital Helpline" required>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" data-i18n="disputeEmail">Official Contact Email</label>
+              <input type="email" id="dispute-email" class="form-input" placeholder="e.g. admin@apex.org" required>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" data-i18n="disputeProof">Proof or Justification</label>
+              <textarea id="dispute-proof" class="form-textarea" placeholder="Explain why this identifier is legitimate..."></textarea>
+            </div>
+
+            <button type="submit" id="btn-submit-dispute" class="btn btn-primary">
+              <span data-i18n="submitDisputeBtn">Submit Dispute Challenge</span>
+            </button>
+          </form>
+
+          <div id="dispute-feedback" style="display: none; margin-top: 14px; padding: 12px; border-radius: var(--radius-sm); font-size: 0.9rem;"></div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ── Mobile Bottom Navigation Bar ───────────────────────────────────── -->
+  <nav class="bottom-nav" aria-label="Mobile Navigation">
+    <a href="#/check" class="bottom-nav-item active" id="nav-m-check">
+      <span class="nav-icon" aria-hidden="true">🔍</span>
+      <span data-i18n="navCheck">Check</span>
+    </a>
+    <a href="#/report" class="bottom-nav-item" id="nav-m-report">
+      <span class="nav-icon" aria-hidden="true">📢</span>
+      <span data-i18n="navReport">Report</span>
+    </a>
+    <a href="#/map" class="bottom-nav-item" id="nav-m-map">
+      <span class="nav-icon" aria-hidden="true">🗺️</span>
+      <span data-i18n="navMap">Map</span>
+    </a>
+    <a href="#/alerts" class="bottom-nav-item" id="nav-m-alerts">
+      <span class="nav-icon" aria-hidden="true">⚠️</span>
+      <span data-i18n="navAlerts">Alerts</span>
+    </a>
+    <a href="#/about" class="bottom-nav-item" id="nav-m-about">
+      <span class="nav-icon" aria-hidden="true">ℹ️</span>
+      <span data-i18n="navAbout">About</span>
+    </a>
+  </nav>
+
+  <!-- ── Licence Expired Full-Screen Overlay ────────────────────────────── -->
+  <div id="licence-expired-overlay" class="licence-overlay" role="alertdialog" aria-modal="true" aria-labelledby="lic-title">
+    <div class="licence-box">
+      <div style="font-size: 3rem; margin-bottom: 10px;">🔒</div>
+      <h2 id="lic-title" data-i18n="licenceExpiredTitle">Licence Expired</h2>
+      <p id="lic-msg" data-i18n="licenceExpiredMsg">The SatyaCheck evaluation licence has expired. Please contact your system provider to renew.</p>
+      <div class="status-pulse" data-i18n="licencePollingMsg">Checking system status every 30 seconds...</div>
+    </div>
+  </div>
+
+  <!-- Pinned Leaflet JS CDN -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <!-- Application JS -->
+  <script type="module" src="app.js"></script>
+</body>
+</html>

@@ -30,9 +30,9 @@
 | **T6** | Licence system (cryptography, middleware, cache) | **DONE** | 23/23 tests pass |
 | **T6b** | Public HTTPS deployment | **Pending** | Render / fly / Railway |
 | **T7** | Challenges & admin routes | **DONE** | POST /challenges, GET/POST admin, reset |
-| **T8** | Frontend (HTML, CSS, JS, Leaflet map) | **NEXT** | `web/` plain static files, EN/HI i18n |
-| **T9** | README, demo script, video | **Pending** | Documentation & submission |
-| **T10** | Privacy audit & performance verification | **Pending** | docs/06-privacy.md checklist |
+| **T8** | Frontend (HTML, CSS, JS, Leaflet map) | **DONE** | `web/` plain static files, EN/HI i18n |
+| **T9** | README, demo script, video walkthrough | **NEXT** | Documentation & submission |
+| **T10** | Privacy audit & performance verification | **NEXT** | docs/06-privacy.md checklist |
 
 ---
 
@@ -167,6 +167,28 @@
     - Resets in-memory sliding window rate limits.
   - Created test suite in `tests/test_challenges.py` (7/7 tests passing covering challenge submission, verdict capping, idempotency, admin token validation, resolution flows, 7-day rejection cooldown, and demo reset behavior).
 - **Test Status:** 140/140 pytest tests passing.
-- **Next Task:** T8 (Frontend: Shell, i18n English/Hindi, Check view, Report flow, Leaflet Map, Alerts view in `web/`).
+
+### [T8] Frontend Implementation (2026-10-31)
+- **Files Modified/Created:** `web/index.html`, `web/app.css`, `web/app.js`, `web/i18n.js`, `tests/test_frontend.py`, `tests/test_wording.py`, `tasks/B.md`, `status/B.md`, `progress.md`
+- **Actions:**
+  - Implemented bilingual dictionary (`web/i18n.js`) with full English and Hindi (`en`/`hi`) translations for all UI views, labels, verdicts, scam-type prevention advice, and error states.
+  - Built responsive CSS (`web/app.css`) following mobile-first principles:
+    - Curated emerald green palette (`#059669`), warm off-white background (`#fbfbfa`), charcoal typography, amber caution, red exclusively for `KNOWN_SCAM`.
+    - Card radius 14-16px, smooth shadows, 44px+ touch targets, mobile bottom bar with icons, desktop top navbar.
+  - Built complete single-page HTML shell (`web/index.html`) mounted at `/`:
+    - **Check View:** Fast identifier search with auto-detection chips (`phone`, `upi`, `url`, `sender_id`), verdict card, masked display value, what-to-do advice, and expandable technical verification details.
+    - **Report Flow:** Sub-60-second submission form (channel selector, scam type grid, identifier input with auto-detect, 25-area dropdown, time chips, privacy-warning note, loss amount & screenshot checkbox).
+    - **Map View:** Pinned Leaflet 1.9.4 integration with OpenStreetMap tiles, displaying clusters with severity-colored circles (`CRIT` red, `HIGH` amber, `MED` blue), popup details, and locality list.
+    - **Alerts View:** Live display of `SPIKE` and `NEW_TYPE` warnings with monitored windows and baseline metrics.
+    - **About View:** 5-point trust engine explanation, 4-point privacy guarantee, comprehensive scam-type knowledge base, and official business dispute form (`POST /challenges`).
+    - **Licence Expired Overlay:** Full-screen modal triggered automatically upon HTTP 403 `LICENSE_EXPIRED`, polling `/license` every 30 seconds to resume.
+  - Implemented client logic (`web/app.js`):
+    - Hash navigation (`#/check`, `#/report`, `#/map`, `#/alerts`, `#/about`).
+    - Embedded 25 areas from `data/areas.json` for zero-latency dropdowns.
+    - Pseudonymous device UUID in `localStorage` sent as `reporter_id` and `X-Device-Id`.
+    - Added test suite in `tests/test_frontend.py` verifying static asset serving and DOM views.
+    - Verified strict privacy wording policy (no `scammer`, `fraud`, `criminal`, etc.) across all web assets.
+- **Test Status:** 143/143 pytest tests passing.
+- **Next Task:** T9 (README, demo script, video walkthrough) and T10 (Final privacy audit & checklist verification).
 
 ---

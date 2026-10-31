@@ -24,6 +24,22 @@ def test_no_prohibited_words_in_app_code():
     assert not violations, f"Prohibited words found in app code: {violations}"
 
 
+def test_no_prohibited_words_in_web_files():
+    """Ensure no web files (HTML, JS, CSS) contain prohibited words per docs/06-privacy.md rule 7."""
+    web_dir = Path(__file__).resolve().parent.parent / "web"
+    prohibited_pattern = re.compile(r"\b(" + "|".join(PROHIBITED_WORDS) + r")\b", re.IGNORECASE)
+
+    violations = []
+    for f in web_dir.glob("*.*"):
+        if f.suffix in (".html", ".js", ".css"):
+            content = f.read_text(encoding="utf-8")
+            matches = prohibited_pattern.findall(content)
+            if matches:
+                violations.append(f"{f.name}: found {set(matches)}")
+
+    assert not violations, f"Prohibited words found in web files: {violations}"
+
+
 def test_no_prohibited_words_in_api_responses(client):
     """Ensure API responses do not contain prohibited words."""
     # Check health
