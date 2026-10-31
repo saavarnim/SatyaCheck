@@ -11,7 +11,7 @@ Start with T6 while A does T0/T1 (licence needs nothing from A except the main.p
 - [ ] **T8a Frontend: shell, i18n, Check view, Report flow**
   Reads: docs/07-frontend.md, docs/01-api.md (routes only). Files: web/*
   Done when: on a phone-width browser, a report can be completed in under 60 s and a lookup shows a result card in EN and HI.
-- [ ] **T5 Map + alerts** (after A pushes T0; test with fake units until A's T3 lands)
+- [x] **T5 Map + alerts** (after A pushes T0; test with fake units until A's T3 lands)
   Reads: docs/04-map-alerts.md. Files: app/routes_map.py tests/test_map_alerts.py
   Done when: `pytest tests/test_map_alerts.py -q` passes.
 - [ ] **T7 Challenges + reset + admin routes**

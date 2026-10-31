@@ -35,6 +35,12 @@ LICENCE_PUBLIC_KEY: str = os.getenv("LICENCE_PUBLIC_KEY", "")  # hex-encoded Ed2
 # ── Map / alerts constants (docs/04) ─────────────────────────────────────────
 MAP_DEFAULT_DAYS: int = 7
 MAP_DEFAULT_RADIUS_KM: float = 2.0
+SEV_CRIT: int = 10
+SEV_HIGH: int = 5
+
+SPIKE_MIN: int = 5
+SPIKE_FACTOR: float = 2.0
+MIN_HISTORY_FOR_NEW_TYPE: int = 2
 
 # ── Scam / channel allow-lists (docs/02) ────────────────────────────────────
 KNOWN_CHANNELS = [

@@ -26,10 +26,10 @@
 | **T3c** | HMAC tokens + rate limit | **DONE** | HMAC 16-hex, IPv4/v6 prefix, sliding window |
 | **T3d** | Wire trust + verdict + identity into routes | **DONE** | Integration in `app/routes_reports.py` |
 | **T4** | Threshold tuning & wording privacy audit | **DONE** | `app/config.py` constants & `test_wording.py` |
-| **T5** | Map & alerts APIs (`routes_map.py`) | **NEXT** | GET /map, GET /alerts (SPIKE, NEW_TYPE) |
+| **T5** | Map & alerts APIs (`routes_map.py`) | **DONE** | GET /map, GET /alerts (SPIKE, NEW_TYPE) |
 | **T6** | Licence system (cryptography, middleware, cache) | **DONE** | 23/23 tests pass |
 | **T6b** | Public HTTPS deployment | **Pending** | Render / fly / Railway |
-| **T7** | Challenges & admin routes | **Pending** | POST /challenges, GET/POST admin |
+| **T7** | Challenges & admin routes | **NEXT** | POST /challenges, GET/POST admin |
 | **T8** | Frontend (HTML, CSS, JS, Leaflet map) | **Pending** | `web/` plain static files |
 | **T9** | README, demo script, video | **Pending** | Documentation & submission |
 | **T10** | Privacy audit & performance verification | **Pending** | docs/06-privacy.md checklist |
@@ -128,6 +128,22 @@
     - Scans all Python files under `app/` to ensure prohibited words (`scammer`, `fraudster`, `criminal`, `culprit`) never appear in code.
     - Tests live API responses (`/health`, `/lookup`) ensuring prohibited terms are never returned.
 - **Test Status:** 125/125 pytest tests passing.
-- **Next Task:** T5 (Map & Alerts APIs: `GET /map` and `GET /alerts` in `app/routes_map.py`).
+
+### [T5] Map & Alerts APIs (2026-10-31)
+- **Files Modified/Created:** `app/routes_map.py`, `app/config.py`, `tests/test_map_alerts.py`, `tasks/B.md`, `status/B.md`, `progress.md`
+- **Actions:**
+  - Implemented `GET /map?pincode=&days=7&radius_km=2`:
+    - Filters `TrustedUnit`s within the sliding window `(now - days, now]`.
+    - Handles geographic filtering when `pincode` is provided, computing Haversine distance from the reference area center to all candidate areas.
+    - Groups units into area clusters returning `pincode`, `locality`, `city`, `count`, `top_scam_type`, `severity` (`CRIT` for $\ge 10$, `HIGH` for $\ge 5$, `MED` otherwise), `lat`, and `lng`.
+    - Enforces 400 `INVALID_REQUEST` on unknown pincodes, non-positive days, or negative radius.
+  - Implemented `GET /alerts?pincode=`:
+    - Evaluates 24-hour activity window `(now - 24h, now]` against baseline `[now - 24h - 7d, now - 24h)`.
+    - Detects `SPIKE` alerts when `last24 >= 5` and `last24 >= 2 * baseline_per_day` (correctly alerting on baseline 0 with 5 units).
+    - Detects `NEW_TYPE` alerts when an area with prior history ($\ge 2$ units in prior 30 days) sees an indicator type never reported there before.
+    - Returns empty list `{"alerts": []}` when no conditions are met.
+  - Implemented comprehensive test suite in `tests/test_map_alerts.py` (8/8 tests covering default clustering, exclusion of 8-day-old/month-old units, radius filtering, severity categorization, invalid parameter handling, SPIKE thresholds, and NEW_TYPE detection with/without history).
+- **Test Status:** 133/133 pytest tests passing.
+- **Next Task:** T7 (Challenges, Reset, and Admin Routes in `app/routes_challenges.py`).
 
 ---
