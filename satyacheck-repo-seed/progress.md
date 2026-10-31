@@ -19,8 +19,8 @@
 | **T1** | Normalise & redact (`normalise.py`, `redact.py`, 56 tests) | **DONE** | Commit `[T1] normalise + redact` |
 | **T2a** | DB engine, session, models (`app/db.py`, `app/models.py`) | **DONE** | Commit `[T2a] db engine, session, models` |
 | **T2b** | Seed loader (`app/seed.py`) | **DONE** | Commit `[T2b] seed loader wired` |
-| **T2c** | POST /reports (`routes_reports.py`, `tests/test_reports.py`) | **NEXT** | Validation, HMAC, duplicates, status 201/400 |
-| **T2d** | GET /lookup basic (`routes_reports.py`) | **Pending** | NO_REPORTS, VERIFIED_BUSINESS, 400 |
+| **T2c** | POST /reports (`routes_reports.py`, `tests/test_reports.py`) | **DONE** | Validation, HMAC, duplicates, rate limit |
+| **T2d** | GET /lookup basic (`routes_reports.py`) | **NEXT** | NO_REPORTS, VERIFIED_BUSINESS, 400 |
 | **T3a** | Trust core (pure functions: voice, cohort, score) | **Pending** | `app/trust.py`, `tests/test_trust.py` |
 | **T3b** | Verdict + masking (pure functions) | **Pending** | `app/verdict.py`, `tests/test_verdict.py` |
 | **T3c** | HMAC tokens + rate limit | **Pending** | `app/identity.py`, `tests/test_identity.py` |
@@ -47,6 +47,19 @@
 - **Files Modified:** `app/main.py`, `tasks/A.md`, `status/A.md`
 - **Actions:** Connected `seed(db)` to `on_startup` in `app/main.py` so tables are populated automatically upon launch. Confirmed idempotent seeding (25 areas, 19 verified indicators).
 - **Test Status:** 79/79 pytest tests passing.
-- **Next Task:** T2c (POST /reports endpoint with validation, HMAC tokens, and deduplication).
+
+### [T2c] POST /reports Endpoint & Rate Limiting (2026-10-31)
+- **Files Modified/Created:** `app/routes_reports.py`, `app/identity.py`, `tests/test_reports.py`, `tests/conftest.py`, `tasks/A.md`, `status/A.md`
+- **Actions:**
+  - Implemented `POST /reports` handling validation of identifier types (`phone`, `upi`, `url`, `sender_id`) and canonical values using T1 normalisation.
+  - Implemented area/pincode validation against the seeded `areas` table.
+  - Added timestamp validation rejecting timestamps in the future.
+  - Added `report_id` duplicate detection returning 201 unchanged without creating duplicate rows.
+  - Handled indicator lookup/creation, case ID generation (`CASE-<hash>`), and `merged` indicator status.
+  - Implemented HMAC-SHA256 pseudonymisation for `reporter_token` and `ip_token` in `app/identity.py` (privacy preservation).
+  - Implemented in-memory sliding window rate limiting (429 `SLOW_DOWN`).
+  - Added full test suite in `tests/test_reports.py` (9 tests covering 4 phone formats mapping to one indicator, invalid input 400, duplicate report idempotency, note PII scrubbing, and 429 rate limiting).
+- **Test Status:** 88/88 pytest tests passing.
+- **Next Task:** T2d (GET /lookup basic endpoint).
 
 ---

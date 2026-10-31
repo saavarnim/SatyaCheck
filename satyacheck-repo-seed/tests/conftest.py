@@ -4,6 +4,7 @@ from datetime import datetime, timezone
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy.pool import StaticPool
 
 import app.clock as clock_module
 from app.models import Base
@@ -17,11 +18,17 @@ TEST_DB_URL = "sqlite://"  # in-memory
 
 @pytest.fixture(scope="function")
 def test_db():
-    """Create a fresh in-memory SQLite engine and yield a session."""
-    engine = create_engine(TEST_DB_URL, connect_args={"check_same_thread": False})
+    """Create a fresh in-memory SQLite engine and yield a session with seed data."""
+    engine = create_engine(
+        TEST_DB_URL,
+        connect_args={"check_same_thread": False},
+        poolclass=StaticPool,
+    )
     Base.metadata.create_all(bind=engine)
     TestingSession = sessionmaker(autocommit=False, autoflush=False, bind=engine)
     db = TestingSession()
+    from app.seed import seed
+    seed(db)
     try:
         yield db
     finally:
@@ -37,6 +44,11 @@ def client(test_db, monkeypatch):
     """
     engine = test_db.get_bind()
     TestingSession = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
+    from app import licence
+    from app.identity import reset_rate_limits
+    reset_rate_limits()
+    monkeypatch.setattr(licence, "is_allowed", lambda path: True)
 
     def override_get_db():
         db = TestingSession()
