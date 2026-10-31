@@ -28,11 +28,11 @@
 | **T4** | Threshold tuning & wording privacy audit | **DONE** | `app/config.py` constants & `test_wording.py` |
 | **T5** | Map & alerts APIs (`routes_map.py`) | **DONE** | GET /map, GET /alerts (SPIKE, NEW_TYPE) |
 | **T6** | Licence system (cryptography, middleware, cache) | **DONE** | 23/23 tests pass |
-| **T6b** | Public HTTPS deployment | **Pending** | Render / fly / Railway |
+| **T6b** | Public HTTPS deployment | **NEXT** | Render / fly / Railway |
 | **T7** | Challenges & admin routes | **DONE** | POST /challenges, GET/POST admin, reset |
 | **T8** | Frontend (HTML, CSS, JS, Leaflet map) | **DONE** | `web/` plain static files, EN/HI i18n |
-| **T9** | README, demo script, video walkthrough | **NEXT** | Documentation & submission |
-| **T10** | Privacy audit & performance verification | **NEXT** | docs/06-privacy.md checklist |
+| **T9** | README, demo script, video walkthrough | **DONE** | Complete README, API curls, storyboard |
+| **T10** | Privacy audit & performance verification | **DONE** | 10-point audit, safe logging, p95 benchmark |
 
 ---
 
@@ -189,6 +189,39 @@
     - Added test suite in `tests/test_frontend.py` verifying static asset serving and DOM views.
     - Verified strict privacy wording policy (no `scammer`, `fraud`, `criminal`, etc.) across all web assets.
 - **Test Status:** 143/143 pytest tests passing.
-- **Next Task:** T9 (README, demo script, video walkthrough) and T10 (Final privacy audit & checklist verification).
+
+### [T9] Documentation, API Reference & Walkthrough Storyboard (2026-10-31)
+- **Files Modified/Created:** `README.md`, `tasks/B.md`, `status/B.md`, `progress.md`
+- **Actions:**
+  - Authored comprehensive, production-grade `README.md`:
+    - Core philosophy: *"A report is a sighting, not a verdict"*.
+    - Stack rationale (zero build step, no npm, lightweight FastAPI + SQLite/Postgres).
+    - 3-command local quickstart & environment variables dictionary.
+    - Full API reference with exact `curl` commands for all 7 judging routes.
+    - Comprehensive normalisation rules table (Phone, Toll-free, Shortcode, UPI, URL, Sender ID).
+    - Complete trust constants table with values and rationale for every magic number.
+    - Adversarial defence analysis (Sybil attacks, astroturfing, business defamation).
+    - Confounder experiment evaluation (8 genuine reporters on 2 IP prefixes) and honest limitation disclosure.
+    - Privacy architecture summary and what is NOT collected.
+    - 4-step software licence rehearsal script with Ed25519 cryptography demo.
+    - Timed 3-minute video walkthrough storyboard.
+
+### [T10] Privacy Checklist Audit & Performance Verification (2026-10-31)
+- **Files Modified/Created:** `tests/test_audit.py`, `tasks/A.md`, `status/A.md`, `progress.md`
+- **Actions:**
+  - Implemented `tests/test_audit.py` systematically validating all 10 items of the `docs/06-privacy.md` checklist:
+    1. Pincode-only location in DB; no GPS or street addresses.
+    2. Salted 16-hex HMAC-SHA256 tokens only for `reporter_id` and `ip_prefix`; raw values never stored.
+    3. Notes redacted of PII, <= 300 chars, internal only, never returned in public routes.
+    4. `has_screenshot` boolean only; no image uploads.
+    5. Safe ASGI logging: method, path (strictly without query string), status, duration.
+    6. Masking enforced until $\ge 3$ distinct cohorts or verified.
+    7. Prohibited terminology strictly enforced (no "scammer", "fraudster", "criminal", "culprit").
+    8. Challenge claimant data isolated to `challenges` table.
+    9. No external network scraping.
+    10. Evidence items contain only allowed keys (`occurred_at`, `channel`, `scam_type`, `pincode`).
+  - Implemented performance benchmark: 100 lookups against seeded events verified p95 latency < 150ms.
+- **Test Status:** 146/146 pytest tests passing.
+- **Next Task:** T6b (Public deployment configuration / verification).
 
 ---

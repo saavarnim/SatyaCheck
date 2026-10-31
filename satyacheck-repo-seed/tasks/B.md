@@ -19,5 +19,5 @@ Start with T6 while A does T0/T1 (licence needs nothing from A except the main.p
   Done when: challenge makes lookup challenged=true and never KNOWN_SCAM; reset clears reports; upheld/rejected flows work.
 - [x] **T8b Frontend: map, alerts, about + dispute form, licence-expired screen**
   Reads: docs/07-frontend.md. Files: web/*
-- [ ] **T9 README, demo script, video, final deploy check**
+- [x] **T9 README, demo script, video, final deploy check**
   Reads: docs/08-tests-deploy-readme.md. Files: README.md. Rehearse the licence demo 3x on the deployed URL with two licence files (5-minute and long).

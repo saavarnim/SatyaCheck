@@ -12,3 +12,4 @@ Format:  [T#] done|wip | LEFT OFF AT: ... | NEEDS (from other person/files): ...
 [T3c] done | T3c pushed | app/identity.py: HMAC-SHA256 16-hex tokens, /24 and /48 IP prefix extraction, body vs header resolution, sliding 1-hr rate limiting | 120 tests pass | NEEDS: T3d wire trust+verdict+identity into routes
 [T3d] done | T3d pushed | app/routes_reports.py: full trust+verdict+identity wired; tests/test_scenarios.py verifies 22 bot accounts on 1 IP prefix stay 1 cohort/SUSPICIOUS, 3 independent reporters unmask & reach KNOWN_SCAM | 123 tests pass | NEEDS: T4 tune constants
 [T4] done | T4 pushed | app/config.py audited & tuned; tests/test_wording.py added enforcing no prohibited scammer/fraud words per docs/06-privacy.md | 125 tests pass | NEEDS: T5 map & alerts
+[T10] done | T10 pushed | tests/test_audit.py: verified 10-point privacy checklist, safe logging, p95 bulk lookup latency benchmark | 146 tests pass

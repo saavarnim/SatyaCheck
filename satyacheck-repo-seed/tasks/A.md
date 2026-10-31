@@ -12,4 +12,4 @@ Whoever has quota can take any slice: change the Owner and push. A is the licenc
 - [x] **T3c** HMAC tokens + rate limit. Reads: docs/03-trust.md (Rate limit, Identity). Files: app/identity.py tests/test_identity.py.
 - [x] **T3d** Wire trust + verdict + identity into /reports and /lookup. Files: app/routes_reports.py. Done: 22 accounts on one prefix is 1 cohort; 3 independent reporters unmask.
 - [x] **T4** Tune constants against tools/fakegen.py. Files: app/config.py ONLY.
-- [ ] **T10** Final audit: docs/06-privacy.md checklist, log audit, perf test.
+- [x] **T10** Final audit: docs/06-privacy.md checklist, log audit, perf test.
