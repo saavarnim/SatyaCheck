@@ -260,6 +260,33 @@ class TestExpiredGives403:
         assert r.status_code == 403
 
 
+class TestCacheRefresh:
+    """In-memory cache refreshed from DB every 5s and immediately on POST."""
+
+    def test_cache_refreshed_after_ttl(self, licence_client):
+        import app.licence as lm
+        kp = licence_client._keypair
+
+        # Initial post
+        _post_licence(licence_client, kp, minutes=60)
+        assert lm._cache.licensee == "Test Corp"
+
+        # Directly update DB without updating cache
+        lm._save_row("Direct DB Update", datetime.now(timezone.utc) + timedelta(hours=2), "fake_sig")
+
+        # Cache is not stale yet (less than 5s)
+        lm.refresh_cache(force=False)
+        assert lm._cache.licensee == "Test Corp"
+
+        # Simulate monotonic time passing > 5 seconds
+        lm._cache.last_refresh -= 6.0
+        assert lm._cache.is_stale() is True
+
+        # Now refresh
+        lm.refresh_cache(force=False)
+        assert lm._cache.licensee == "Direct DB Update"
+
+
 class TestRenewalWithoutRestart:
     """Renewal without restart, data preserved."""
 
