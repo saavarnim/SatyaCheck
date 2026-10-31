@@ -8,7 +8,7 @@ Whoever has quota can take any slice: change the Owner and push. A is the licenc
 - [x] **T2c** POST /reports. Reads: docs/01-api.md (POST /reports), docs/02-normalise.md. Files: app/routes_reports.py (+ tests/test_reports.py). Done: 4 phone formats make one indicator; `12345` gives 400; duplicate report_id returns 201 unchanged.
 - [x] **T2d** GET /lookup basic. File: app/routes_reports.py. Done: unreported valid gives 200 NO_REPORTS; `1930` gives VERIFIED_BUSINESS; invalid gives 400.
 - [x] **T3a** Trust core, PURE functions, no DB. Reads: docs/03-trust.md. Files: app/trust.py tests/test_trust.py. Done: voice/cohort/score tests pass.
-- [ ] **T3b** Verdict + masking, PURE. Reads: docs/03-trust.md. Files: app/verdict.py tests/test_verdict.py. Done: verdict-order and masking tests (1, 2, 3 cohorts, 4 types) pass.
+- [x] **T3b** Verdict + masking, PURE. Reads: docs/03-trust.md. Files: app/verdict.py tests/test_verdict.py. Done: verdict-order and masking tests (1, 2, 3 cohorts, 4 types) pass.
 - [ ] **T3c** HMAC tokens + rate limit. Reads: docs/03-trust.md (Rate limit, Identity). Files: app/identity.py tests/test_identity.py.
 - [ ] **T3d** Wire trust + verdict + identity into /reports and /lookup. Files: app/routes_reports.py. Done: 22 accounts on one prefix is 1 cohort; 3 independent reporters unmask.
 - [ ] **T4** Tune constants against tools/fakegen.py. Files: app/config.py ONLY.

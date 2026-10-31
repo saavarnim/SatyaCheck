@@ -5,7 +5,7 @@ import re
 from typing import Optional
 from urllib.parse import urlparse
 
-from app.config import KNOWN_MIN_COHORTS, KNOWN_MIN_SCORE
+from app.config import KNOWN_MIN_COHORTS, KNOWN_MIN_SCORE, UNMASK_MIN
 from app.trust import IndicatorTrust
 
 
@@ -79,3 +79,17 @@ def mask_display_value(identifier_type: str, canonical_value: str) -> str:
         return f"{prefix}****"
 
     return canonical_value
+
+
+def resolve_display_value(
+    identifier_type: str,
+    canonical_value: str,
+    cohort_count: int,
+    is_verified: bool,
+) -> str:
+    """Return unmasked canonical_value if is_verified or cohort_count >= UNMASK_MIN (3),
+    otherwise return masked string (docs/03).
+    """
+    if is_verified or cohort_count >= UNMASK_MIN:
+        return canonical_value
+    return mask_display_value(identifier_type, canonical_value)

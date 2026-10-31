@@ -22,8 +22,8 @@
 | **T2c** | POST /reports (`routes_reports.py`, `tests/test_reports.py`) | **DONE** | Validation, HMAC, duplicates, rate limit |
 | **T2d** | GET /lookup basic (`routes_reports.py`) | **DONE** | NO_REPORTS, VERIFIED_BUSINESS, 400 |
 | **T3a** | Trust core (pure functions: voice, cohort, score) | **DONE** | Voice, cohort (union-find), scoring |
-| **T3b** | Verdict + masking (pure functions) | **NEXT** | `app/verdict.py`, `tests/test_verdict.py` |
-| **T3c** | HMAC tokens + rate limit | **Pending** | `app/identity.py`, `tests/test_identity.py` |
+| **T3b** | Verdict + masking (pure functions) | **DONE** | Verdict precedence, unmasking at 3 cohorts |
+| **T3c** | HMAC tokens + rate limit | **NEXT** | `app/identity.py`, `tests/test_identity.py` |
 | **T3d** | Wire trust + verdict + identity into routes | **Pending** | Integration in `app/routes_reports.py` |
 | **T4** | Threshold tuning against `tools/fakegen.py` | **Pending** | `app/config.py` constants |
 | **T5** | Map & alerts APIs (`routes_map.py`) | **Pending** | GET /map, GET /alerts (SPIKE, NEW_TYPE) |
@@ -85,6 +85,16 @@
   - Added `all_trusted_units(db)` helper.
   - Added unit test suite in `tests/test_trust.py` (7 tests covering voice deduplication, IP-based merging, note similarity merging, Hindi/multilingual similarity, and independent cohorts).
 - **Test Status:** 100/100 pytest tests passing.
-- **Next Task:** T3b (Verdict ordering and masking pure functions & unit tests).
+
+### [T3b] Verdict Precedence & Masking Pure Tests (2026-10-31)
+- **Files Modified/Created:** `app/verdict.py`, `tests/test_verdict.py`, `tasks/A.md`, `status/A.md`
+- **Actions:**
+  - Implemented `verdict(trust, is_verified, has_active_challenge)` respecting strict precedence:
+    `VERIFIED_BUSINESS` > `NO_REPORTS` > active challenge cap (`SUSPICIOUS`) > `KNOWN_SCAM` ($\ge 3$ cohorts and score $\ge 2.5$) > `SUSPICIOUS`.
+  - Implemented `mask_display_value` for all four identifier types (`phone`, `upi`, `url`, `sender_id`).
+  - Added `resolve_display_value` unmasking at $\ge 3$ cohorts or when indicator belongs to a verified business.
+  - Created unit test suite in `tests/test_verdict.py` (10 tests covering full verdict ordering, all 4 masking types, and cohort unmasking thresholds).
+- **Test Status:** 110/110 pytest tests passing.
+- **Next Task:** T3c (HMAC tokens + rate limiting unit tests in `tests/test_identity.py`).
 
 ---
