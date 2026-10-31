@@ -93,10 +93,13 @@ app.include_router(challenges_router)
 @app.on_event("startup")
 def on_startup():
     init_db()
+    from app.licence import init_licence
+    init_licence()
     from app.db import SessionLocal
     from app.seed import seed
     with SessionLocal() as db:
         seed(db)
+
 
 
 # ── Static files LAST (so API routes are not overshadowed) ───────────────────

@@ -190,9 +190,7 @@ def _save_row(licensee: str, expires_at_dt: datetime, signature: str,
         row.signature = signature
         if last_seen is not None:
             dt_utc = _ensure_utc(last_seen)
-            curr = _ensure_utc(row.last_seen_server_time)
-            if curr is None or (dt_utc is not None and dt_utc > curr):
-                row.last_seen_server_time = dt_utc
+            row.last_seen_server_time = dt_utc
         db.commit()
     finally:
         db.close()
@@ -231,11 +229,37 @@ def _bootstrap_if_needed():
         return
     _bootstrapped = True
     bootstrap = os.getenv("LICENSE_BOOTSTRAP", "")
+    data = None
     if bootstrap:
         try:
             data = json.loads(bootstrap)
+        except Exception:
+            data = None
+    if not data:
+        # Fallback to committed licences/long.json if present
+        candidates = [
+            os.path.join(os.path.dirname(os.path.dirname(__file__)), "licences", "long.json"),
+            os.path.join(os.getcwd(), "licences", "long.json"),
+            os.path.join(os.getcwd(), "satyacheck-repo-seed", "licences", "long.json"),
+        ]
+        for c in candidates:
+            if os.path.exists(c):
+                try:
+                    with open(c, "r", encoding="utf-8") as f:
+                        data = json.load(f)
+                    break
+                except Exception:
+                    pass
+
+    if data and isinstance(data, dict):
+        try:
             existing = _load_row()
-            if existing is None or existing.licensee is None:
+            should_bootstrap = False
+            if existing is None or existing.licensee is None or not existing.expires_at:
+                should_bootstrap = True
+            elif clock.now() >= _ensure_utc(existing.expires_at):
+                should_bootstrap = True
+            if should_bootstrap:
                 store_licence(data["licensee"], data["expires_at"], data["signature"])
         except Exception:
             pass
