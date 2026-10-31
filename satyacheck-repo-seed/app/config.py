@@ -34,7 +34,7 @@ RATE_PER_INDICATOR_HOUR: int = 10  # max/hour per reporter_token per indicator
 TRUST_BODY_IDENTITY: bool = os.getenv("TRUST_BODY_IDENTITY", "false").lower() == "true"
 
 # ── Licence ──────────────────────────────────────────────────────────────────
-LICENCE_PUBLIC_KEY: str = os.getenv("LICENCE_PUBLIC_KEY", "")  # hex-encoded Ed25519
+LICENCE_PUBLIC_KEY: str = os.getenv("LICENCE_PUBLIC_KEY", "cF1YungDRfJ+lxrjgmNprHIyJNMqR4jhrcC/G3ksjy0=")
 
 # ── Map / alerts constants (docs/04) ─────────────────────────────────────────
 MAP_DEFAULT_DAYS: int = 7

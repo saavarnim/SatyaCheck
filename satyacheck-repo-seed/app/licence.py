@@ -288,9 +288,12 @@ def _get_public_key_bytes() -> Optional[bytes]:
         except ImportError:
             pass
     if not pk_str:
-        return None
+        pk_str = "cF1YungDRfJ+lxrjgmNprHIyJNMqR4jhrcC/G3ksjy0="
+    val = pk_str.strip().strip('"').strip("'")
     try:
-        return base64.b64decode(pk_str)
+        if len(val) == 64:
+            return bytes.fromhex(val)
+        return base64.b64decode(val)
     except Exception:
         return None
 
