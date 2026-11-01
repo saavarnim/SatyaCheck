@@ -546,6 +546,90 @@ body {
   display: inline-block;
 }
 
+/* ── Timepicker Custom Control (Task F4) ── */
+.timepicker-summary {
+  margin-top: 8px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #065f46;
+  background: #ecfdf5;
+  border: 1px solid #a7f3d0;
+  border-radius: var(--radius-sm);
+  padding: 7px 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.timepicker-custom-wrapper {
+  margin-top: 8px;
+}
+
+.timepicker-toggle-btn {
+  background: none;
+  border: none;
+  color: #0284c7;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 0;
+  transition: color 0.15s ease;
+}
+
+.timepicker-toggle-btn:hover {
+  color: #0369a1;
+  text-decoration: underline;
+}
+
+.timepicker-toggle-arrow {
+  font-size: 0.7rem;
+  transition: transform 0.2s ease;
+}
+
+.timepicker-toggle-btn.expanded .timepicker-toggle-arrow {
+  transform: rotate(180deg);
+}
+
+.timepicker-custom-drawer {
+  background: #f8fafc;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 12px 14px;
+  margin-top: 6px;
+}
+
+.timepicker-inputs-row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.timepicker-field {
+  flex: 1 1 140px;
+}
+
+.form-sublabel {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+
+.timepicker-error {
+  color: #b91c1c;
+  background: #fee2e2;
+  border: 1px solid #fca5a5;
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-top: 8px;
+}
+
 /* ── Map View ─────────────────────────────────────────────────────────── */
 #leaflet-map {
   width: 100%;

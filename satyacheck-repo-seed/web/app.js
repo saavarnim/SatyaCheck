@@ -5,6 +5,12 @@ import {
   updateMapLegend,
   renderClustersList,
 } from "./heatmap.js";
+import {
+  initTimepicker,
+  getTimepickerValue,
+  resetTimepicker,
+  updateSummaryLine,
+} from "./timepicker.js";
 
 // ── 25 Seeded Areas (Embedded per docs/07 to avoid extra latency) ───────────
 const AREAS = [
@@ -144,6 +150,9 @@ function renderTranslations() {
   if (lastLoadedClusters && lastLoadedClusters.length > 0) {
     renderFilteredMap();
   }
+
+  // Update timepicker summary line in the active language
+  updateSummaryLine();
 }
 
 function renderScamAdviceDirectory() {
@@ -401,14 +410,8 @@ function setupReportView() {
     });
   });
 
-  // Time chips
-  document.querySelectorAll("#report-time-chips .chip").forEach((chip) => {
-    chip.addEventListener("click", () => {
-      document.querySelectorAll("#report-time-chips .chip").forEach((c) => c.classList.remove("active"));
-      chip.classList.add("active");
-      reportSelectedTime = chip.getAttribute("data-time");
-    });
-  });
+  // Initialise IST Timepicker (Task F4)
+  initTimepicker();
 
   // Identifier type & input
   const idInput = document.getElementById("report-identifier-value");
@@ -490,16 +493,26 @@ function setupReportView() {
       return;
     }
 
-    // Occurred at ISO timestamp based on selected time chip
-    let occurredAt = null;
-    if (reportSelectedTime === "today") {
-      const d = new Date();
-      d.setHours(d.getHours() - 3);
-      occurredAt = d.toISOString();
-    } else if (reportSelectedTime === "yesterday") {
-      const d = new Date();
-      d.setDate(d.getDate() - 1);
-      occurredAt = d.toISOString();
+    // Task F4: Validate chosen occurred_at and block submission if in future or invalid
+    const timeVal = getTimepickerValue();
+    if (!timeVal.isValid) {
+      // Expand custom drawer so user sees exact fields & validation error
+      const drawer = document.getElementById("timepicker-custom-drawer");
+      const toggleBtn = document.getElementById("timepicker-toggle-btn");
+      if (drawer && drawer.style.display === "none") {
+        drawer.style.display = "block";
+        if (toggleBtn) {
+          toggleBtn.classList.add("expanded");
+          toggleBtn.setAttribute("aria-expanded", "true");
+        }
+      }
+      const errorEl = document.getElementById("timepicker-error");
+      if (errorEl) {
+        errorEl.textContent = timeVal.error;
+        errorEl.style.display = "block";
+      }
+      alert(timeVal.error || "Please select a valid past date and time.");
+      return;
     }
 
     const reportUid = "REP-" + Math.random().toString(36).substring(2, 10).toUpperCase();
@@ -510,7 +523,8 @@ function setupReportView() {
       channel: reportSelectedChannel,
       scam_type: reportSelectedScamType,
       pincode: pincode,
-      occurred_at: occurredAt,
+      occurred_at: timeVal.occurredAtIso,
+      reported_at: timeVal.reportedAtIso,
       note: note,
       has_screenshot: hasScreenshot,
       amount_lost_inr: amountVal ? parseFloat(amountVal) : null,
@@ -578,9 +592,9 @@ function setupReportView() {
       c.classList.toggle("active", idx === 0);
     });
     reportSelectedTime = "now";
-    document.querySelectorAll("#report-time-chips .chip").forEach((c, idx) => {
-      c.classList.toggle("active", idx === 0);
-    });
+
+    // Reset IST timepicker to default "Just now" collapsed state
+    resetTimepicker();
 
     form.style.display = "block";
     document.getElementById("report-success-container").style.display = "none";

@@ -94,3 +94,125 @@ def test_task_f3_heatmap_and_map_view(client):
     assert "markerPulse" in css or "marker-highlight-pulse" in css
 
 
+def test_task_f4_timepicker_and_report_submission(client, test_db):
+    """Task F4: Verify timepicker.js, UI controls, pure functions nowIst/istIso, and POST /reports with past IST occurred_at."""
+    # 1. timepicker.js static asset served with 200
+    resp = client.get("/timepicker.js")
+    assert resp.status_code == 200
+    js = resp.text
+
+    # Verify pure functions exported and window assignments for console testing
+    assert "export function nowIst" in js
+    assert "export function istIso" in js
+    assert "window.nowIst = nowIst" in js
+    assert "window.istIso = istIso" in js
+
+    # Verify IST timezone and +05:30 offset
+    assert "Asia/Kolkata" in js
+    assert "+05:30" in js
+
+    # Verify 90 days min limit
+    assert "90" in js
+
+    # 2. index.html has required timepicker UI elements
+    idx_resp = client.get("/")
+    assert idx_resp.status_code == 200
+    html = idx_resp.text
+
+    # Default path remains "Just now" chips & summary
+    assert 'id="report-time-chips"' in html
+    assert 'id="chip-time-now"' in html
+    assert 'id="chip-time-1h"' in html
+    assert 'id="chip-time-this-morning"' in html
+    assert 'id="chip-time-last-night"' in html
+    assert 'id="chip-time-yesterday"' in html
+    assert 'id="chip-time-2-3-days"' in html
+    assert 'id="chip-time-last-week"' in html
+
+    # Summary line
+    assert 'id="timepicker-summary"' in html
+
+    # Collapsed drawer and toggle
+    assert 'id="timepicker-toggle-btn"' in html
+    assert 'id="timepicker-custom-drawer"' in html
+    assert 'id="timepicker-date"' in html
+    assert 'id="timepicker-time"' in html
+    assert 'id="timepicker-error"' in html
+
+    # 3. i18n has translations for chips and Hindi summary
+    i18n_resp = client.get("/i18n.js")
+    assert i18n_resp.status_code == 200
+    i18n = i18n_resp.text
+    assert "Just now" in i18n and "अभी-अभी" in i18n
+    assert "1 hour ago" in i18n and "1 घंटा पहले" in i18n
+    assert "This morning" in i18n and "आज सुबह" in i18n
+    assert "Last night" in i18n and "कल रात" in i18n
+    assert "Yesterday" in i18n and "कल" in i18n
+    assert "2-3 days ago" in i18n and "2-3 दिन पहले" in i18n
+    assert "Last week" in i18n and "पिछले हफ्ते" in i18n
+    assert "Change date and time" in i18n and "तारीख और समय बदलें" in i18n
+
+    # 4. Default path submission (takes 0 extra taps)
+    default_payload = {
+        "report_id": "REP-TEST-DEF-001",
+        "identifier_type": "phone",
+        "identifier_value": "+91 98765 43210",
+        "channel": "phone call",
+        "scam_type": "digital-arrest",
+        "pincode": "560102",
+        "occurred_at": "2026-11-01T07:00:00+05:30",
+        "reported_at": "2026-11-01T07:00:00+05:30",
+        "reporter_id": "test_device_f4_1",
+    }
+    def_resp = client.post("/reports", json=default_payload)
+    assert def_resp.status_code == 201
+    data = def_resp.json()
+    assert data["report_id"] == "REP-TEST-DEF-001"
+
+    # 5. Past date & time report submission (e.g. 5 days ago in IST +05:30)
+    past_ist = "2026-10-27T14:30:00+05:30"
+    past_payload = {
+        "report_id": "REP-TEST-PAST-002",
+        "identifier_type": "upi",
+        "identifier_value": "scammer123@okaxis",
+        "channel": "upi request",
+        "scam_type": "upi-refund-qr",
+        "pincode": "560038",
+        "occurred_at": past_ist,
+        "reported_at": "2026-11-01T07:00:00+05:30",
+        "reporter_id": "test_device_f4_2",
+    }
+    past_resp = client.post("/reports", json=past_payload)
+    assert past_resp.status_code == 201
+    assert past_resp.json()["report_id"] == "REP-TEST-PAST-002"
+
+    # Verify in DB that occurred_at was stored accurately
+    from app.models import Report
+    saved = test_db.query(Report).filter_by(report_id="REP-TEST-PAST-002").first()
+    assert saved is not None
+    # Converted to UTC in DB: 14:30 IST is 09:00 UTC (14:30 - 05:30 = 09:00)
+    assert saved.occurred_at.hour == 9
+    assert saved.occurred_at.minute == 0
+    assert saved.occurred_at.day == 27
+    assert saved.occurred_at.month == 10
+    from app.clock import to_ist_iso
+    assert to_ist_iso(saved.occurred_at) == "2026-10-27T14:30:00+05:30"
+
+    # 6. Future date & time must be rejected by POST /reports
+    future_ist = "2026-11-05T12:00:00+05:30"
+    future_payload = {
+        "report_id": "REP-TEST-FUT-003",
+        "identifier_type": "phone",
+        "identifier_value": "+91 91234 56789",
+        "channel": "phone call",
+        "scam_type": "job-offer",
+        "pincode": "560102",
+        "occurred_at": future_ist,
+        "reporter_id": "test_device_f4_3",
+    }
+    fut_resp = client.post("/reports", json=future_payload)
+    assert fut_resp.status_code == 400
+    assert fut_resp.json()["error"] == "INVALID_REQUEST"
+
+
+

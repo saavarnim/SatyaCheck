@@ -153,13 +153,61 @@
             </select>
           </div>
 
-          <!-- Step 5: Time -->
-          <div class="form-group">
+          <!-- Step 5: Time (Task F4 IST Timepicker) -->
+          <div class="form-group" id="report-step-time">
             <label class="form-label" data-i18n="step5Time">5. When did this happen?</label>
+            
+            <!-- Quick Chips: Just now, 1 hour ago, This morning, Last night, Yesterday, 2-3 days ago, Last week -->
             <div class="chips-row" id="report-time-chips">
-              <button type="button" class="chip active" data-time="now"><span data-i18n="timeJustNow">Just now</span></button>
-              <button type="button" class="chip" data-time="today"><span data-i18n="timeToday">Earlier today</span></button>
-              <button type="button" class="chip" data-time="yesterday"><span data-i18n="timeYesterday">Yesterday</span></button>
+              <button type="button" class="chip active" data-time="now" id="chip-time-now">
+                <span data-i18n="timeChipNow">Just now</span>
+              </button>
+              <button type="button" class="chip" data-time="1h" id="chip-time-1h">
+                <span data-i18n="timeChip1h">1 hour ago</span>
+              </button>
+              <button type="button" class="chip" data-time="this_morning" id="chip-time-this-morning">
+                <span data-i18n="timeChipThisMorning">This morning</span>
+              </button>
+              <button type="button" class="chip" data-time="last_night" id="chip-time-last-night">
+                <span data-i18n="timeChipLastNight">Last night</span>
+              </button>
+              <button type="button" class="chip" data-time="yesterday" id="chip-time-yesterday">
+                <span data-i18n="timeChipYesterday">Yesterday</span>
+              </button>
+              <button type="button" class="chip" data-time="2_3_days" id="chip-time-2-3-days">
+                <span data-i18n="timeChip23Days">2-3 days ago</span>
+              </button>
+              <button type="button" class="chip" data-time="last_week" id="chip-time-last-week">
+                <span data-i18n="timeChipLastWeek">Last week</span>
+              </button>
+            </div>
+
+            <!-- Summary Line -->
+            <div id="timepicker-summary" class="timepicker-summary" aria-live="polite">
+              Happened: Just now (India time)
+            </div>
+
+            <!-- Collapsible "Change date and time" toggle -->
+            <div class="timepicker-custom-wrapper">
+              <button type="button" id="timepicker-toggle-btn" class="timepicker-toggle-btn" aria-expanded="false" aria-controls="timepicker-custom-drawer">
+                <span id="timepicker-toggle-icon">⏱️</span>
+                <span id="timepicker-toggle-text" data-i18n="timeCustomToggle">Change date and time</span>
+                <span class="timepicker-toggle-arrow">▼</span>
+              </button>
+
+              <div id="timepicker-custom-drawer" class="timepicker-custom-drawer" style="display: none;">
+                <div class="timepicker-inputs-row">
+                  <div class="timepicker-field">
+                    <label class="form-sublabel" for="timepicker-date" data-i18n="timepickerDateLabel">Date (IST):</label>
+                    <input type="date" id="timepicker-date" class="form-input">
+                  </div>
+                  <div class="timepicker-field">
+                    <label class="form-sublabel" for="timepicker-time" data-i18n="timepickerTimeLabel">Time (IST):</label>
+                    <input type="time" id="timepicker-time" class="form-input">
+                  </div>
+                </div>
+                <div id="timepicker-error" class="timepicker-error" style="display: none;" role="alert"></div>
+              </div>
             </div>
           </div>
 

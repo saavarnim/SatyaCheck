@@ -108,6 +108,16 @@ export const translations = {
     timeJustNow: "Just now",
     timeToday: "Earlier today",
     timeYesterday: "Yesterday",
+    timeChipNow: "Just now",
+    timeChip1h: "1 hour ago",
+    timeChipThisMorning: "This morning",
+    timeChipLastNight: "Last night",
+    timeChipYesterday: "Yesterday",
+    timeChip23Days: "2-3 days ago",
+    timeChipLastWeek: "Last week",
+    timeCustomToggle: "Change date and time",
+    timepickerDateLabel: "Date (IST):",
+    timepickerTimeLabel: "Time (IST):",
 
     // Success Screen
     reportSuccessTitle: "Report Received",
@@ -320,6 +330,16 @@ export const translations = {
     timeJustNow: "अभी-अभी",
     timeToday: "आज पहले",
     timeYesterday: "कल",
+    timeChipNow: "अभी-अभी",
+    timeChip1h: "1 घंटा पहले",
+    timeChipThisMorning: "आज सुबह",
+    timeChipLastNight: "कल रात",
+    timeChipYesterday: "कल",
+    timeChip23Days: "2-3 दिन पहले",
+    timeChipLastWeek: "पिछले हफ्ते",
+    timeCustomToggle: "तारीख और समय बदलें",
+    timepickerDateLabel: "तारीख (भारतीय समय):",
+    timepickerTimeLabel: "समय (भारतीय समय):",
 
     // Success Screen
     reportSuccessTitle: "रिपोर्ट प्राप्त हुई",
