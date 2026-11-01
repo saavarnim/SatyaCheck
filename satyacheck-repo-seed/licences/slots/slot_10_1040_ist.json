@@ -1,0 +1,10 @@
+{
+  "licensee": "Demo Bank",
+  "expires_at": "2026-11-01T05:15:00+00:00",
+  "signature": "Bsk2ZKaJKwwaRBBZmIWLm41DSZB7wtg0gKQ4VdVnk/s6jj+jGboo4dM2JHBOsPOv9p2AYI3mQmvDBjLW70oIBw==",
+  "_validity_notes": {
+    "slot_id": "SLOT-10",
+    "validity_ist": "10:40 AM to 10:45 AM IST (01 Nov 2026)",
+    "validity_sgt": "01:10 PM to 01:15 PM SGT (01 Nov 2026)"
+  }
+}

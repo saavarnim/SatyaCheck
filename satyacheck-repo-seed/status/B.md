@@ -11,3 +11,4 @@ Format:  [T#] done|wip | LEFT OFF AT: ... | NEEDS (from other person/files): ...
 [F1] done | app/explain.py pure build_explain, web/explain.js 3-part card + confidence bar + 12 scam types + speech synthesis, tests/test_explain.py 7/7 pass (153 total) | explain field added to /lookup
 [F2] done | web/official.json (1930 tel, cybercrime.gov.in, sancharsaathi.gov.in EN/HI), web/advisories.json ([]), web/official.js authorities card, app/routes_export.py GET /admin/export/known-scams (JSON/CSV, token, no PII), tests/test_export.py 6/6 pass (160 total)
 [DEMO-LICENCE] done | in-app licence upload input field & file picker on expired overlay and about view, demo 5min & long licence loaders, instant activation & unblock without restart
+[DEMO-SLOTS] done | alternative_5min.json with 50 pre-signed 5-min slots (10:00-14:05 IST / 12:30-16:35 SGT), individual slot files, automatic slot resolution in app.js and routes_licence.py

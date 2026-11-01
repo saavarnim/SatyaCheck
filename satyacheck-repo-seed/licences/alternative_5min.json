@@ -1,0 +1,1014 @@
+{
+  "title": "SatyaCheck 5-Minute Alternative Licence Keys",
+  "description": "Pre-signed 5-minute evaluation licence keys for the live demo window (10:00 AM to 1:00 PM+ IST / 12:30 PM to 3:30 PM+ SGT).",
+  "generated_date": "2026-11-01",
+  "licensee": "Demo Bank",
+  "total_slots": 50,
+  "timezone_reference": {
+    "IST": "Indian Standard Time (UTC+05:30)",
+    "SGT": "Singapore Time (UTC+08:00, IST + 2h 30m)"
+  },
+  "instructions": "Copy any single slot JSON or upload it in the web interface. To test, upload a slot matching your current time window. After 5 minutes, the app will return 403 / expired state. Then upload licences/long.json to restore.",
+  "slots": [
+    {
+      "slot_id": "SLOT-01",
+      "validity_window_ist": "09:55 AM to 10:00 AM IST (01 Nov 2026)",
+      "validity_window_sgt": "12:25 PM to 12:30 PM SGT (01 Nov 2026)",
+      "time_validity": {
+        "ist": {
+          "valid_from": "2026-11-01 09:55:00 AM IST",
+          "expires_at": "2026-11-01 10:00:00 AM IST",
+          "utc_offset": "+05:30"
+        },
+        "sgt": {
+          "valid_from": "2026-11-01 12:25:00 PM SGT",
+          "expires_at": "2026-11-01 12:30:00 PM SGT",
+          "utc_offset": "+08:00"
+        }
+      },
+      "licensee": "Demo Bank",
+      "expires_at": "2026-11-01T04:30:00+00:00",
+      "signature": "M1S/j6224T0x5DCwJlF5Odu6glkKLpTTfQeLON0Vru9x7HjZMLcHlQW3El5erAVLsTdPpQD7g+C7USxAxh9mAw=="
+    },
+    {
+      "slot_id": "SLOT-02",
+      "validity_window_ist": "10:00 AM to 10:05 AM IST (01 Nov 2026)",
+      "validity_window_sgt": "12:30 PM to 12:35 PM SGT (01 Nov 2026)",
+      "time_validity": {
+        "ist": {
+          "valid_from": "2026-11-01 10:00:00 AM IST",
+          "expires_at": "2026-11-01 10:05:00 AM IST",
+          "utc_offset": "+05:30"
+        },
+        "sgt": {
+          "valid_from": "2026-11-01 12:30:00 PM SGT",
+          "expires_at": "2026-11-01 12:35:00 PM SGT",
+          "utc_offset": "+08:00"
+        }
+      },
+      "licensee": "Demo Bank",
+      "expires_at": "2026-11-01T04:35:00+00:00",
+      "signature": "9oFCLI28JkQxYjtlJmB8XEcuIfEX0Ad74IQCJKjyv8ApQYI6MN+LJRjos1zd2dc3+rKjM0+MBST4oAdf051BDw=="
+    },
+    {
+      "slot_id": "SLOT-03",
+      "validity_window_ist": "10:05 AM to 10:10 AM IST (01 Nov 2026)",
+      "validity_window_sgt": "12:35 PM to 12:40 PM SGT (01 Nov 2026)",
+      "time_validity": {
+        "ist": {
+          "valid_from": "2026-11-01 10:05:00 AM IST",
+          "expires_at": "2026-11-01 10:10:00 AM IST",
+          "utc_offset": "+05:30"
+        },
+        "sgt": {
+          "valid_from": "2026-11-01 12:35:00 PM SGT",
+          "expires_at": "2026-11-01 12:40:00 PM SGT",
+          "utc_offset": "+08:00"
+        }
+      },
+      "licensee": "Demo Bank",
+      "expires_at": "2026-11-01T04:40:00+00:00",
+      "signature": "05/WmcPTwl7KeCTRR4VlZ8B7hkojZVjT5G+kjFiNQOc0JtpwKQdUocMRNrbzPq8ldgcRj1nq6LHZsdwkJzkLBQ=="
+    },
+    {
+      "slot_id": "SLOT-04",
+      "validity_window_ist": "10:10 AM to 10:15 AM IST (01 Nov 2026)",
+      "validity_window_sgt": "12:40 PM to 12:45 PM SGT (01 Nov 2026)",
+      "time_validity": {
+        "ist": {
+          "valid_from": "2026-11-01 10:10:00 AM IST",
+          "expires_at": "2026-11-01 10:15:00 AM IST",
+          "utc_offset": "+05:30"
+        },
+        "sgt": {
+          "valid_from": "2026-11-01 12:40:00 PM SGT",
+          "expires_at": "2026-11-01 12:45:00 PM SGT",
+          "utc_offset": "+08:00"
+        }
+      },
+      "licensee": "Demo Bank",
+      "expires_at": "2026-11-01T04:45:00+00:00",
+      "signature": "0EgkFFjKwbidT9WHdaPxarq3DvAj0iCjYumbPNHgZo3vA3FkmHn7SaVHkG07XQ/kiqjag82o49gPZzZ6W9MBBg=="
+    },
+    {
+      "slot_id": "SLOT-05",
+      "validity_window_ist": "10:15 AM to 10:20 AM IST (01 Nov 2026)",
+      "validity_window_sgt": "12:45 PM to 12:50 PM SGT (01 Nov 2026)",
+      "time_validity": {
+        "ist": {
+          "valid_from": "2026-11-01 10:15:00 AM IST",
+          "expires_at": "2026-11-01 10:20:00 AM IST",
+          "utc_offset": "+05:30"
+        },
+        "sgt": {
+          "valid_from": "2026-11-01 12:45:00 PM SGT",
+          "expires_at": "2026-11-01 12:50:00 PM SGT",
+          "utc_offset": "+08:00"
+        }
+      },
+      "licensee": "Demo Bank",
+      "expires_at": "2026-11-01T04:50:00+00:00",
+      "signature": "uQkT8nxEKAnxmbxxzR4lhPAO4mA1nNt/cYSz2fGxmFL9pY2VYJm9Wq18XVp7mecOJhFpXCxTHgjMwGLS9uL/BA=="
+    },
+    {
+      "slot_id": "SLOT-06",
+      "validity_window_ist": "10:20 AM to 10:25 AM IST (01 Nov 2026)",
+      "validity_window_sgt": "12:50 PM to 12:55 PM SGT (01 Nov 2026)",
+      "time_validity": {
+        "ist": {
+          "valid_from": "2026-11-01 10:20:00 AM IST",
+          "expires_at": "2026-11-01 10:25:00 AM IST",
+          "utc_offset": "+05:30"
+        },
+        "sgt": {
+          "valid_from": "2026-11-01 12:50:00 PM SGT",
+          "expires_at": "2026-11-01 12:55:00 PM SGT",
+          "utc_offset": "+08:00"
+        }
+      },
+      "licensee": "Demo Bank",
+      "expires_at": "2026-11-01T04:55:00+00:00",
+      "signature": "A0NVRnHa3G44o5lLsU4dha3RPql6aT4AajsvzgXnQyJ63ToyHUFDlYZUrqAQ611UEv1LH9zSNrKRMlu+ZIW7AQ=="
+    },
+    {
+      "slot_id": "SLOT-07",
+      "validity_window_ist": "10:25 AM to 10:30 AM IST (01 Nov 2026)",
+      "validity_window_sgt": "12:55 PM to 01:00 PM SGT (01 Nov 2026)",
+      "time_validity": {
+        "ist": {
+          "valid_from": "2026-11-01 10:25:00 AM IST",
+          "expires_at": "2026-11-01 10:30:00 AM IST",
+          "utc_offset": "+05:30"
+        },
+        "sgt": {
+          "valid_from": "2026-11-01 12:55:00 PM SGT",
+          "expires_at": "2026-11-01 01:00:00 PM SGT",
+          "utc_offset": "+08:00"
+        }
+      },
+      "licensee": "Demo Bank",
+      "expires_at": "2026-11-01T05:00:00+00:00",
+      "signature": "2j+a6sQNvf8Q/wTTO39BKBxUt7O5JWBzvkYJ0Z913FGsaST8NETh5xdXaHqF4c7/fJ4ZPiPgQxwP+DAAgKpODw=="
+    },
+    {
+      "slot_id": "SLOT-08",
+      "validity_window_ist": "10:30 AM to 10:35 AM IST (01 Nov 2026)",
+      "validity_window_sgt": "01:00 PM to 01:05 PM SGT (01 Nov 2026)",
+      "time_validity": {
+        "ist": {
+          "valid_from": "2026-11-01 10:30:00 AM IST",
+          "expires_at": "2026-11-01 10:35:00 AM IST",
+          "utc_offset": "+05:30"
+        },
+        "sgt": {
+          "valid_from": "2026-11-01 01:00:00 PM SGT",
+          "expires_at": "2026-11-01 01:05:00 PM SGT",
+          "utc_offset": "+08:00"
+        }
+      },
+      "licensee": "Demo Bank",
+      "expires_at": "2026-11-01T05:05:00+00:00",
+      "signature": "wnY6skUGuHQ78ruDYcgsZySTkLciJhtn76IQzaq+8jN79WtdluYEf+t2ftea+l6HdnsvUilbx3rQilNuDkmKCw=="
+    },
+    {
+      "slot_id": "SLOT-09",
+      "validity_window_ist": "10:35 AM to 10:40 AM IST (01 Nov 2026)",
+      "validity_window_sgt": "01:05 PM to 01:10 PM SGT (01 Nov 2026)",
+      "time_validity": {
+        "ist": {
+          "valid_from": "2026-11-01 10:35:00 AM IST",
+          "expires_at": "2026-11-01 10:40:00 AM IST",
+          "utc_offset": "+05:30"
+        },
+        "sgt": {
+          "valid_from": "2026-11-01 01:05:00 PM SGT",
+          "expires_at": "2026-11-01 01:10:00 PM SGT",
+          "utc_offset": "+08:00"
+        }
+      },
+      "licensee": "Demo Bank",
+      "expires_at": "2026-11-01T05:10:00+00:00",
+      "signature": "g6vRXol4trE65aQzY+nzGERG7GXFF6E6QCsLCmzVVOeB16QaoKcXQyLX00n0FtN5e0qyKURugE0fmkRZIhszCQ=="
+    },
+    {
+      "slot_id": "SLOT-10",
+      "validity_window_ist": "10:40 AM to 10:45 AM IST (01 Nov 2026)",
+      "validity_window_sgt": "01:10 PM to 01:15 PM SGT (01 Nov 2026)",
+      "time_validity": {
+        "ist": {
+          "valid_from": "2026-11-01 10:40:00 AM IST",
+          "expires_at": "2026-11-01 10:45:00 AM IST",
+          "utc_offset": "+05:30"
+        },
+        "sgt": {
+          "valid_from": "2026-11-01 01:10:00 PM SGT",
+          "expires_at": "2026-11-01 01:15:00 PM SGT",
+          "utc_offset": "+08:00"
+        }
+      },
+      "licensee": "Demo Bank",
+      "expires_at": "2026-11-01T05:15:00+00:00",
+      "signature": "Bsk2ZKaJKwwaRBBZmIWLm41DSZB7wtg0gKQ4VdVnk/s6jj+jGboo4dM2JHBOsPOv9p2AYI3mQmvDBjLW70oIBw=="
+    },
+    {
+      "slot_id": "SLOT-11",
+      "validity_window_ist": "10:45 AM to 10:50 AM IST (01 Nov 2026)",
+      "validity_window_sgt": "01:15 PM to 01:20 PM SGT (01 Nov 2026)",
+      "time_validity": {
+        "ist": {
+          "valid_from": "2026-11-01 10:45:00 AM IST",
+          "expires_at": "2026-11-01 10:50:00 AM IST",
+          "utc_offset": "+05:30"
+        },
+        "sgt": {
+          "valid_from": "2026-11-01 01:15:00 PM SGT",
+          "expires_at": "2026-11-01 01:20:00 PM SGT",
+          "utc_offset": "+08:00"
+        }
+      },
+      "licensee": "Demo Bank",
+      "expires_at": "2026-11-01T05:20:00+00:00",
+      "signature": "DUBExhTYNdYL3pd7qT4XlO/hea89LhQh4vlMmmi3oV5qfRBw6558G+BGGVzRDGv9265ZdZ13+1dnTf755lWZDA=="
+    },
+    {
+      "slot_id": "SLOT-12",
+      "validity_window_ist": "10:50 AM to 10:55 AM IST (01 Nov 2026)",
+      "validity_window_sgt": "01:20 PM to 01:25 PM SGT (01 Nov 2026)",
+      "time_validity": {
+        "ist": {
+          "valid_from": "2026-11-01 10:50:00 AM IST",
+          "expires_at": "2026-11-01 10:55:00 AM IST",
+          "utc_offset": "+05:30"
+        },
+        "sgt": {
+          "valid_from": "2026-11-01 01:20:00 PM SGT",
+          "expires_at": "2026-11-01 01:25:00 PM SGT",
+          "utc_offset": "+08:00"
+        }
+      },
+      "licensee": "Demo Bank",
+      "expires_at": "2026-11-01T05:25:00+00:00",
+      "signature": "t08aIUhdZzxVnlVrJskXiCTIzVoFU/j14sQHKVnSbOo8YpJ7ap5tgWa2SXtqz2T6lRWORFFQvZFi3TmqRyFSBw=="
+    },
+    {
+      "slot_id": "SLOT-13",
+      "validity_window_ist": "10:55 AM to 11:00 AM IST (01 Nov 2026)",
+      "validity_window_sgt": "01:25 PM to 01:30 PM SGT (01 Nov 2026)",
+      "time_validity": {
+        "ist": {
+          "valid_from": "2026-11-01 10:55:00 AM IST",
+          "expires_at": "2026-11-01 11:00:00 AM IST",
+          "utc_offset": "+05:30"
+        },
+        "sgt": {
+          "valid_from": "2026-11-01 01:25:00 PM SGT",
+          "expires_at": "2026-11-01 01:30:00 PM SGT",
+          "utc_offset": "+08:00"
+        }
+      },
+      "licensee": "Demo Bank",
+      "expires_at": "2026-11-01T05:30:00+00:00",
+      "signature": "+3EzbAYN1vg/ezAO5SYCQZp08R7uw+GnHokzlKIdhzt3/Gn0RWHtvhL5r6NUJV1E5R+PiRYBRBjJF0fcUm5CAQ=="
+    },
+    {
+      "slot_id": "SLOT-14",
+      "validity_window_ist": "11:00 AM to 11:05 AM IST (01 Nov 2026)",
+      "validity_window_sgt": "01:30 PM to 01:35 PM SGT (01 Nov 2026)",
+      "time_validity": {
+        "ist": {
+          "valid_from": "2026-11-01 11:00:00 AM IST",
+          "expires_at": "2026-11-01 11:05:00 AM IST",
+          "utc_offset": "+05:30"
+        },
+        "sgt": {
+          "valid_from": "2026-11-01 01:30:00 PM SGT",
+          "expires_at": "2026-11-01 01:35:00 PM SGT",
+          "utc_offset": "+08:00"
+        }
+      },
+      "licensee": "Demo Bank",
+      "expires_at": "2026-11-01T05:35:00+00:00",
+      "signature": "hHFOzZbaFASXi1fn413MXZPvkTuv+NG7+/cdj5xw/bbhQsNg1izW6m4QV6/R7nkuY3qAhrYDQ7RffELWDxnRDQ=="
+    },
+    {
+      "slot_id": "SLOT-15",
+      "validity_window_ist": "11:05 AM to 11:10 AM IST (01 Nov 2026)",
+      "validity_window_sgt": "01:35 PM to 01:40 PM SGT (01 Nov 2026)",
+      "time_validity": {
+        "ist": {
+          "valid_from": "2026-11-01 11:05:00 AM IST",
+          "expires_at": "2026-11-01 11:10:00 AM IST",
+          "utc_offset": "+05:30"
+        },
+        "sgt": {
+          "valid_from": "2026-11-01 01:35:00 PM SGT",
+          "expires_at": "2026-11-01 01:40:00 PM SGT",
+          "utc_offset": "+08:00"
+        }
+      },
+      "licensee": "Demo Bank",
+      "expires_at": "2026-11-01T05:40:00+00:00",
+      "signature": "3eJ+Wbtfn1XufGH3VYJy6Yvo+nZtIdspshCNEOpywmXgQb2SsOswwJfhTkDajfwVBjv+3307Jd0hOtlVK2/OCg=="
+    },
+    {
+      "slot_id": "SLOT-16",
+      "validity_window_ist": "11:10 AM to 11:15 AM IST (01 Nov 2026)",
+      "validity_window_sgt": "01:40 PM to 01:45 PM SGT (01 Nov 2026)",
+      "time_validity": {
+        "ist": {
+          "valid_from": "2026-11-01 11:10:00 AM IST",
+          "expires_at": "2026-11-01 11:15:00 AM IST",
+          "utc_offset": "+05:30"
+        },
+        "sgt": {
+          "valid_from": "2026-11-01 01:40:00 PM SGT",
+          "expires_at": "2026-11-01 01:45:00 PM SGT",
+          "utc_offset": "+08:00"
+        }
+      },
+      "licensee": "Demo Bank",
+      "expires_at": "2026-11-01T05:45:00+00:00",
+      "signature": "LX9sfpQXvAcCiEe9ZmEFdycoTj3ZIYvCqdz/UY0EossooEGzwy0KGmiV6ysJqXAm/KIHtVoXJglheh3YuJ2BDg=="
+    },
+    {
+      "slot_id": "SLOT-17",
+      "validity_window_ist": "11:15 AM to 11:20 AM IST (01 Nov 2026)",
+      "validity_window_sgt": "01:45 PM to 01:50 PM SGT (01 Nov 2026)",
+      "time_validity": {
+        "ist": {
+          "valid_from": "2026-11-01 11:15:00 AM IST",
+          "expires_at": "2026-11-01 11:20:00 AM IST",
+          "utc_offset": "+05:30"
+        },
+        "sgt": {
+          "valid_from": "2026-11-01 01:45:00 PM SGT",
+          "expires_at": "2026-11-01 01:50:00 PM SGT",
+          "utc_offset": "+08:00"
+        }
+      },
+      "licensee": "Demo Bank",
+      "expires_at": "2026-11-01T05:50:00+00:00",
+      "signature": "Bdb0TPjPdricnWIvTwIZpG23waemcvQ4txEPuLrJdKix3GKZCswrvslvno6EpkNGTAvD2B8hN3i8WWqvka/pCg=="
+    },
+    {
+      "slot_id": "SLOT-18",
+      "validity_window_ist": "11:20 AM to 11:25 AM IST (01 Nov 2026)",
+      "validity_window_sgt": "01:50 PM to 01:55 PM SGT (01 Nov 2026)",
+      "time_validity": {
+        "ist": {
+          "valid_from": "2026-11-01 11:20:00 AM IST",
+          "expires_at": "2026-11-01 11:25:00 AM IST",
+          "utc_offset": "+05:30"
+        },
+        "sgt": {
+          "valid_from": "2026-11-01 01:50:00 PM SGT",
+          "expires_at": "2026-11-01 01:55:00 PM SGT",
+          "utc_offset": "+08:00"
+        }
+      },
+      "licensee": "Demo Bank",
+      "expires_at": "2026-11-01T05:55:00+00:00",
+      "signature": "wAN1pO+69II547hE9BZmd5zzpnLYjowHZGdERTDaJxzKSWgOqfBqc6XMKELP7LzuTZkAxZQgbgScyH1+MsHoCg=="
+    },
+    {
+      "slot_id": "SLOT-19",
+      "validity_window_ist": "11:25 AM to 11:30 AM IST (01 Nov 2026)",
+      "validity_window_sgt": "01:55 PM to 02:00 PM SGT (01 Nov 2026)",
+      "time_validity": {
+        "ist": {
+          "valid_from": "2026-11-01 11:25:00 AM IST",
+          "expires_at": "2026-11-01 11:30:00 AM IST",
+          "utc_offset": "+05:30"
+        },
+        "sgt": {
+          "valid_from": "2026-11-01 01:55:00 PM SGT",
+          "expires_at": "2026-11-01 02:00:00 PM SGT",
+          "utc_offset": "+08:00"
+        }
+      },
+      "licensee": "Demo Bank",
+      "expires_at": "2026-11-01T06:00:00+00:00",
+      "signature": "zen/46oHKhH7OB0rYr3tAUryBSBXa3xQEQab5TUplimKUHvCGU00Q/bEFqVszhGtb0QeIDlC1iUwN2ksVKKTCw=="
+    },
+    {
+      "slot_id": "SLOT-20",
+      "validity_window_ist": "11:30 AM to 11:35 AM IST (01 Nov 2026)",
+      "validity_window_sgt": "02:00 PM to 02:05 PM SGT (01 Nov 2026)",
+      "time_validity": {
+        "ist": {
+          "valid_from": "2026-11-01 11:30:00 AM IST",
+          "expires_at": "2026-11-01 11:35:00 AM IST",
+          "utc_offset": "+05:30"
+        },
+        "sgt": {
+          "valid_from": "2026-11-01 02:00:00 PM SGT",
+          "expires_at": "2026-11-01 02:05:00 PM SGT",
+          "utc_offset": "+08:00"
+        }
+      },
+      "licensee": "Demo Bank",
+      "expires_at": "2026-11-01T06:05:00+00:00",
+      "signature": "F5EhWUGe9yCWO6ardeoyJ6mIB5h/4lsgpXvPpfTtBBMMmpnEAlG30swlaUr1nwX6IZNTHEftYU1oADMmCq3vBQ=="
+    },
+    {
+      "slot_id": "SLOT-21",
+      "validity_window_ist": "11:35 AM to 11:40 AM IST (01 Nov 2026)",
+      "validity_window_sgt": "02:05 PM to 02:10 PM SGT (01 Nov 2026)",
+      "time_validity": {
+        "ist": {
+          "valid_from": "2026-11-01 11:35:00 AM IST",
+          "expires_at": "2026-11-01 11:40:00 AM IST",
+          "utc_offset": "+05:30"
+        },
+        "sgt": {
+          "valid_from": "2026-11-01 02:05:00 PM SGT",
+          "expires_at": "2026-11-01 02:10:00 PM SGT",
+          "utc_offset": "+08:00"
+        }
+      },
+      "licensee": "Demo Bank",
+      "expires_at": "2026-11-01T06:10:00+00:00",
+      "signature": "9Ahd2OMULEBC87NNKiJo4ClbhHylukVYGvYtlqeoYZgargP1f8REE1GdoVJNgTdgEVesWv8Bv+w01YPe+cNZBw=="
+    },
+    {
+      "slot_id": "SLOT-22",
+      "validity_window_ist": "11:40 AM to 11:45 AM IST (01 Nov 2026)",
+      "validity_window_sgt": "02:10 PM to 02:15 PM SGT (01 Nov 2026)",
+      "time_validity": {
+        "ist": {
+          "valid_from": "2026-11-01 11:40:00 AM IST",
+          "expires_at": "2026-11-01 11:45:00 AM IST",
+          "utc_offset": "+05:30"
+        },
+        "sgt": {
+          "valid_from": "2026-11-01 02:10:00 PM SGT",
+          "expires_at": "2026-11-01 02:15:00 PM SGT",
+          "utc_offset": "+08:00"
+        }
+      },
+      "licensee": "Demo Bank",
+      "expires_at": "2026-11-01T06:15:00+00:00",
+      "signature": "kznBV7WtFC3Njle2h7N297o/Zf7cyCaHIVqhlH5ZMpVme9somWfiXkUOGucVm73LDi5+Mwc+nYIeWMqMTWKDBA=="
+    },
+    {
+      "slot_id": "SLOT-23",
+      "validity_window_ist": "11:45 AM to 11:50 AM IST (01 Nov 2026)",
+      "validity_window_sgt": "02:15 PM to 02:20 PM SGT (01 Nov 2026)",
+      "time_validity": {
+        "ist": {
+          "valid_from": "2026-11-01 11:45:00 AM IST",
+          "expires_at": "2026-11-01 11:50:00 AM IST",
+          "utc_offset": "+05:30"
+        },
+        "sgt": {
+          "valid_from": "2026-11-01 02:15:00 PM SGT",
+          "expires_at": "2026-11-01 02:20:00 PM SGT",
+          "utc_offset": "+08:00"
+        }
+      },
+      "licensee": "Demo Bank",
+      "expires_at": "2026-11-01T06:20:00+00:00",
+      "signature": "npx9Mu7AKUTRb9iwA9UJcsR7i379p+0GgivjZNOx/q65SZ4tTzeLNuHv/2+55GIX4iWqoLeOq/YXkUybALq1DA=="
+    },
+    {
+      "slot_id": "SLOT-24",
+      "validity_window_ist": "11:50 AM to 11:55 AM IST (01 Nov 2026)",
+      "validity_window_sgt": "02:20 PM to 02:25 PM SGT (01 Nov 2026)",
+      "time_validity": {
+        "ist": {
+          "valid_from": "2026-11-01 11:50:00 AM IST",
+          "expires_at": "2026-11-01 11:55:00 AM IST",
+          "utc_offset": "+05:30"
+        },
+        "sgt": {
+          "valid_from": "2026-11-01 02:20:00 PM SGT",
+          "expires_at": "2026-11-01 02:25:00 PM SGT",
+          "utc_offset": "+08:00"
+        }
+      },
+      "licensee": "Demo Bank",
+      "expires_at": "2026-11-01T06:25:00+00:00",
+      "signature": "0n7J3FtCdIcB9W2WMXO0US9Rn/d/3cDpU7Qb3D5zy/KFt2ZvDPfLFE1xis75W/OL3cqgATQNSA6ywUQk21BMCA=="
+    },
+    {
+      "slot_id": "SLOT-25",
+      "validity_window_ist": "11:55 AM to 12:00 PM IST (01 Nov 2026)",
+      "validity_window_sgt": "02:25 PM to 02:30 PM SGT (01 Nov 2026)",
+      "time_validity": {
+        "ist": {
+          "valid_from": "2026-11-01 11:55:00 AM IST",
+          "expires_at": "2026-11-01 12:00:00 PM IST",
+          "utc_offset": "+05:30"
+        },
+        "sgt": {
+          "valid_from": "2026-11-01 02:25:00 PM SGT",
+          "expires_at": "2026-11-01 02:30:00 PM SGT",
+          "utc_offset": "+08:00"
+        }
+      },
+      "licensee": "Demo Bank",
+      "expires_at": "2026-11-01T06:30:00+00:00",
+      "signature": "H8+39GG3rOUAu8gmQTKSIc1P3MgMzTJDeL0MTqFvNwTO1N7p2HBKTStOW4dc7ItJkDnuU2xY0uIew0zS2HlcDA=="
+    },
+    {
+      "slot_id": "SLOT-26",
+      "validity_window_ist": "12:00 PM to 12:05 PM IST (01 Nov 2026)",
+      "validity_window_sgt": "02:30 PM to 02:35 PM SGT (01 Nov 2026)",
+      "time_validity": {
+        "ist": {
+          "valid_from": "2026-11-01 12:00:00 PM IST",
+          "expires_at": "2026-11-01 12:05:00 PM IST",
+          "utc_offset": "+05:30"
+        },
+        "sgt": {
+          "valid_from": "2026-11-01 02:30:00 PM SGT",
+          "expires_at": "2026-11-01 02:35:00 PM SGT",
+          "utc_offset": "+08:00"
+        }
+      },
+      "licensee": "Demo Bank",
+      "expires_at": "2026-11-01T06:35:00+00:00",
+      "signature": "A0AtPCoqD1LHS+svOembXaIK8UWyVgs9TPzG9c/ggucvy/tcz67rHcdwZxcoU7vEOJUVj6tWlmD5RyIooul/BA=="
+    },
+    {
+      "slot_id": "SLOT-27",
+      "validity_window_ist": "12:05 PM to 12:10 PM IST (01 Nov 2026)",
+      "validity_window_sgt": "02:35 PM to 02:40 PM SGT (01 Nov 2026)",
+      "time_validity": {
+        "ist": {
+          "valid_from": "2026-11-01 12:05:00 PM IST",
+          "expires_at": "2026-11-01 12:10:00 PM IST",
+          "utc_offset": "+05:30"
+        },
+        "sgt": {
+          "valid_from": "2026-11-01 02:35:00 PM SGT",
+          "expires_at": "2026-11-01 02:40:00 PM SGT",
+          "utc_offset": "+08:00"
+        }
+      },
+      "licensee": "Demo Bank",
+      "expires_at": "2026-11-01T06:40:00+00:00",
+      "signature": "P5JverdZmz6QkLypnCkpOLAzgo9I+rYyjQEW6qTBvFd4ch6f4M9UDswgzlGmnFwQ9nMFNhwJ2fOqfcIa5NxlDg=="
+    },
+    {
+      "slot_id": "SLOT-28",
+      "validity_window_ist": "12:10 PM to 12:15 PM IST (01 Nov 2026)",
+      "validity_window_sgt": "02:40 PM to 02:45 PM SGT (01 Nov 2026)",
+      "time_validity": {
+        "ist": {
+          "valid_from": "2026-11-01 12:10:00 PM IST",
+          "expires_at": "2026-11-01 12:15:00 PM IST",
+          "utc_offset": "+05:30"
+        },
+        "sgt": {
+          "valid_from": "2026-11-01 02:40:00 PM SGT",
+          "expires_at": "2026-11-01 02:45:00 PM SGT",
+          "utc_offset": "+08:00"
+        }
+      },
+      "licensee": "Demo Bank",
+      "expires_at": "2026-11-01T06:45:00+00:00",
+      "signature": "xbpcHqoB9vPP3AGI/x/AOGnkTuhAvn7uQ2zv8tqJPK52WQFN71FYN0yOfIeo3g5wGf3t4udmlJ6GZhf71V7DCA=="
+    },
+    {
+      "slot_id": "SLOT-29",
+      "validity_window_ist": "12:15 PM to 12:20 PM IST (01 Nov 2026)",
+      "validity_window_sgt": "02:45 PM to 02:50 PM SGT (01 Nov 2026)",
+      "time_validity": {
+        "ist": {
+          "valid_from": "2026-11-01 12:15:00 PM IST",
+          "expires_at": "2026-11-01 12:20:00 PM IST",
+          "utc_offset": "+05:30"
+        },
+        "sgt": {
+          "valid_from": "2026-11-01 02:45:00 PM SGT",
+          "expires_at": "2026-11-01 02:50:00 PM SGT",
+          "utc_offset": "+08:00"
+        }
+      },
+      "licensee": "Demo Bank",
+      "expires_at": "2026-11-01T06:50:00+00:00",
+      "signature": "fXsHZxXeCidKTdtSl/t17WuxYwQ80vfy74aGilvf9y8bTwQ6cMo7rJbdh/EgnT3nkAJv7doNqJz5zJCT3QP4Cg=="
+    },
+    {
+      "slot_id": "SLOT-30",
+      "validity_window_ist": "12:20 PM to 12:25 PM IST (01 Nov 2026)",
+      "validity_window_sgt": "02:50 PM to 02:55 PM SGT (01 Nov 2026)",
+      "time_validity": {
+        "ist": {
+          "valid_from": "2026-11-01 12:20:00 PM IST",
+          "expires_at": "2026-11-01 12:25:00 PM IST",
+          "utc_offset": "+05:30"
+        },
+        "sgt": {
+          "valid_from": "2026-11-01 02:50:00 PM SGT",
+          "expires_at": "2026-11-01 02:55:00 PM SGT",
+          "utc_offset": "+08:00"
+        }
+      },
+      "licensee": "Demo Bank",
+      "expires_at": "2026-11-01T06:55:00+00:00",
+      "signature": "Dn7VcPSeBLliZPPsQe6bLSEwnx0/an10kqRA/4Y8mWufqCGS0A1gh6NjegdmC17YHgcvxd2g2gS655Q5FlStCA=="
+    },
+    {
+      "slot_id": "SLOT-31",
+      "validity_window_ist": "12:25 PM to 12:30 PM IST (01 Nov 2026)",
+      "validity_window_sgt": "02:55 PM to 03:00 PM SGT (01 Nov 2026)",
+      "time_validity": {
+        "ist": {
+          "valid_from": "2026-11-01 12:25:00 PM IST",
+          "expires_at": "2026-11-01 12:30:00 PM IST",
+          "utc_offset": "+05:30"
+        },
+        "sgt": {
+          "valid_from": "2026-11-01 02:55:00 PM SGT",
+          "expires_at": "2026-11-01 03:00:00 PM SGT",
+          "utc_offset": "+08:00"
+        }
+      },
+      "licensee": "Demo Bank",
+      "expires_at": "2026-11-01T07:00:00+00:00",
+      "signature": "HJ8coIpJLi3kZQ6AXiILKTfKeZZiA1RTjVtX58ZbCW05QMHY4SnhTn+azm2W1qkc7KUCMg7Q94NYhTZ8SeCZAw=="
+    },
+    {
+      "slot_id": "SLOT-32",
+      "validity_window_ist": "12:30 PM to 12:35 PM IST (01 Nov 2026)",
+      "validity_window_sgt": "03:00 PM to 03:05 PM SGT (01 Nov 2026)",
+      "time_validity": {
+        "ist": {
+          "valid_from": "2026-11-01 12:30:00 PM IST",
+          "expires_at": "2026-11-01 12:35:00 PM IST",
+          "utc_offset": "+05:30"
+        },
+        "sgt": {
+          "valid_from": "2026-11-01 03:00:00 PM SGT",
+          "expires_at": "2026-11-01 03:05:00 PM SGT",
+          "utc_offset": "+08:00"
+        }
+      },
+      "licensee": "Demo Bank",
+      "expires_at": "2026-11-01T07:05:00+00:00",
+      "signature": "W/gyzqQZcPWkQKlgACPakhEOudbZXuGRBgFl4nykD5YtbUQhTbDKgDCn7891LbvpNsOpGnKAWA6mfM9DxxkZAQ=="
+    },
+    {
+      "slot_id": "SLOT-33",
+      "validity_window_ist": "12:35 PM to 12:40 PM IST (01 Nov 2026)",
+      "validity_window_sgt": "03:05 PM to 03:10 PM SGT (01 Nov 2026)",
+      "time_validity": {
+        "ist": {
+          "valid_from": "2026-11-01 12:35:00 PM IST",
+          "expires_at": "2026-11-01 12:40:00 PM IST",
+          "utc_offset": "+05:30"
+        },
+        "sgt": {
+          "valid_from": "2026-11-01 03:05:00 PM SGT",
+          "expires_at": "2026-11-01 03:10:00 PM SGT",
+          "utc_offset": "+08:00"
+        }
+      },
+      "licensee": "Demo Bank",
+      "expires_at": "2026-11-01T07:10:00+00:00",
+      "signature": "Wz5xlYw/xj47F+Ng4i8ZBzTV1mjU/OWb2eUnRz5PoMuWCix8/7Pee3OWAR+sSnX1dynk7dTbYLmKWZgdaMRXCQ=="
+    },
+    {
+      "slot_id": "SLOT-34",
+      "validity_window_ist": "12:40 PM to 12:45 PM IST (01 Nov 2026)",
+      "validity_window_sgt": "03:10 PM to 03:15 PM SGT (01 Nov 2026)",
+      "time_validity": {
+        "ist": {
+          "valid_from": "2026-11-01 12:40:00 PM IST",
+          "expires_at": "2026-11-01 12:45:00 PM IST",
+          "utc_offset": "+05:30"
+        },
+        "sgt": {
+          "valid_from": "2026-11-01 03:10:00 PM SGT",
+          "expires_at": "2026-11-01 03:15:00 PM SGT",
+          "utc_offset": "+08:00"
+        }
+      },
+      "licensee": "Demo Bank",
+      "expires_at": "2026-11-01T07:15:00+00:00",
+      "signature": "eRqcA+QC2pgOFSxoX5bwxDj3X2oivFfl+qmcwCgvjB50HQha40Z/Oeo2A+46U9XprFN2UlGBsmY6n/9bwKU4Bw=="
+    },
+    {
+      "slot_id": "SLOT-35",
+      "validity_window_ist": "12:45 PM to 12:50 PM IST (01 Nov 2026)",
+      "validity_window_sgt": "03:15 PM to 03:20 PM SGT (01 Nov 2026)",
+      "time_validity": {
+        "ist": {
+          "valid_from": "2026-11-01 12:45:00 PM IST",
+          "expires_at": "2026-11-01 12:50:00 PM IST",
+          "utc_offset": "+05:30"
+        },
+        "sgt": {
+          "valid_from": "2026-11-01 03:15:00 PM SGT",
+          "expires_at": "2026-11-01 03:20:00 PM SGT",
+          "utc_offset": "+08:00"
+        }
+      },
+      "licensee": "Demo Bank",
+      "expires_at": "2026-11-01T07:20:00+00:00",
+      "signature": "ZRmknwCc5Sp3o/qexdn0UsjUFu96VbbsO7jBEjSOUwe1sdqI9e3f8lFW1H5ixsi1ahKI6B889paezKyYFZePCA=="
+    },
+    {
+      "slot_id": "SLOT-36",
+      "validity_window_ist": "12:50 PM to 12:55 PM IST (01 Nov 2026)",
+      "validity_window_sgt": "03:20 PM to 03:25 PM SGT (01 Nov 2026)",
+      "time_validity": {
+        "ist": {
+          "valid_from": "2026-11-01 12:50:00 PM IST",
+          "expires_at": "2026-11-01 12:55:00 PM IST",
+          "utc_offset": "+05:30"
+        },
+        "sgt": {
+          "valid_from": "2026-11-01 03:20:00 PM SGT",
+          "expires_at": "2026-11-01 03:25:00 PM SGT",
+          "utc_offset": "+08:00"
+        }
+      },
+      "licensee": "Demo Bank",
+      "expires_at": "2026-11-01T07:25:00+00:00",
+      "signature": "ckN6EenyvjgNsSvap/biozXq+q35OUld+8GsNMh7pUsRzlX1+6Yx6IgtiOq1fP6xWpfJK7ftbSpXKXa5nahKCw=="
+    },
+    {
+      "slot_id": "SLOT-37",
+      "validity_window_ist": "12:55 PM to 01:00 PM IST (01 Nov 2026)",
+      "validity_window_sgt": "03:25 PM to 03:30 PM SGT (01 Nov 2026)",
+      "time_validity": {
+        "ist": {
+          "valid_from": "2026-11-01 12:55:00 PM IST",
+          "expires_at": "2026-11-01 01:00:00 PM IST",
+          "utc_offset": "+05:30"
+        },
+        "sgt": {
+          "valid_from": "2026-11-01 03:25:00 PM SGT",
+          "expires_at": "2026-11-01 03:30:00 PM SGT",
+          "utc_offset": "+08:00"
+        }
+      },
+      "licensee": "Demo Bank",
+      "expires_at": "2026-11-01T07:30:00+00:00",
+      "signature": "pMGX/65dM54bEMKEBjBmitcMtmgP5zhDKcAoMicRbp1sbc4KIhVZZTOHV4xHv/wrozr6m8L2DUVOzazgqI9SBA=="
+    },
+    {
+      "slot_id": "SLOT-38",
+      "validity_window_ist": "01:00 PM to 01:05 PM IST (01 Nov 2026)",
+      "validity_window_sgt": "03:30 PM to 03:35 PM SGT (01 Nov 2026)",
+      "time_validity": {
+        "ist": {
+          "valid_from": "2026-11-01 01:00:00 PM IST",
+          "expires_at": "2026-11-01 01:05:00 PM IST",
+          "utc_offset": "+05:30"
+        },
+        "sgt": {
+          "valid_from": "2026-11-01 03:30:00 PM SGT",
+          "expires_at": "2026-11-01 03:35:00 PM SGT",
+          "utc_offset": "+08:00"
+        }
+      },
+      "licensee": "Demo Bank",
+      "expires_at": "2026-11-01T07:35:00+00:00",
+      "signature": "R+73ETOlWf6zvRQU2M7j5U6Pr6lw9mgmQqjUF2zh+YXw4OzvdatXoqq0yxSt7JT4NnATaoOADotp4sAA6Ve2CQ=="
+    },
+    {
+      "slot_id": "SLOT-39",
+      "validity_window_ist": "01:05 PM to 01:10 PM IST (01 Nov 2026)",
+      "validity_window_sgt": "03:35 PM to 03:40 PM SGT (01 Nov 2026)",
+      "time_validity": {
+        "ist": {
+          "valid_from": "2026-11-01 01:05:00 PM IST",
+          "expires_at": "2026-11-01 01:10:00 PM IST",
+          "utc_offset": "+05:30"
+        },
+        "sgt": {
+          "valid_from": "2026-11-01 03:35:00 PM SGT",
+          "expires_at": "2026-11-01 03:40:00 PM SGT",
+          "utc_offset": "+08:00"
+        }
+      },
+      "licensee": "Demo Bank",
+      "expires_at": "2026-11-01T07:40:00+00:00",
+      "signature": "AKYlXq4wncvkjVszI2uEySrqjKRZSE8fqqlD93+hCqe1L/zWZ5WkYNakoyqXnoWXb9bKosIJtYnTZX3Q2KbWCw=="
+    },
+    {
+      "slot_id": "SLOT-40",
+      "validity_window_ist": "01:10 PM to 01:15 PM IST (01 Nov 2026)",
+      "validity_window_sgt": "03:40 PM to 03:45 PM SGT (01 Nov 2026)",
+      "time_validity": {
+        "ist": {
+          "valid_from": "2026-11-01 01:10:00 PM IST",
+          "expires_at": "2026-11-01 01:15:00 PM IST",
+          "utc_offset": "+05:30"
+        },
+        "sgt": {
+          "valid_from": "2026-11-01 03:40:00 PM SGT",
+          "expires_at": "2026-11-01 03:45:00 PM SGT",
+          "utc_offset": "+08:00"
+        }
+      },
+      "licensee": "Demo Bank",
+      "expires_at": "2026-11-01T07:45:00+00:00",
+      "signature": "pGQMutoxEziPyIfEhyVtREkv4NhSpsizIgkuCvH8p3kC+PAV4HNm2pOqrHly+/cZzVv9oKkXrpS9hiB6wxAMBw=="
+    },
+    {
+      "slot_id": "SLOT-41",
+      "validity_window_ist": "01:15 PM to 01:20 PM IST (01 Nov 2026)",
+      "validity_window_sgt": "03:45 PM to 03:50 PM SGT (01 Nov 2026)",
+      "time_validity": {
+        "ist": {
+          "valid_from": "2026-11-01 01:15:00 PM IST",
+          "expires_at": "2026-11-01 01:20:00 PM IST",
+          "utc_offset": "+05:30"
+        },
+        "sgt": {
+          "valid_from": "2026-11-01 03:45:00 PM SGT",
+          "expires_at": "2026-11-01 03:50:00 PM SGT",
+          "utc_offset": "+08:00"
+        }
+      },
+      "licensee": "Demo Bank",
+      "expires_at": "2026-11-01T07:50:00+00:00",
+      "signature": "Bgd8OwpmDiDTD4Q5JshwUyAa2IR/hP9GtburaHdllV9dDocHOXavdoNcJ++Jjx8aKjoJU3tW6Pmw0LXBBJ3TDw=="
+    },
+    {
+      "slot_id": "SLOT-42",
+      "validity_window_ist": "01:20 PM to 01:25 PM IST (01 Nov 2026)",
+      "validity_window_sgt": "03:50 PM to 03:55 PM SGT (01 Nov 2026)",
+      "time_validity": {
+        "ist": {
+          "valid_from": "2026-11-01 01:20:00 PM IST",
+          "expires_at": "2026-11-01 01:25:00 PM IST",
+          "utc_offset": "+05:30"
+        },
+        "sgt": {
+          "valid_from": "2026-11-01 03:50:00 PM SGT",
+          "expires_at": "2026-11-01 03:55:00 PM SGT",
+          "utc_offset": "+08:00"
+        }
+      },
+      "licensee": "Demo Bank",
+      "expires_at": "2026-11-01T07:55:00+00:00",
+      "signature": "+nxCqdXF9Ue55Dw5KzyYrbF1mX2l5JKRKhP10WOSa93SVUxImqoCNVHUb8lB3vLX4XjyWh4Xt78nKVe/92VWAw=="
+    },
+    {
+      "slot_id": "SLOT-43",
+      "validity_window_ist": "01:25 PM to 01:30 PM IST (01 Nov 2026)",
+      "validity_window_sgt": "03:55 PM to 04:00 PM SGT (01 Nov 2026)",
+      "time_validity": {
+        "ist": {
+          "valid_from": "2026-11-01 01:25:00 PM IST",
+          "expires_at": "2026-11-01 01:30:00 PM IST",
+          "utc_offset": "+05:30"
+        },
+        "sgt": {
+          "valid_from": "2026-11-01 03:55:00 PM SGT",
+          "expires_at": "2026-11-01 04:00:00 PM SGT",
+          "utc_offset": "+08:00"
+        }
+      },
+      "licensee": "Demo Bank",
+      "expires_at": "2026-11-01T08:00:00+00:00",
+      "signature": "75MwL6l5IclmoObCoPRM36YX7wQHrDWHok2p60HtG6HBCR4jhev0kADw+OvuA098NtDaq14xYWI9EgRrhlX6BA=="
+    },
+    {
+      "slot_id": "SLOT-44",
+      "validity_window_ist": "01:30 PM to 01:35 PM IST (01 Nov 2026)",
+      "validity_window_sgt": "04:00 PM to 04:05 PM SGT (01 Nov 2026)",
+      "time_validity": {
+        "ist": {
+          "valid_from": "2026-11-01 01:30:00 PM IST",
+          "expires_at": "2026-11-01 01:35:00 PM IST",
+          "utc_offset": "+05:30"
+        },
+        "sgt": {
+          "valid_from": "2026-11-01 04:00:00 PM SGT",
+          "expires_at": "2026-11-01 04:05:00 PM SGT",
+          "utc_offset": "+08:00"
+        }
+      },
+      "licensee": "Demo Bank",
+      "expires_at": "2026-11-01T08:05:00+00:00",
+      "signature": "+NubsbS1sYtBJL6mXqKVKG0NCG7uoQWSpU7xYj0mr22gNlv7WZsWMC6Id+nAeQcQGkIGqatLwO44cbLO4PHBAQ=="
+    },
+    {
+      "slot_id": "SLOT-45",
+      "validity_window_ist": "01:35 PM to 01:40 PM IST (01 Nov 2026)",
+      "validity_window_sgt": "04:05 PM to 04:10 PM SGT (01 Nov 2026)",
+      "time_validity": {
+        "ist": {
+          "valid_from": "2026-11-01 01:35:00 PM IST",
+          "expires_at": "2026-11-01 01:40:00 PM IST",
+          "utc_offset": "+05:30"
+        },
+        "sgt": {
+          "valid_from": "2026-11-01 04:05:00 PM SGT",
+          "expires_at": "2026-11-01 04:10:00 PM SGT",
+          "utc_offset": "+08:00"
+        }
+      },
+      "licensee": "Demo Bank",
+      "expires_at": "2026-11-01T08:10:00+00:00",
+      "signature": "6PL4bNa40plvz67tWXw3LRkei59TVBg+4+l6tH2T4apNokeK5NuXO8PMRERpm/jlytAzV+8QQnZEONryJGe1CQ=="
+    },
+    {
+      "slot_id": "SLOT-46",
+      "validity_window_ist": "01:40 PM to 01:45 PM IST (01 Nov 2026)",
+      "validity_window_sgt": "04:10 PM to 04:15 PM SGT (01 Nov 2026)",
+      "time_validity": {
+        "ist": {
+          "valid_from": "2026-11-01 01:40:00 PM IST",
+          "expires_at": "2026-11-01 01:45:00 PM IST",
+          "utc_offset": "+05:30"
+        },
+        "sgt": {
+          "valid_from": "2026-11-01 04:10:00 PM SGT",
+          "expires_at": "2026-11-01 04:15:00 PM SGT",
+          "utc_offset": "+08:00"
+        }
+      },
+      "licensee": "Demo Bank",
+      "expires_at": "2026-11-01T08:15:00+00:00",
+      "signature": "F2w5Gqd/+A0eCfQ0UA3nIxwSCnqzHXZNf/4K4YYvVKxzpr8JNberFQADRqO5wquSYMBGsYUiFOsv0UFEs+G/Aw=="
+    },
+    {
+      "slot_id": "SLOT-47",
+      "validity_window_ist": "01:45 PM to 01:50 PM IST (01 Nov 2026)",
+      "validity_window_sgt": "04:15 PM to 04:20 PM SGT (01 Nov 2026)",
+      "time_validity": {
+        "ist": {
+          "valid_from": "2026-11-01 01:45:00 PM IST",
+          "expires_at": "2026-11-01 01:50:00 PM IST",
+          "utc_offset": "+05:30"
+        },
+        "sgt": {
+          "valid_from": "2026-11-01 04:15:00 PM SGT",
+          "expires_at": "2026-11-01 04:20:00 PM SGT",
+          "utc_offset": "+08:00"
+        }
+      },
+      "licensee": "Demo Bank",
+      "expires_at": "2026-11-01T08:20:00+00:00",
+      "signature": "yot4/h/15l/cdtI++g/1ShE3PdMoAV071poXEZi7VdJU63q/ibBzNSQ/mkmI/OXx/yckHLY8QwyXg2xKDe4MAA=="
+    },
+    {
+      "slot_id": "SLOT-48",
+      "validity_window_ist": "01:50 PM to 01:55 PM IST (01 Nov 2026)",
+      "validity_window_sgt": "04:20 PM to 04:25 PM SGT (01 Nov 2026)",
+      "time_validity": {
+        "ist": {
+          "valid_from": "2026-11-01 01:50:00 PM IST",
+          "expires_at": "2026-11-01 01:55:00 PM IST",
+          "utc_offset": "+05:30"
+        },
+        "sgt": {
+          "valid_from": "2026-11-01 04:20:00 PM SGT",
+          "expires_at": "2026-11-01 04:25:00 PM SGT",
+          "utc_offset": "+08:00"
+        }
+      },
+      "licensee": "Demo Bank",
+      "expires_at": "2026-11-01T08:25:00+00:00",
+      "signature": "1qXSBc/9pRipRH89Z4MZEE9b83GCDvQXBkksh8FhcR/V4WzbjQ3ytcr88UUHZsMDQlLUimTbYmIEgxPCdTIKCA=="
+    },
+    {
+      "slot_id": "SLOT-49",
+      "validity_window_ist": "01:55 PM to 02:00 PM IST (01 Nov 2026)",
+      "validity_window_sgt": "04:25 PM to 04:30 PM SGT (01 Nov 2026)",
+      "time_validity": {
+        "ist": {
+          "valid_from": "2026-11-01 01:55:00 PM IST",
+          "expires_at": "2026-11-01 02:00:00 PM IST",
+          "utc_offset": "+05:30"
+        },
+        "sgt": {
+          "valid_from": "2026-11-01 04:25:00 PM SGT",
+          "expires_at": "2026-11-01 04:30:00 PM SGT",
+          "utc_offset": "+08:00"
+        }
+      },
+      "licensee": "Demo Bank",
+      "expires_at": "2026-11-01T08:30:00+00:00",
+      "signature": "ZBH7oqc8nKVuZBBOtJOwr+yrKMGW2hox+dLZyZSdT0bryk23UAYBXrDAnd5bOPMIbT975rDFQsxqDqtdKOJhDg=="
+    },
+    {
+      "slot_id": "SLOT-50",
+      "validity_window_ist": "02:00 PM to 02:05 PM IST (01 Nov 2026)",
+      "validity_window_sgt": "04:30 PM to 04:35 PM SGT (01 Nov 2026)",
+      "time_validity": {
+        "ist": {
+          "valid_from": "2026-11-01 02:00:00 PM IST",
+          "expires_at": "2026-11-01 02:05:00 PM IST",
+          "utc_offset": "+05:30"
+        },
+        "sgt": {
+          "valid_from": "2026-11-01 04:30:00 PM SGT",
+          "expires_at": "2026-11-01 04:35:00 PM SGT",
+          "utc_offset": "+08:00"
+        }
+      },
+      "licensee": "Demo Bank",
+      "expires_at": "2026-11-01T08:35:00+00:00",
+      "signature": "dLkwrxeIIMWSsJKDOln7OjzUbuSNO+6kgAR60WaneV4SxL2hGiqs+JXGIdxy4UwarkEfqYln1vOftCVqo+v0AA=="
+    }
+  ]
+}

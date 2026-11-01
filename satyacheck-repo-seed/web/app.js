@@ -1037,6 +1037,22 @@ function setupLicenceManager() {
       return;
     }
 
+    // Auto-resolve active slot if a multi-slot bundle is provided
+    if (bodyData && bodyData.slots && Array.isArray(bodyData.slots)) {
+      const nowMs = Date.now();
+      const activeSlot = bodyData.slots.find(s => {
+        const exp = new Date(s.expires_at).getTime();
+        return (exp - nowMs) >= 60000;
+      }) || bodyData.slots[bodyData.slots.length - 1];
+      if (activeSlot) {
+        bodyData = {
+          licensee: activeSlot.licensee,
+          expires_at: activeSlot.expires_at,
+          signature: activeSlot.signature,
+        };
+      }
+    }
+
     try {
       const res = await fetch("/license", {
         method: "POST",

@@ -28,6 +28,18 @@ async def post_license(request: Request):
     except Exception:
         return JSONResponse(status_code=400, content={"error": "INVALID_REQUEST"})
 
+    # If payload contains a multi-slot catalog, find the active slot
+    if isinstance(body, dict) and "slots" in body and isinstance(body["slots"], list):
+        now_utc = datetime.now(timezone.utc)
+        for s in body["slots"]:
+            try:
+                exp_dt = datetime.fromisoformat(s.get("expires_at", ""))
+                if (exp_dt - now_utc).total_seconds() >= 60:
+                    body = s
+                    break
+            except Exception:
+                continue
+
     licensee = body.get("licensee")
     expires_at = body.get("expires_at")
     signature = body.get("signature")
@@ -61,7 +73,8 @@ async def get_demo_long_licence():
 
 @router.get("/license/demo-5min")
 async def get_demo_5min_licence():
-    """Demo helper: generate a fresh 5-minute licence if private key is present."""
+    """Demo helper: generate a fresh 5-minute licence if private key is present,
+    or pick an active 5-minute slot from licences/alternative_5min.json."""
     from app.licence import sign
 
     priv_path = Path.home() / ".satyacheck" / "private.key"
@@ -75,6 +88,26 @@ async def get_demo_5min_licence():
             "expires_at": expires_at,
             "signature": sig,
         }
+
+    # If running where private key is not stored (e.g. cloud host Render),
+    # pick the active slot from licences/alternative_5min.json
+    alt_path = Path(__file__).resolve().parent.parent / "licences" / "alternative_5min.json"
+    if alt_path.exists():
+        try:
+            data = json.loads(alt_path.read_text(encoding="utf-8"))
+            slots = data.get("slots", [])
+            now_utc = datetime.now(timezone.utc)
+            for slot in slots:
+                exp_dt = datetime.fromisoformat(slot["expires_at"])
+                # Pick first slot expiring at least 60 seconds in the future
+                if (exp_dt - now_utc).total_seconds() >= 60:
+                    return {
+                        "licensee": slot["licensee"],
+                        "expires_at": slot["expires_at"],
+                        "signature": slot["signature"],
+                    }
+        except Exception:
+            pass
 
     # Fallback to pre-signed 5min.json if exists
     fmin_path = Path(__file__).resolve().parent.parent / "licences" / "5min.json"
