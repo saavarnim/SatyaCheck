@@ -492,6 +492,48 @@ def _render_reviews_html(reviews: list[dict], token: str, current_filter: str, t
       </div>
     </div>
 
+    <!-- Evaluation Licence & Live Demo Console (Administrators Only) -->
+    <div style="background: #ffffff; border: 1px solid var(--border); border-radius: 8px; padding: 22px; margin-bottom: 24px; box-shadow: 0 1px 4px rgba(0,0,0,0.04);">
+      <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 6px;">
+        <h2 style="font-size: 1.18rem; font-weight: 800; color: #0f172a; display: flex; align-items: center; gap: 8px;">
+          <span>🔑</span> Evaluation Licence &amp; Live Demo
+        </h2>
+        <span style="font-size: 0.72rem; font-weight: 800; background: #e0f2fe; color: #0369a1; padding: 3px 10px; border-radius: 999px; text-transform: uppercase; letter-spacing: 0.04em;">ADMIN DESK</span>
+      </div>
+      <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 16px;">
+        Manage and test the SatyaCheck evaluation licence. Upload or paste a 5-minute evaluation licence or long renewal licence.
+      </p>
+
+      <div style="background: #f8fafc; border: 1px solid var(--border); border-radius: 6px; padding: 14px 18px; margin-bottom: 16px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 6px;">
+          <span style="font-size: 0.92rem; font-weight: 600; color: #1e293b;">Licensee: <strong id="admin-licence-licensee" style="font-weight: 800; color: #059669;">Loading...</strong></span>
+          <span id="admin-licence-status-badge" style="font-size: 0.75rem; font-weight: 800; padding: 3px 10px; border-radius: 999px; background: #e0f2fe; color: #0369a1; text-transform: uppercase;">ACTIVE</span>
+        </div>
+        <div style="font-size: 0.84rem; color: var(--text-muted);">
+          Expires at: <span id="admin-licence-expiry" style="font-family: monospace; font-weight: 600;">-</span>
+          (<span id="admin-licence-remaining" style="font-weight: 600;">-</span>)
+        </div>
+      </div>
+
+      <div style="margin-bottom: 12px;">
+        <label style="display: block; font-size: 0.88rem; font-weight: 700; color: #334155; margin-bottom: 6px;">Upload or Paste Licence Key / JSON</label>
+        <textarea id="admin-licence-input" rows="4" style="width: 100%; box-sizing: border-box; font-family: monospace; font-size: 0.82rem; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; resize: vertical;" placeholder='{{"licensee": "Demo Bank", "expires_at": "...", "signature": "..."}}'></textarea>
+      </div>
+
+      <div style="display: flex; gap: 12px; margin-bottom: 12px; align-items: center; flex-wrap: wrap; justify-content: space-between;">
+        <div>
+          <input type="file" id="admin-licence-file" accept=".json,application/json" style="font-size: 0.84rem; color: #475569; padding: 4px;">
+        </div>
+        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+          <button type="button" id="btn-admin-load-5min" class="btn btn-secondary" style="font-size: 0.85rem; padding: 8px 12px;">⏱️ Load 5-Min Licence</button>
+          <button type="button" id="btn-admin-load-long" class="btn btn-secondary" style="font-size: 0.85rem; padding: 8px 12px;">📜 Load Long Licence</button>
+        </div>
+      </div>
+
+      <button type="button" id="btn-admin-activate" style="width: 100%; background: #059669; color: white; border: none; padding: 12px; font-size: 0.95rem; font-weight: 700; border-radius: 6px; cursor: pointer; transition: background 0.15s ease;">Activate Licence</button>
+      <div id="admin-licence-feedback" style="display: none; margin-top: 10px; padding: 10px 14px; border-radius: 6px; font-size: 0.88rem; font-weight: 600;"></div>
+    </div>
+
     <div class="tabs-bar">
       <a href="/admin/reviews?token={html.escape(token)}" class="tab-link {'active' if not current_filter else ''}">All ({total_counts['total']})</a>
       <a href="/admin/reviews?token={html.escape(token)}&status=under_review" class="tab-link {'active' if current_filter == 'under_review' else ''}">Under Review ({total_counts['under_review']})</a>
@@ -559,6 +601,185 @@ def _render_reviews_html(reviews: list[dict], token: str, current_filter: str, t
         window.location.reload();
       }}
     }}
+    // ── Admin Licence Management Console ────────────────────────────────
+    let adminCountdownInterval = null;
+
+    function formatAdminRemaining(seconds) {{
+      if (seconds <= 0) return 'expired';
+      const d = Math.floor(seconds / 86400);
+      const h = Math.floor((seconds % 86400) / 3600);
+      const m = Math.floor((seconds % 3600) / 60);
+      const s = Math.floor(seconds % 60);
+      if (d > 0) return `${{d}}d ${{h}}h remaining`;
+      if (h > 0) return `${{h}}h ${{m}}m remaining`;
+      return `${{m}}m ${{s}}s remaining`;
+    }}
+
+    async function loadAdminLicenceStatus() {{
+      try {{
+        const res = await fetch('/license');
+        if (!res.ok) return;
+        const data = await res.json();
+
+        const licEl = document.getElementById('admin-licence-licensee');
+        const badgeEl = document.getElementById('admin-licence-status-badge');
+        const expEl = document.getElementById('admin-licence-expiry');
+        const remEl = document.getElementById('admin-licence-remaining');
+
+        if (licEl) licEl.textContent = data.licensee || 'None';
+        if (expEl) expEl.textContent = data.expires_at || 'Never';
+
+        let remainingSec = data.seconds_remaining || 0;
+        const isActive = data.status === 'ACTIVE' && remainingSec > 0;
+
+        if (badgeEl) {{
+          badgeEl.textContent = isActive ? 'ACTIVE' : 'EXPIRED';
+          badgeEl.style.background = isActive ? '#dcfce7' : '#fee2e2';
+          badgeEl.style.color = isActive ? '#166534' : '#991b1b';
+        }}
+
+        if (remEl) remEl.textContent = formatAdminRemaining(remainingSec);
+
+        if (adminCountdownInterval) clearInterval(adminCountdownInterval);
+        if (isActive) {{
+          adminCountdownInterval = setInterval(() => {{
+            remainingSec--;
+            if (remEl) remEl.textContent = formatAdminRemaining(remainingSec);
+            if (remainingSec <= 0) {{
+              clearInterval(adminCountdownInterval);
+              if (badgeEl) {{
+                badgeEl.textContent = 'EXPIRED';
+                badgeEl.style.background = '#fee2e2';
+                badgeEl.style.color = '#991b1b';
+              }}
+            }}
+          }}, 1000);
+        }}
+      }} catch (e) {{
+        console.error('Failed to load licence status in admin:', e);
+      }}
+    }}
+
+    const adminLicInput = document.getElementById('admin-licence-input');
+    const adminLicFile = document.getElementById('admin-licence-file');
+    const btnAdmin5min = document.getElementById('btn-admin-load-5min');
+    const btnAdminLong = document.getElementById('btn-admin-load-long');
+    const btnAdminActivate = document.getElementById('btn-admin-activate');
+    const adminFeedback = document.getElementById('admin-licence-feedback');
+
+    if (adminLicFile && adminLicInput) {{
+      adminLicFile.addEventListener('change', (e) => {{
+        const file = e.target.files && e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (ev) => {{
+          adminLicInput.value = ev.target.result;
+        }};
+        reader.readAsText(file);
+      }});
+    }}
+
+    if (btnAdmin5min && adminLicInput) {{
+      btnAdmin5min.addEventListener('click', async () => {{
+        try {{
+          const res = await fetch('/license/demo-5min');
+          if (res.ok) {{
+            const json = await res.json();
+            adminLicInput.value = JSON.stringify(json, null, 2);
+          }} else {{
+            alert('Unable to load 5-min licence.');
+          }}
+        }} catch (e) {{
+          alert('Network error loading 5-min licence.');
+        }}
+      }});
+    }}
+
+    if (btnAdminLong && adminLicInput) {{
+      btnAdminLong.addEventListener('click', async () => {{
+        try {{
+          const res = await fetch('/license/demo-long');
+          const json = await res.json();
+          adminLicInput.value = JSON.stringify(json, null, 2);
+        }} catch (e) {{
+          adminLicInput.value = JSON.stringify({{
+            licensee: "Demo Bank",
+            expires_at: "2026-11-30T16:18:29.141842+00:00",
+            signature: "F4JtrV95BDI4dZCrrO3aUmwYrXNcJ0s5uOT7vqGU6LVssdvF9WdzyZJho4Dr+qlJLPrHt17HVCJdwS+AcXwVCg=="
+          }}, null, 2);
+        }}
+      }});
+    }}
+
+    if (btnAdminActivate && adminLicInput) {{
+      btnAdminActivate.addEventListener('click', async () => {{
+        const val = adminLicInput.value.trim();
+        if (!val) {{
+          adminFeedback.style.display = 'block';
+          adminFeedback.style.background = '#fee2e2';
+          adminFeedback.style.color = '#991b1b';
+          adminFeedback.textContent = 'Please enter or upload a licence JSON.';
+          return;
+        }}
+
+        let payload;
+        try {{
+          payload = JSON.parse(val);
+        }} catch (e) {{
+          adminFeedback.style.display = 'block';
+          adminFeedback.style.background = '#fee2e2';
+          adminFeedback.style.color = '#991b1b';
+          adminFeedback.textContent = 'Invalid JSON syntax.';
+          return;
+        }}
+
+        if (payload && payload.slots && Array.isArray(payload.slots)) {{
+          const nowMs = Date.now();
+          const activeSlot = payload.slots.find(s => {{
+            const exp = new Date(s.expires_at).getTime();
+            return (exp - nowMs) >= 60000;
+          }}) || payload.slots[payload.slots.length - 1];
+          if (activeSlot) {{
+            payload = {{
+              licensee: activeSlot.licensee,
+              expires_at: activeSlot.expires_at,
+              signature: activeSlot.signature,
+            }};
+          }}
+        }}
+
+        adminFeedback.style.display = 'block';
+        adminFeedback.style.background = '#f8fafc';
+        adminFeedback.style.color = '#475569';
+        adminFeedback.textContent = 'Activating licence...';
+
+        try {{
+          const res = await fetch('/license', {{
+            method: 'POST',
+            headers: {{ 'Content-Type': 'application/json' }},
+            body: JSON.stringify(payload)
+          }});
+
+          if (res.ok) {{
+            adminFeedback.style.background = '#dcfce7';
+            adminFeedback.style.color = '#166534';
+            adminFeedback.textContent = `✓ Licence successfully activated for ${{payload.licensee || 'Demo Bank'}}!`;
+            loadAdminLicenceStatus();
+          }} else {{
+            const err = await res.json().catch(() => ({{}}));
+            adminFeedback.style.background = '#fee2e2';
+            adminFeedback.style.color = '#991b1b';
+            adminFeedback.textContent = `❌ Activation failed: ${{err.error || 'Check signature / expiry'}}`;
+          }}
+        }} catch (e) {{
+          adminFeedback.style.background = '#fee2e2';
+          adminFeedback.style.color = '#991b1b';
+          adminFeedback.textContent = 'Network error activating licence.';
+        }}
+      }});
+    }}
+
+    loadAdminLicenceStatus();
   </script>
 </body>
 </html>

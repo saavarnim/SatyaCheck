@@ -1,14 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
   <title>SatyaCheck – Community Scam Map & Verification</title>
-  <meta name="description" content="Privacy-first community platform to check and report suspicious phone numbers, UPI IDs, links, and SMS headers.">
+  <meta name="description"
+    content="Privacy-first community platform to check and report suspicious phone numbers, UPI IDs, links, and SMS headers.">
   <link rel="stylesheet" href="app.css">
   <!-- Pinned Leaflet 1.9.4 CDN per docs/07-frontend.md -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
 </head>
+
 <body>
 
   <!-- ── Header ─────────────────────────────────────────────────────────── -->
@@ -27,7 +31,8 @@
         <a href="#/check" id="nav-d-check" class="active">🔍 <span data-i18n="navCheck">Check</span></a>
         <a href="#/report" id="nav-d-report">📢 <span data-i18n="navReport">Report</span></a>
         <a href="#/map" id="nav-d-map">🗺️ <span data-i18n="navMap">Map</span></a>
-        <a href="#/alerts" id="nav-d-alerts">⚠️ <span data-i18n="navAlerts">Alerts</span><span class="nav-alert-badge" id="badge-d-alerts" style="display: none;">0</span></a>
+        <a href="#/alerts" id="nav-d-alerts">⚠️ <span data-i18n="navAlerts">Alerts</span><span class="nav-alert-badge"
+            id="badge-d-alerts" style="display: none;">0</span></a>
         <a href="#/about" id="nav-d-about">ℹ️ <span data-i18n="navAbout">About</span></a>
       </nav>
 
@@ -47,21 +52,29 @@
       <div class="card">
         <div class="card-header">
           <h2 class="card-title" data-i18n="checkHeading">Check Before You Trust</h2>
-          <p class="card-subtitle" data-i18n="checkSubheading">Instant community-verified check for unknown phone numbers, UPI IDs, links, or SMS headers.</p>
+          <p class="card-subtitle" data-i18n="checkSubheading">Instant community-verified check for unknown phone
+            numbers, UPI IDs, links, or SMS headers.</p>
         </div>
 
         <form id="form-check" onsubmit="return false;">
           <div class="search-box-wrapper">
-            <input type="text" id="input-check-value" class="search-input" data-i18n-ph="checkPlaceholder" placeholder="Paste a number, UPI ID, link or SMS sender..." autocomplete="off" spellcheck="false" required>
+            <input type="text" id="input-check-value" class="search-input" data-i18n-ph="checkPlaceholder"
+              placeholder="Paste a number, UPI ID, link or SMS sender..." autocomplete="off" spellcheck="false"
+              required>
           </div>
 
           <!-- Type filter chips -->
           <div class="chips-row" id="check-type-chips" role="radiogroup" aria-label="Identifier Type">
-            <button type="button" class="chip active" data-type="auto" id="chip-auto"><span data-i18n="typeAuto">Auto-detect</span></button>
-            <button type="button" class="chip" data-type="phone" id="chip-phone"><span data-i18n="typePhone">Phone</span></button>
-            <button type="button" class="chip" data-type="upi" id="chip-upi"><span data-i18n="typeUpi">UPI ID</span></button>
-            <button type="button" class="chip" data-type="url" id="chip-url"><span data-i18n="typeUrl">Link / URL</span></button>
-            <button type="button" class="chip" data-type="sender_id" id="chip-sender"><span data-i18n="typeSender">SMS Sender</span></button>
+            <button type="button" class="chip active" data-type="auto" id="chip-auto"><span
+                data-i18n="typeAuto">Auto-detect</span></button>
+            <button type="button" class="chip" data-type="phone" id="chip-phone"><span
+                data-i18n="typePhone">Phone</span></button>
+            <button type="button" class="chip" data-type="upi" id="chip-upi"><span data-i18n="typeUpi">UPI
+                ID</span></button>
+            <button type="button" class="chip" data-type="url" id="chip-url"><span data-i18n="typeUrl">Link /
+                URL</span></button>
+            <button type="button" class="chip" data-type="sender_id" id="chip-sender"><span data-i18n="typeSender">SMS
+                Sender</span></button>
           </div>
 
           <button type="submit" id="btn-submit-check" class="btn btn-primary">
@@ -82,7 +95,8 @@
 
       <!-- Recent Emerging Alerts Preview Card on Check Page -->
       <div class="card" id="check-recent-alerts-card" style="margin-top: 20px;">
-        <div class="card-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+        <div class="card-header"
+          style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
           <div>
             <h3 class="card-title" style="font-size: 1.05rem; display: flex; align-items: center; gap: 8px; margin: 0;">
               <span>🚨</span> <span data-i18n="recentAlertsPreview">Recent Area Alerts</span>
@@ -91,7 +105,8 @@
               Live warnings for sudden local spikes and newly emerging scam tactics.
             </p>
           </div>
-          <a href="#/alerts" class="btn btn-secondary btn-sm" style="font-size: 0.82rem; padding: 6px 12px; text-decoration: none;">
+          <a href="#/alerts" class="btn btn-secondary btn-sm"
+            style="font-size: 0.82rem; padding: 6px 12px; text-decoration: none;">
             View All Alerts ➔
           </a>
         </div>
@@ -114,7 +129,8 @@
       <div class="card">
         <div class="card-header">
           <h2 class="card-title" data-i18n="reportHeading">Report a Scam Sighting</h2>
-          <p class="card-subtitle" data-i18n="reportSubheading">Help protect your community. Takes under 60 seconds. No login required.</p>
+          <p class="card-subtitle" data-i18n="reportSubheading">Help protect your community. Takes under 60 seconds. No
+            login required.</p>
         </div>
 
         <form id="form-report">
@@ -122,12 +138,18 @@
           <div class="form-group">
             <label class="form-label" data-i18n="step1Channel">1. How did they contact you?</label>
             <div class="selection-grid" id="grid-channels">
-              <div class="select-card active" data-val="phone call"><span>📞</span> <span data-i18n="channel_call">Phone Call</span></div>
-              <div class="select-card" data-val="sms or whatsapp"><span>💬</span> <span data-i18n="channel_sms">SMS / WhatsApp</span></div>
-              <div class="select-card" data-val="upi request"><span>💳</span> <span data-i18n="channel_upi">UPI Request</span></div>
-              <div class="select-card" data-val="fake website"><span>🌐</span> <span data-i18n="channel_web">Fake Website</span></div>
-              <div class="select-card" data-val="qr code"><span>📱</span> <span data-i18n="channel_qr">QR Code</span></div>
-              <div class="select-card" data-val="something else"><span>❓</span> <span data-i18n="channel_other">Something Else</span></div>
+              <div class="select-card active" data-val="phone call"><span>📞</span> <span data-i18n="channel_call">Phone
+                  Call</span></div>
+              <div class="select-card" data-val="sms or whatsapp"><span>💬</span> <span data-i18n="channel_sms">SMS /
+                  WhatsApp</span></div>
+              <div class="select-card" data-val="upi request"><span>💳</span> <span data-i18n="channel_upi">UPI
+                  Request</span></div>
+              <div class="select-card" data-val="fake website"><span>🌐</span> <span data-i18n="channel_web">Fake
+                  Website</span></div>
+              <div class="select-card" data-val="qr code"><span>📱</span> <span data-i18n="channel_qr">QR Code</span>
+              </div>
+              <div class="select-card" data-val="something else"><span>❓</span> <span
+                  data-i18n="channel_other">Something Else</span></div>
             </div>
           </div>
 
@@ -135,19 +157,32 @@
           <div class="form-group">
             <label class="form-label" data-i18n="step2Type">2. What type of scam was it?</label>
             <div class="selection-grid" id="grid-scam-types">
-              <div class="select-card active" data-val="digital-arrest"><span>👮</span> <span data-i18n="scam_digital_arrest">Digital Arrest</span></div>
-              <div class="select-card" data-val="fake-kyc-link"><span>🔗</span> <span data-i18n="scam_fake_kyc">Fake KYC Link</span></div>
-              <div class="select-card" data-val="upi-refund-qr"><span>💸</span> <span data-i18n="scam_upi_refund">UPI Refund QR</span></div>
-              <div class="select-card" data-val="investment-group"><span>📈</span> <span data-i18n="scam_investment">Investment Group</span></div>
-              <div class="select-card" data-val="courier-customs"><span>📦</span> <span data-i18n="scam_courier">Courier / Customs</span></div>
-              <div class="select-card" data-val="job-offer"><span>💼</span> <span data-i18n="scam_job_offer">Job Offer</span></div>
-              <div class="select-card" data-val="lottery-prize"><span>🎁</span> <span data-i18n="scam_lottery">Lottery / Prize</span></div>
-              <div class="select-card" data-val="loan-app-harassment"><span>📱</span> <span data-i18n="scam_loan_app">Loan Harassment</span></div>
-              <div class="select-card" data-val="electricity-disconnection"><span>⚡</span> <span data-i18n="scam_electricity">Electricity Threat</span></div>
-              <div class="select-card" data-val="fake-customer-care"><span>🎧</span> <span data-i18n="scam_customer_care">Fake Customer Care</span></div>
-              <div class="select-card" data-val="otp-call"><span>🔢</span> <span data-i18n="scam_otp_call">OTP / PIN Call</span></div>
-              <div class="select-card" data-val="sextortion"><span>📹</span> <span data-i18n="scam_sextortion">Sextortion</span></div>
-              <div class="select-card" data-val="other"><span>⚠️</span> <span data-i18n="scam_other">Other Scam</span></div>
+              <div class="select-card active" data-val="digital-arrest"><span>👮</span> <span
+                  data-i18n="scam_digital_arrest">Digital Arrest</span></div>
+              <div class="select-card" data-val="fake-kyc-link"><span>🔗</span> <span data-i18n="scam_fake_kyc">Fake KYC
+                  Link</span></div>
+              <div class="select-card" data-val="upi-refund-qr"><span>💸</span> <span data-i18n="scam_upi_refund">UPI
+                  Refund QR</span></div>
+              <div class="select-card" data-val="investment-group"><span>📈</span> <span
+                  data-i18n="scam_investment">Investment Group</span></div>
+              <div class="select-card" data-val="courier-customs"><span>📦</span> <span data-i18n="scam_courier">Courier
+                  / Customs</span></div>
+              <div class="select-card" data-val="job-offer"><span>💼</span> <span data-i18n="scam_job_offer">Job
+                  Offer</span></div>
+              <div class="select-card" data-val="lottery-prize"><span>🎁</span> <span data-i18n="scam_lottery">Lottery /
+                  Prize</span></div>
+              <div class="select-card" data-val="loan-app-harassment"><span>📱</span> <span
+                  data-i18n="scam_loan_app">Loan Harassment</span></div>
+              <div class="select-card" data-val="electricity-disconnection"><span>⚡</span> <span
+                  data-i18n="scam_electricity">Electricity Threat</span></div>
+              <div class="select-card" data-val="fake-customer-care"><span>🎧</span> <span
+                  data-i18n="scam_customer_care">Fake Customer Care</span></div>
+              <div class="select-card" data-val="otp-call"><span>🔢</span> <span data-i18n="scam_otp_call">OTP / PIN
+                  Call</span></div>
+              <div class="select-card" data-val="sextortion"><span>📹</span> <span
+                  data-i18n="scam_sextortion">Sextortion</span></div>
+              <div class="select-card" data-val="other"><span>⚠️</span> <span data-i18n="scam_other">Other Scam</span>
+              </div>
             </div>
           </div>
 
@@ -161,7 +196,8 @@
                 <option value="url">Link / URL</option>
                 <option value="sender_id">SMS Sender</option>
               </select>
-              <input type="text" id="report-identifier-value" class="form-input" placeholder="e.g. 9876543210 or scam@okaxis" required>
+              <input type="text" id="report-identifier-value" class="form-input"
+                placeholder="e.g. 9876543210 or scam@okaxis" required>
             </div>
           </div>
 
@@ -176,7 +212,7 @@
           <!-- Step 5: Time (Task F4 IST Timepicker) -->
           <div class="form-group" id="report-step-time">
             <label class="form-label" data-i18n="step5Time">5. When did this happen?</label>
-            
+
             <!-- Quick Chips: Just now, 1 hour ago, This morning, Last night, Yesterday, 2-3 days ago, Last week -->
             <div class="chips-row" id="report-time-chips">
               <button type="button" class="chip active" data-time="now" id="chip-time-now">
@@ -209,7 +245,8 @@
 
             <!-- Collapsible "Change date and time" toggle -->
             <div class="timepicker-custom-wrapper">
-              <button type="button" id="timepicker-toggle-btn" class="timepicker-toggle-btn" aria-expanded="false" aria-controls="timepicker-custom-drawer">
+              <button type="button" id="timepicker-toggle-btn" class="timepicker-toggle-btn" aria-expanded="false"
+                aria-controls="timepicker-custom-drawer">
                 <span id="timepicker-toggle-icon">⏱️</span>
                 <span id="timepicker-toggle-text" data-i18n="timeCustomToggle">Change date and time</span>
                 <span class="timepicker-toggle-arrow">▼</span>
@@ -218,11 +255,13 @@
               <div id="timepicker-custom-drawer" class="timepicker-custom-drawer" style="display: none;">
                 <div class="timepicker-inputs-row">
                   <div class="timepicker-field">
-                    <label class="form-sublabel" for="timepicker-date" data-i18n="timepickerDateLabel">Date (IST):</label>
+                    <label class="form-sublabel" for="timepicker-date" data-i18n="timepickerDateLabel">Date
+                      (IST):</label>
                     <input type="date" id="timepicker-date" class="form-input">
                   </div>
                   <div class="timepicker-field">
-                    <label class="form-sublabel" for="timepicker-time" data-i18n="timepickerTimeLabel">Time (IST):</label>
+                    <label class="form-sublabel" for="timepicker-time" data-i18n="timepickerTimeLabel">Time
+                      (IST):</label>
                     <input type="time" id="timepicker-time" class="form-input">
                   </div>
                 </div>
@@ -234,19 +273,26 @@
           <!-- Step 6: Note -->
           <div class="form-group">
             <label class="form-label" data-i18n="step6Note">6. Brief note (Optional)</label>
-            <textarea id="report-note" class="form-textarea" maxlength="300" placeholder="Briefly describe what they claimed..."></textarea>
-            <div class="privacy-tip" data-i18n="notePrivacyWarning">Privacy rule: Do NOT include your name, phone number, or bank details.</div>
+            <textarea id="report-note" class="form-textarea" maxlength="300"
+              placeholder="Briefly describe what they claimed..."></textarea>
+            <div class="privacy-tip" data-i18n="notePrivacyWarning">Privacy rule: Do NOT include your name, phone
+              number, or bank details.</div>
           </div>
 
           <!-- Step 7: Loss & Screenshot -->
           <div class="form-group">
             <label class="form-label" data-i18n="step7Loss">Did you lose money? (Optional)</label>
-            <input type="number" id="report-amount" class="form-input" placeholder="Amount in ₹ INR (if any)" min="0" step="1">
-            <label style="display: flex; align-items: flex-start; gap: 10px; margin-top: 14px; cursor: pointer; font-size: 0.9rem;">
+            <input type="number" id="report-amount" class="form-input" placeholder="Amount in ₹ INR (if any)" min="0"
+              step="1">
+            <label
+              style="display: flex; align-items: flex-start; gap: 10px; margin-top: 14px; cursor: pointer; font-size: 0.9rem;">
               <input type="checkbox" id="report-has-screenshot" style="width: 18px; height: 18px; margin-top: 2px;">
               <div>
-                <span data-i18n="hasScreenshotLabel" style="font-weight: 500;">I have a screenshot / evidence saved</span>
-                <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 3px;" data-i18n="hasScreenshotHint">Keep it safe on your device for cyber helpline 1930 reporting. For your privacy, SatyaCheck never collects images.</p>
+                <span data-i18n="hasScreenshotLabel" style="font-weight: 500;">I have a screenshot / evidence
+                  saved</span>
+                <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 3px;" data-i18n="hasScreenshotHint">
+                  Keep it safe on your device for cyber helpline 1930 reporting. For your privacy, SatyaCheck never
+                  collects images.</p>
               </div>
             </label>
           </div>
@@ -259,24 +305,36 @@
         <!-- Report Success Screen -->
         <div id="report-success-container" style="display: none; text-align: center; padding: 20px 0;">
           <div style="font-size: 3rem; margin-bottom: 12px;">✅</div>
-          <h3 style="font-size: 1.4rem; font-weight: 700; margin-bottom: 8px;" data-i18n="reportSuccessTitle">Report Received</h3>
-          <p style="color: var(--text-muted); margin-bottom: 16px;" data-i18n="reportSuccessMessage">Thank you for alerting your community.</p>
-          <div style="background: #f8fafc; border: 1px solid var(--border); border-radius: var(--radius-md); padding: 16px; margin-bottom: 16px; text-align: left;">
+          <h3 style="font-size: 1.4rem; font-weight: 700; margin-bottom: 8px;" data-i18n="reportSuccessTitle">Report
+            Received</h3>
+          <p style="color: var(--text-muted); margin-bottom: 16px;" data-i18n="reportSuccessMessage">Thank you for
+            alerting your community.</p>
+          <div
+            style="background: #f8fafc; border: 1px solid var(--border); border-radius: var(--radius-md); padding: 16px; margin-bottom: 16px; text-align: left;">
             <div style="margin-bottom: 12px;">
-              <span style="font-size: 0.85rem; color: var(--text-muted); display: block;" data-i18n="reportRefLabel">Report Submission ID</span>
-              <span id="res-report-id" style="font-family: monospace; font-size: 1.25rem; font-weight: 800; color: var(--primary);"></span>
-              <span style="display: block; font-size: 0.78rem; color: #64748b; margin-top: 2px;" data-i18n="reportRefSub">Unique tracking reference generated for this report submission</span>
+              <span style="font-size: 0.85rem; color: var(--text-muted); display: block;"
+                data-i18n="reportRefLabel">Report Submission ID</span>
+              <span id="res-report-id"
+                style="font-family: monospace; font-size: 1.25rem; font-weight: 800; color: var(--primary);"></span>
+              <span style="display: block; font-size: 0.78rem; color: #64748b; margin-top: 2px;"
+                data-i18n="reportRefSub">Unique tracking reference generated for this report submission</span>
             </div>
             <div style="border-top: 1px solid var(--border); padding-top: 10px;">
-              <span style="font-size: 0.85rem; color: var(--text-muted); display: block;" data-i18n="caseRefLabel">Community Cluster Case ID</span>
-              <span id="res-case-id" style="font-family: monospace; font-size: 1.05rem; font-weight: 700; color: var(--text-main);"></span>
-              <span style="display: block; font-size: 0.78rem; color: #64748b; margin-top: 2px;" data-i18n="caseRefSub">Cryptographic cluster grouping all reports for this specific number or account</span>
+              <span style="font-size: 0.85rem; color: var(--text-muted); display: block;"
+                data-i18n="caseRefLabel">Community Cluster Case ID</span>
+              <span id="res-case-id"
+                style="font-family: monospace; font-size: 1.05rem; font-weight: 700; color: var(--text-main);"></span>
+              <span style="display: block; font-size: 0.78rem; color: #64748b; margin-top: 2px;"
+                data-i18n="caseRefSub">Cryptographic cluster grouping all reports for this specific number or
+                account</span>
             </div>
           </div>
-          <p style="font-size: 0.85rem; color: #475569; margin-bottom: 16px;" data-i18n="reportAnonNote">Your report is anonymous. Only salted cryptographic tokens and pincode-level location are stored.</p>
+          <p style="font-size: 0.85rem; color: #475569; margin-bottom: 16px;" data-i18n="reportAnonNote">Your report is
+            anonymous. Only salted cryptographic tokens and pincode-level location are stored.</p>
           <div class="helpline-banner" style="text-align: left;">
             <span style="font-size: 1.25rem;">⚠️</span>
-            <div data-i18n="notPoliceComplaint">Important: SatyaCheck is a community intelligence map, NOT a police FIR or formal complaint. Call 1930 for financial freeze.</div>
+            <div data-i18n="notPoliceComplaint">Important: SatyaCheck is a community intelligence map, NOT a police FIR
+              or formal complaint. Call 1930 for financial freeze.</div>
           </div>
           <!-- Task F2: Official Authorities Card on Success Screen -->
           <div id="report-success-official-container"></div>
@@ -292,7 +350,8 @@
       <div class="card">
         <div class="card-header">
           <h2 class="card-title" data-i18n="mapHeading">Community Scam Activity Map</h2>
-          <p class="card-subtitle" data-i18n="mapSubheading">Aggregated independent sightings by locality over recent days.</p>
+          <p class="card-subtitle" data-i18n="mapSubheading">Aggregated independent sightings by locality over recent
+            days.</p>
         </div>
 
         <div class="map-filters">
@@ -321,7 +380,9 @@
                 <option value="10">10 km</option>
               </select>
             </div>
-            <button type="button" id="btn-map-fit-all" class="btn btn-secondary btn-sm" style="min-height: 36px; padding: 6px 12px; font-size: 0.82rem;" title="Reset zoom to view all 25 localities">
+            <button type="button" id="btn-map-fit-all" class="btn btn-secondary btn-sm"
+              style="min-height: 36px; padding: 6px 12px; font-size: 0.82rem;"
+              title="Reset zoom to view all 25 localities">
               🗺️ <span data-i18n="btnFitAll">Reset View</span>
             </button>
           </div>
@@ -330,10 +391,13 @@
         <!-- Heatmap Search & Multi-Filter Toolbar -->
         <div class="map-interactive-toolbar">
           <div class="map-search-wrap">
-            <input type="search" id="map-search-input" class="form-input" placeholder="🔍 Search locality, city, or pincode (e.g. HSR, Bandra, 560102)..." data-i18n-ph="searchMapPlaceholder">
+            <input type="search" id="map-search-input" class="form-input"
+              placeholder="🔍 Search locality, city, or pincode (e.g. HSR, Bandra, 560102)..."
+              data-i18n-ph="searchMapPlaceholder">
           </div>
           <div class="map-dropdown-filters">
-            <select id="map-filter-scam-type" class="form-select" style="min-height: 36px; padding: 6px 10px; font-size: 0.84rem;">
+            <select id="map-filter-scam-type" class="form-select"
+              style="min-height: 36px; padding: 6px 10px; font-size: 0.84rem;">
               <option value="">All Scam Types</option>
               <option value="digital-arrest">👮 Digital Arrest</option>
               <option value="fake-kyc-link">🔗 Fake KYC Link</option>
@@ -349,7 +413,8 @@
               <option value="other">⚠️ Other Scams</option>
             </select>
 
-            <select id="map-filter-severity" class="form-select" style="min-height: 36px; padding: 6px 10px; font-size: 0.84rem;">
+            <select id="map-filter-severity" class="form-select"
+              style="min-height: 36px; padding: 6px 10px; font-size: 0.84rem;">
               <option value="">All Severities</option>
               <option value="CRIT">🚨 Critical (10+ reports)</option>
               <option value="HIGH">⚠️ High (5–9 reports)</option>
@@ -361,7 +426,8 @@
 
         <!-- City Quick-Jump Filter Chips -->
         <div class="city-chips-wrap">
-          <span style="font-size: 0.78rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Quick Jump:</span>
+          <span style="font-size: 0.78rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Quick
+            Jump:</span>
           <div class="chips-row" id="map-city-chips">
             <button type="button" class="chip active" data-city="all">All Cities</button>
             <button type="button" class="chip" data-city="Bengaluru">Bengaluru</button>
@@ -395,7 +461,8 @@
         <!-- Clusters list under map -->
         <div class="card-header" style="margin-top: 14px; flex-wrap: wrap; gap: 10px; align-items: baseline;">
           <div>
-            <h3 style="font-size: 1.05rem; font-weight: 700;" data-i18n="mapClustersList">Locality Intelligence & Sightings</h3>
+            <h3 style="font-size: 1.05rem; font-weight: 700;" data-i18n="mapClustersList">Locality Intelligence &
+              Sightings</h3>
             <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 2px;">
               Press any locality to automatically zoom and inspect on the map.
             </p>
@@ -424,20 +491,23 @@
       <div class="card">
         <div class="card-header">
           <h2 class="card-title" data-i18n="alertsHeading">Emerging Threat Alerts</h2>
-          <p class="card-subtitle" data-i18n="alertsSubheading">Real-time anomaly detection for local spikes and newly emerging scam tactics.</p>
+          <p class="card-subtitle" data-i18n="alertsSubheading">Real-time anomaly detection for local spikes and newly
+            emerging scam tactics.</p>
         </div>
 
         <!-- Locality / Pincode Filter -->
         <div style="display: flex; gap: 10px; align-items: flex-end; margin-bottom: 18px; flex-wrap: wrap;">
           <div style="flex: 1; min-width: 220px;">
-            <label for="alerts-pincode-select" class="form-sublabel" style="display: block; margin-bottom: 6px; font-weight: 600;">
+            <label for="alerts-pincode-select" class="form-sublabel"
+              style="display: block; margin-bottom: 6px; font-weight: 600;">
               📍 <span data-i18n="alertsFilterArea">Filter by Locality:</span>
             </label>
             <select id="alerts-pincode-select" class="form-select">
               <option value="" data-i18n="alertsAllAreas">All Localities (Nationwide)</option>
             </select>
           </div>
-          <button type="button" id="btn-refresh-alerts" class="btn btn-secondary" style="padding: 10px 16px; height: 42px; font-size: 0.88rem;">
+          <button type="button" id="btn-refresh-alerts" class="btn btn-secondary"
+            style="padding: 10px 16px; height: 42px; font-size: 0.88rem;">
             🔄 <span data-i18n="alertsRefreshBtn">Refresh Alerts</span>
           </button>
         </div>
@@ -456,32 +526,42 @@
         </div>
 
         <!-- Trust Engine explanation in 5 plain lines -->
-        <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 10px;" data-i18n="trustHeader">How Our Trust Engine Works</h3>
+        <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 10px;" data-i18n="trustHeader">How Our Trust
+          Engine Works</h3>
         <ul style="padding-left: 20px; font-size: 0.92rem; color: #334155; margin-bottom: 24px; line-height: 1.7;">
           <li data-i18n="trust1">A single report is a sighting, never an automatic verdict.</li>
-          <li data-i18n="trust2">Coordinated bot accounts on the same network or with copy-pasted notes are merged into a single cohort.</li>
-          <li data-i18n="trust3">An identifier reaches Known Scam only when multiple independent people on distinct networks corroborate it.</li>
-          <li data-i18n="trust4">Numbers are masked until enough independent sightings exist, preventing harassment.</li>
-          <li data-i18n="trust5">Legitimate businesses and helplines can verify their identity or dispute incorrect reports.</li>
+          <li data-i18n="trust2">Coordinated bot accounts on the same network or with copy-pasted notes are merged into
+            a single cohort.</li>
+          <li data-i18n="trust3">An identifier reaches Known Scam only when multiple independent people on distinct
+            networks corroborate it.</li>
+          <li data-i18n="trust4">Numbers are masked until enough independent sightings exist, preventing harassment.
+          </li>
+          <li data-i18n="trust5">Legitimate businesses and helplines can verify their identity or dispute incorrect
+            reports.</li>
         </ul>
 
         <!-- Privacy architecture -->
-        <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 10px;" data-i18n="privacyHeader">Our Privacy Architecture</h3>
+        <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 10px;" data-i18n="privacyHeader">Our Privacy
+          Architecture</h3>
         <ul style="padding-left: 20px; font-size: 0.92rem; color: #334155; margin-bottom: 24px; line-height: 1.7;">
           <li data-i18n="privacy1">We never ask for your name, phone number, or exact GPS coordinates.</li>
           <li data-i18n="privacy2">Your device and network are pseudonymised using HMAC-SHA256 salted tokens.</li>
-          <li data-i18n="privacy3">Notes are automatically scrubbed for personal details and strictly capped at 300 characters.</li>
+          <li data-i18n="privacy3">Notes are automatically scrubbed for personal details and strictly capped at 300
+            characters.</li>
           <li data-i18n="privacy4">No screenshots are ever uploaded to our servers.</li>
         </ul>
 
         <!-- Scam prevention knowledge base -->
-        <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 10px;" data-i18n="adviceHeader">Scam Prevention Knowledgebase</h3>
+        <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 10px;" data-i18n="adviceHeader">Scam Prevention
+          Knowledgebase</h3>
         <div id="scam-advice-directory" style="font-size: 0.88rem; color: #334155; margin-bottom: 30px;"></div>
 
         <!-- Dispute Challenge Form for Businesses -->
         <div style="border-top: 1px solid var(--border); padding-top: 24px;">
-          <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 6px;" data-i18n="disputeHeader">Business Dispute & Verification Form</h3>
-          <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 16px;" data-i18n="disputeSubheading">If your business or organisation number is reported incorrectly, file an official dispute below.</p>
+          <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 6px;" data-i18n="disputeHeader">Business
+            Dispute & Verification Form</h3>
+          <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 16px;" data-i18n="disputeSubheading">If
+            your business or organisation number is reported incorrectly, file an official dispute below.</p>
 
           <form id="form-dispute">
             <div class="form-group">
@@ -493,13 +573,15 @@
                   <option value="url">Link / URL</option>
                   <option value="sender_id">SMS Sender</option>
                 </select>
-                <input type="text" id="dispute-identifier-value" class="form-input" placeholder="e.g. 9876543210" required>
+                <input type="text" id="dispute-identifier-value" class="form-input" placeholder="e.g. 9876543210"
+                  required>
               </div>
             </div>
 
             <div class="form-group">
               <label class="form-label" data-i18n="disputeName">Claimant / Organisation Name</label>
-              <input type="text" id="dispute-name" class="form-input" placeholder="e.g. Apex Hospital Helpline" required>
+              <input type="text" id="dispute-name" class="form-input" placeholder="e.g. Apex Hospital Helpline"
+                required>
             </div>
 
             <div class="form-group">
@@ -509,7 +591,8 @@
 
             <div class="form-group">
               <label class="form-label" data-i18n="disputeProof">Proof or Justification</label>
-              <textarea id="dispute-proof" class="form-textarea" placeholder="Explain why this identifier is legitimate..."></textarea>
+              <textarea id="dispute-proof" class="form-textarea"
+                placeholder="Explain why this identifier is legitimate..."></textarea>
             </div>
 
             <button type="submit" id="btn-submit-dispute" class="btn btn-primary">
@@ -517,45 +600,15 @@
             </button>
           </form>
 
-          <div id="dispute-feedback" style="display: none; margin-top: 14px; padding: 12px; border-radius: var(--radius-sm); font-size: 0.9rem;"></div>
-
-          <div style="margin-top: 24px; padding-top: 16px; border-top: 1px dashed var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
-            <span style="font-size: 0.8rem; color: var(--text-muted);">Trust &amp; Safety Review Portal</span>
-            <a href="/admin/reviews?token=changeme" target="_blank" style="font-size: 0.82rem; color: var(--primary); text-decoration: none; font-weight: 600;">🔐 Review Challenged Reports ➔</a>
+          <div id="dispute-feedback"
+            style="display: none; margin-top: 14px; padding: 12px; border-radius: var(--radius-sm); font-size: 0.9rem;">
           </div>
 
-          <!-- Evaluation Licence & Live Demo Section -->
-          <div style="border-top: 1px solid var(--border); padding-top: 24px; margin-top: 24px;">
-            <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 6px;">🔑 Evaluation Licence &amp; Live Demo</h3>
-            <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 14px;">
-              Manage and test the SatyaCheck evaluation licence. Upload or paste a 5-minute evaluation licence or long renewal licence.
-            </p>
-
-            <div style="background: var(--surface-alt); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 12px 16px; margin-bottom: 16px;">
-              <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 6px;">
-                <span style="font-size: 0.88rem; font-weight: 600;">Licensee: <span id="about-licence-licensee" style="font-weight: 700; color: var(--primary);">Loading...</span></span>
-                <span id="about-licence-status-badge" style="font-size: 0.78rem; font-weight: 700; padding: 2px 8px; border-radius: 12px; background: #e0f2fe; color: #0369a1;">ACTIVE</span>
-              </div>
-              <div style="font-size: 0.82rem; color: var(--text-muted);">
-                Expires at: <span id="about-licence-expiry" style="font-family: monospace;">-</span>
-                (<span id="about-licence-remaining">-</span>)
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label class="form-label" style="font-size: 0.88rem; font-weight: 600;">Upload or Paste Licence Key / JSON</label>
-              <textarea id="about-licence-input" class="form-textarea" rows="3" style="font-family: monospace; font-size: 0.82rem;" placeholder='Paste licence JSON here, e.g. {"licensee": "Demo Bank", "expires_at": "...", "signature": "..."}'></textarea>
-              
-              <div style="display: flex; gap: 8px; align-items: center; justify-content: space-between; margin-top: 8px; flex-wrap: wrap;">
-                <input type="file" id="about-licence-file" accept=".json,application/json" class="form-input" style="padding: 4px; font-size: 0.82rem; max-width: 200px;">
-                <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                  <button type="button" id="btn-about-load-5min" class="btn btn-secondary" style="font-size: 0.82rem; padding: 6px 10px;">⏱️ Load 5-Min Licence</button>
-                  <button type="button" id="btn-about-load-long" class="btn btn-secondary" style="font-size: 0.82rem; padding: 6px 10px;">📜 Load Long Licence</button>
-                  <button type="button" id="btn-about-upload-licence" class="btn btn-primary" style="font-size: 0.82rem; padding: 6px 14px;">Activate Licence</button>
-                </div>
-              </div>
-              <div id="about-licence-feedback" style="display: none; margin-top: 8px; padding: 8px 12px; border-radius: 4px; font-size: 0.85rem; font-weight: 600;"></div>
-            </div>
+          <div
+            style="margin-top: 24px; padding-top: 16px; border-top: 1px dashed var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+            <span style="font-size: 0.8rem; color: var(--text-muted);">Trust &amp; Safety Review Portal</span>
+            <a href="/admin/reviews?token=changeme" target="_blank"
+              style="font-size: 0.82rem; color: var(--primary); text-decoration: none; font-weight: 600;">🔐 Review Challenged Reports ➔</a>
           </div>
         </div>
       </div>
@@ -589,38 +642,52 @@
   </nav>
 
   <!-- ── Licence Expired Full-Screen Overlay ────────────────────────────── -->
-  <div id="licence-expired-overlay" class="licence-overlay" role="alertdialog" aria-modal="true" aria-labelledby="lic-title">
+  <div id="licence-expired-overlay" class="licence-overlay" role="alertdialog" aria-modal="true"
+    aria-labelledby="lic-title">
     <div class="licence-box">
       <div style="font-size: 3rem; margin-bottom: 10px;">🔒</div>
       <h2 id="lic-title" data-i18n="licenceExpiredTitle">Licence Expired</h2>
-      <p id="lic-msg" data-i18n="licenceExpiredMsg">The SatyaCheck evaluation licence has expired. Please contact your system provider to renew.</p>
+      <p id="lic-msg" data-i18n="licenceExpiredMsg">The SatyaCheck evaluation licence has expired. Please contact your
+        system provider to renew.</p>
 
       <!-- Input field for buyer to upload/renew licence directly on expired screen -->
-      <div class="licence-upload-box" style="margin-top: 18px; text-align: left; background: #0f172a; padding: 16px; border-radius: 8px; border: 1px solid #334155;">
+      <div class="licence-upload-box"
+        style="margin-top: 18px; text-align: left; background: #0f172a; padding: 16px; border-radius: 8px; border: 1px solid #334155;">
         <label style="font-size: 0.85rem; font-weight: 600; color: #cbd5e1; display: block; margin-bottom: 6px;">
           🔑 Upload or Paste Renewal Licence
         </label>
-        <textarea id="overlay-licence-input" class="form-textarea" style="width: 100%; height: 75px; font-family: monospace; font-size: 0.8rem; background: #1e293b; color: #f8fafc; border: 1px solid #475569; border-radius: 6px; padding: 8px; margin-bottom: 8px;" placeholder='{"licensee": "Demo Bank", "expires_at": "...", "signature": "..."}'></textarea>
-        
+        <textarea id="overlay-licence-input" class="form-textarea"
+          style="width: 100%; height: 75px; font-family: monospace; font-size: 0.8rem; background: #1e293b; color: #f8fafc; border: 1px solid #475569; border-radius: 6px; padding: 8px; margin-bottom: 8px;"
+          placeholder='{"licensee": "Demo Bank", "expires_at": "...", "signature": "..."}'></textarea>
+
         <div style="display: flex; gap: 8px; align-items: center; justify-content: space-between; flex-wrap: wrap;">
-          <input type="file" id="overlay-licence-file" accept=".json,application/json" style="font-size: 0.8rem; color: #94a3b8; max-width: 190px;">
+          <input type="file" id="overlay-licence-file" accept=".json,application/json"
+            style="font-size: 0.8rem; color: #94a3b8; max-width: 190px;">
           <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-            <button type="button" id="btn-overlay-load-long" class="btn" style="background: #334155; color: #f8fafc; font-size: 0.8rem; padding: 6px 10px;">📜 Load Long Licence</button>
-            <button type="button" id="btn-overlay-upload-licence" class="btn btn-primary" style="font-size: 0.8rem; padding: 6px 14px;">Unlock App</button>
+            <button type="button" id="btn-overlay-load-long" class="btn"
+              style="background: #334155; color: #f8fafc; font-size: 0.8rem; padding: 6px 10px;">📜 Load Long
+              Licence</button>
+            <button type="button" id="btn-overlay-upload-licence" class="btn btn-primary"
+              style="font-size: 0.8rem; padding: 6px 14px;">Unlock App</button>
           </div>
         </div>
-        <div id="overlay-licence-feedback" style="display: none; margin-top: 8px; padding: 6px 10px; border-radius: 4px; font-size: 0.82rem; font-weight: 600;"></div>
+        <div id="overlay-licence-feedback"
+          style="display: none; margin-top: 8px; padding: 6px 10px; border-radius: 4px; font-size: 0.82rem; font-weight: 600;">
+        </div>
       </div>
 
-      <div class="status-pulse" data-i18n="licencePollingMsg" style="margin-top: 14px;">Checking system status every 30 seconds...</div>
+      <div class="status-pulse" data-i18n="licencePollingMsg" style="margin-top: 14px;">Checking system status every 30
+        seconds...</div>
     </div>
   </div>
 
   <!-- Pinned Leaflet JS CDN -->
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
   <!-- Pinned Leaflet.heat 0.2.0 CDN per Task F3 -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.heat/0.2.0/leaflet-heat.js"></script>
   <!-- Application JS -->
   <script type="module" src="app.js?v=4"></script>
 </body>
+
 </html>

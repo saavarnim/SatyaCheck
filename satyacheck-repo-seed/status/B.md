@@ -12,3 +12,4 @@ Format:  [T#] done|wip | LEFT OFF AT: ... | NEEDS (from other person/files): ...
 [F2] done | web/official.json (1930 tel, cybercrime.gov.in, sancharsaathi.gov.in EN/HI), web/advisories.json ([]), web/official.js authorities card, app/routes_export.py GET /admin/export/known-scams (JSON/CSV, token, no PII), tests/test_export.py 6/6 pass (160 total)
 [DEMO-LICENCE] done | in-app licence upload input field & file picker on expired overlay and about view, demo 5min & long licence loaders, instant activation & unblock without restart
 [DEMO-SLOTS] done | alternative_5min.json with 50 pre-signed 5-min slots (10:00-14:05 IST / 12:30-16:35 SGT), individual slot files, automatic slot resolution in app.js and routes_licence.py
+[DEMO-ADMIN-ONLY] done | moved Evaluation Licence & Live Demo card from public About view to Admin Review portal (/admin/reviews) with token gating, live countdown, 5-min/long loaders, and direct activation
