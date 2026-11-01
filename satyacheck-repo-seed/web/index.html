@@ -523,6 +523,40 @@
             <span style="font-size: 0.8rem; color: var(--text-muted);">Trust &amp; Safety Review Portal</span>
             <a href="/admin/reviews?token=changeme" target="_blank" style="font-size: 0.82rem; color: var(--primary); text-decoration: none; font-weight: 600;">🔐 Review Challenged Reports ➔</a>
           </div>
+
+          <!-- Evaluation Licence & Live Demo Section -->
+          <div style="border-top: 1px solid var(--border); padding-top: 24px; margin-top: 24px;">
+            <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 6px;">🔑 Evaluation Licence &amp; Live Demo</h3>
+            <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 14px;">
+              Manage and test the SatyaCheck evaluation licence. Upload or paste a 5-minute evaluation licence or long renewal licence.
+            </p>
+
+            <div style="background: var(--surface-alt); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 12px 16px; margin-bottom: 16px;">
+              <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 6px;">
+                <span style="font-size: 0.88rem; font-weight: 600;">Licensee: <span id="about-licence-licensee" style="font-weight: 700; color: var(--primary);">Loading...</span></span>
+                <span id="about-licence-status-badge" style="font-size: 0.78rem; font-weight: 700; padding: 2px 8px; border-radius: 12px; background: #e0f2fe; color: #0369a1;">ACTIVE</span>
+              </div>
+              <div style="font-size: 0.82rem; color: var(--text-muted);">
+                Expires at: <span id="about-licence-expiry" style="font-family: monospace;">-</span>
+                (<span id="about-licence-remaining">-</span>)
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" style="font-size: 0.88rem; font-weight: 600;">Upload or Paste Licence Key / JSON</label>
+              <textarea id="about-licence-input" class="form-textarea" rows="3" style="font-family: monospace; font-size: 0.82rem;" placeholder='Paste licence JSON here, e.g. {"licensee": "Demo Bank", "expires_at": "...", "signature": "..."}'></textarea>
+              
+              <div style="display: flex; gap: 8px; align-items: center; justify-content: space-between; margin-top: 8px; flex-wrap: wrap;">
+                <input type="file" id="about-licence-file" accept=".json,application/json" class="form-input" style="padding: 4px; font-size: 0.82rem; max-width: 200px;">
+                <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                  <button type="button" id="btn-about-load-5min" class="btn btn-secondary" style="font-size: 0.82rem; padding: 6px 10px;">⏱️ Load 5-Min Licence</button>
+                  <button type="button" id="btn-about-load-long" class="btn btn-secondary" style="font-size: 0.82rem; padding: 6px 10px;">📜 Load Long Licence</button>
+                  <button type="button" id="btn-about-upload-licence" class="btn btn-primary" style="font-size: 0.82rem; padding: 6px 14px;">Activate Licence</button>
+                </div>
+              </div>
+              <div id="about-licence-feedback" style="display: none; margin-top: 8px; padding: 8px 12px; border-radius: 4px; font-size: 0.85rem; font-weight: 600;"></div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -560,7 +594,25 @@
       <div style="font-size: 3rem; margin-bottom: 10px;">🔒</div>
       <h2 id="lic-title" data-i18n="licenceExpiredTitle">Licence Expired</h2>
       <p id="lic-msg" data-i18n="licenceExpiredMsg">The SatyaCheck evaluation licence has expired. Please contact your system provider to renew.</p>
-      <div class="status-pulse" data-i18n="licencePollingMsg">Checking system status every 30 seconds...</div>
+
+      <!-- Input field for buyer to upload/renew licence directly on expired screen -->
+      <div class="licence-upload-box" style="margin-top: 18px; text-align: left; background: #0f172a; padding: 16px; border-radius: 8px; border: 1px solid #334155;">
+        <label style="font-size: 0.85rem; font-weight: 600; color: #cbd5e1; display: block; margin-bottom: 6px;">
+          🔑 Upload or Paste Renewal Licence
+        </label>
+        <textarea id="overlay-licence-input" class="form-textarea" style="width: 100%; height: 75px; font-family: monospace; font-size: 0.8rem; background: #1e293b; color: #f8fafc; border: 1px solid #475569; border-radius: 6px; padding: 8px; margin-bottom: 8px;" placeholder='{"licensee": "Demo Bank", "expires_at": "...", "signature": "..."}'></textarea>
+        
+        <div style="display: flex; gap: 8px; align-items: center; justify-content: space-between; flex-wrap: wrap;">
+          <input type="file" id="overlay-licence-file" accept=".json,application/json" style="font-size: 0.8rem; color: #94a3b8; max-width: 190px;">
+          <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+            <button type="button" id="btn-overlay-load-long" class="btn" style="background: #334155; color: #f8fafc; font-size: 0.8rem; padding: 6px 10px;">📜 Load Long Licence</button>
+            <button type="button" id="btn-overlay-upload-licence" class="btn btn-primary" style="font-size: 0.8rem; padding: 6px 14px;">Unlock App</button>
+          </div>
+        </div>
+        <div id="overlay-licence-feedback" style="display: none; margin-top: 8px; padding: 6px 10px; border-radius: 4px; font-size: 0.82rem; font-weight: 600;"></div>
+      </div>
+
+      <div class="status-pulse" data-i18n="licencePollingMsg" style="margin-top: 14px;">Checking system status every 30 seconds...</div>
     </div>
   </div>
 

@@ -153,3 +153,4 @@ def export_known_scams(
 
     # Default JSON
     return known_scams
+

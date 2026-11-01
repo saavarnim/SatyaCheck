@@ -139,3 +139,4 @@ def test_advisories_json_shipped_empty():
     data = json.loads(advisories_file.read_text(encoding="utf-8"))
     assert isinstance(data, list)
     assert len(data) == 0, "web/advisories.json must ship as an empty list"
+
