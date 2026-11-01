@@ -174,11 +174,17 @@ export const translations = {
     // Alerts View
     alertsHeading: "Emerging Threat Alerts",
     alertsSubheading: "Real-time anomaly detection for local spikes and newly emerging scam tactics.",
+    alertsFilterArea: "Filter by Locality:",
+    alertsAllAreas: "All Localities (Nationwide)",
+    alertsRefreshBtn: "Refresh Alerts",
     noAlertsActive: "No active anomaly alerts in your area right now.",
+    alertSpikeBadge: "📈 SPIKE",
+    alertNewTypeBadge: "⚠️ NEW PATTERN",
     alertSpikeTitle: "Sudden Spike in Scam Sightings",
     alertSpikeDesc: "{count} independent reports in the last 24h (prior daily baseline: {baseline}/day).",
     alertNewTypeTitle: "New Scam Pattern Emerged",
     alertNewTypeDesc: "The scam type '{type}' was newly sighted in this locality in the last 24h.",
+    alertSafetyAdviceTitle: "💡 Prevention Advice:",
 
     // About View
     aboutHeading: "About SatyaCheck",
@@ -552,11 +558,17 @@ export const translations = {
     // Alerts View
     alertsHeading: "ताजा उभरती चेतावनियां (Alerts)",
     alertsSubheading: "स्थानीय अचानक वृद्धि और नए स्कैम तरीकों का रीयल-टाइम पता लगाना।",
+    alertsFilterArea: "इलाके के अनुसार फ़िल्टर करें:",
+    alertsAllAreas: "सभी इलाके (देशभर में)",
+    alertsRefreshBtn: "अलर्ट रीफ्रेश करें",
     noAlertsActive: "इस समय आपके क्षेत्र में कोई असामान्य अलर्ट सक्रिय नहीं है।",
+    alertSpikeBadge: "📈 अचानक उछाल",
+    alertNewTypeBadge: "⚠️ नया तरीका",
     alertSpikeTitle: "स्कैम रिपोर्टों में अचानक वृद्धि",
     alertSpikeDesc: "पिछले 24 घंटों में {count} स्वतंत्र रिपोर्टें मिलीं (दैनिक सामान्य आधार: {baseline}/दिन)।",
     alertNewTypeTitle: "नया स्कैम तरीका सामने आया",
     alertNewTypeDesc: "पिछले 24 घंटों में इस क्षेत्र में '{type}' प्रकार का स्कैम पहली बार देखा गया।",
+    alertSafetyAdviceTitle: "💡 बचाव सलाह:",
 
     // About View
     aboutHeading: "सत्यचेक के बारे में",

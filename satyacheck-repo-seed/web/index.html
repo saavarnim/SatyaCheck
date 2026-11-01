@@ -405,6 +405,21 @@
           <p class="card-subtitle" data-i18n="alertsSubheading">Real-time anomaly detection for local spikes and newly emerging scam tactics.</p>
         </div>
 
+        <!-- Locality / Pincode Filter -->
+        <div style="display: flex; gap: 10px; align-items: flex-end; margin-bottom: 18px; flex-wrap: wrap;">
+          <div style="flex: 1; min-width: 220px;">
+            <label for="alerts-pincode-select" class="form-sublabel" style="display: block; margin-bottom: 6px; font-weight: 600;">
+              📍 <span data-i18n="alertsFilterArea">Filter by Locality:</span>
+            </label>
+            <select id="alerts-pincode-select" class="form-select">
+              <option value="" data-i18n="alertsAllAreas">All Localities (Nationwide)</option>
+            </select>
+          </div>
+          <button type="button" id="btn-refresh-alerts" class="btn btn-secondary" style="padding: 10px 16px; height: 42px; font-size: 0.88rem;">
+            🔄 <span data-i18n="alertsRefreshBtn">Refresh Alerts</span>
+          </button>
+        </div>
+
         <div id="alerts-list-container">
           <p style="color: var(--text-muted); font-size: 0.88rem;">Loading alerts...</p>
         </div>

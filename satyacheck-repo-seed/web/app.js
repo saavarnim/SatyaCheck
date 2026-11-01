@@ -777,20 +777,54 @@ async function loadMapData() {
 }
 
 // ── Alerts View Logic ───────────────────────────────────────────────────────
+// ── Alerts View Logic ───────────────────────────────────────────────────────
+let alertsSelectedPincode = "";
+
+function setupAlertsView() {
+  const select = document.getElementById("alerts-pincode-select");
+  const refreshBtn = document.getElementById("btn-refresh-alerts");
+
+  if (select && select.options.length <= 1) {
+    AREAS.forEach((a) => {
+      const opt = document.createElement("option");
+      opt.value = a.pincode;
+      opt.textContent = `${a.locality}, ${a.city} (${a.pincode})`;
+      select.appendChild(opt);
+    });
+
+    select.addEventListener("change", () => {
+      alertsSelectedPincode = select.value;
+      loadAlertsData();
+    });
+  }
+
+  if (refreshBtn) {
+    refreshBtn.addEventListener("click", () => {
+      loadAlertsData();
+    });
+  }
+}
+
 async function loadAlertsData() {
   const container = document.getElementById("alerts-list-container");
+  if (!container) return;
   container.innerHTML = `<p style="color: var(--text-muted); font-size: 0.88rem;">Loading alerts...</p>`;
 
+  const url = alertsSelectedPincode
+    ? `/alerts?pincode=${encodeURIComponent(alertsSelectedPincode)}`
+    : "/alerts";
+
   try {
-    const res = await apiFetch("/alerts");
+    const res = await apiFetch(url);
     const data = await res.json();
     const alerts = data.alerts || [];
 
     if (alerts.length === 0) {
       container.innerHTML = `
-        <div style="text-align: center; padding: 24px; color: var(--text-muted);">
-          <div style="font-size: 2rem; margin-bottom: 8px;">🛡️</div>
-          <p>${t("noAlertsActive")}</p>
+        <div class="alert-empty-state">
+          <div style="font-size: 2.2rem; margin-bottom: 8px;">🛡️</div>
+          <h4 style="font-weight: 700; margin-bottom: 4px; color: var(--text-main);">${t("noAlertsActive")}</h4>
+          <p style="font-size: 0.85rem; color: var(--text-muted);">Normal activity level across recent reporting baseline.</p>
         </div>
       `;
       return;
@@ -799,25 +833,44 @@ async function loadAlertsData() {
     container.innerHTML = alerts.map((a) => {
       const isSpike = a.type === "SPIKE";
       const tagClass = isSpike ? "tag-SPIKE" : "tag-NEW_TYPE";
+      const badgeText = isSpike ? t("alertSpikeBadge") : t("alertNewTypeBadge");
       const title = isSpike ? t("alertSpikeTitle") : t("alertNewTypeTitle");
+
+      const scamTypeKey = "scam_" + (a.scam_type || "").replaceAll("-", "_");
+      const scamTypeLabel = t(scamTypeKey) || a.scam_type;
+
       const desc = isSpike
         ? t("alertSpikeDesc", { count: a.count, baseline: a.baseline_per_day })
-        : t("alertNewTypeDesc", { type: a.scam_type });
+        : t("alertNewTypeDesc", { type: scamTypeLabel });
 
-      // Find locality name for pincode
+      // Locality name for pincode
       const area = AREAS.find((ar) => ar.pincode === a.pincode);
-      const locText = area ? `${area.locality}, ${area.city}` : a.pincode;
+      const locText = area ? `${area.locality}, ${area.city} (${a.pincode})` : `Pincode ${a.pincode}`;
+
+      // Safety advice for new emerging scam types
+      const adviceKey = "advice_" + (a.scam_type || "").replaceAll("-", "_");
+      const adviceText = (!isSpike && t(adviceKey)) ? t(adviceKey) : "";
+      const adviceHtml = adviceText
+        ? `<div class="alert-advice-box">
+             <strong>${t("alertSafetyAdviceTitle")}</strong> ${escapeHtml(adviceText)}
+           </div>`
+        : "";
 
       return `
-        <div class="card alert-card alert-${a.type}">
-          <span class="alert-tag ${tagClass}">${a.type}</span>
-          <h4 style="font-size: 1rem; font-weight: 700; margin-bottom: 4px;">
-            ${title} • ${escapeHtml(locText)}
-          </h4>
-          <p style="font-size: 0.88rem; color: #475569; margin-bottom: 8px;">${desc}</p>
-          <div style="font-size: 0.78rem; color: var(--text-muted);">
-            Monitored window: ${escapeHtml(a.window)}
+        <div class="alert-card alert-${a.type}">
+          <div class="alert-header-row">
+            <span class="alert-tag ${tagClass}">${badgeText}</span>
+            <span class="alert-locality-badge">📍 ${escapeHtml(locText)}</span>
           </div>
+          <h4 class="alert-title">${title}</h4>
+          <p class="alert-desc">${desc}</p>
+          <div class="alert-meta">
+            <span>⏱️ Window: ${escapeHtml(a.window)}</span>
+            ${isSpike ? `<span>📊 Sighting Count: <strong>${a.count}</strong></span>` : ""}
+            ${isSpike ? `<span>📈 Prior Baseline: <strong>${a.baseline_per_day}</strong> / day</span>` : ""}
+            ${!isSpike ? `<span>⚠️ Emerging Type: <strong>${escapeHtml(scamTypeLabel)}</strong></span>` : ""}
+          </div>
+          ${adviceHtml}
         </div>
       `;
     }).join("");
@@ -906,6 +959,7 @@ window.addEventListener("DOMContentLoaded", () => {
   setupCheckView();
   setupReportView();
   setupMapView();
+  setupAlertsView();
   setupAboutView();
 
   // Route according to initial hash

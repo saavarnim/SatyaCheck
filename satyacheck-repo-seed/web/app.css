@@ -1397,3 +1397,114 @@ body {
   line-height: 1.4;
   margin: 0;
 }
+
+/* ── Emerging Threat Alerts View ────────────────────────────────────────── */
+.alert-card {
+  margin-bottom: 16px;
+  padding: 18px 20px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.alert-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.alert-card.alert-SPIKE {
+  border-left: 5px solid #dc2626;
+  background: linear-gradient(135deg, #fff 0%, #fef2f2 100%);
+}
+
+.alert-card.alert-NEW_TYPE {
+  border-left: 5px solid #ea580c;
+  background: linear-gradient(135deg, #fff 0%, #fff7ed 100%);
+}
+
+.alert-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+
+.alert-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  font-size: 0.76rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-radius: 9999px;
+}
+
+.tag-SPIKE {
+  background: #fee2e2;
+  color: #b91c1c;
+  border: 1px solid #fca5a5;
+}
+
+.tag-NEW_TYPE {
+  background: #ffedd5;
+  color: #c2410c;
+  border: 1px solid #fdba74;
+}
+
+.alert-locality-badge {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #475569;
+  background: rgba(0, 0, 0, 0.05);
+  padding: 3px 8px;
+  border-radius: 4px;
+}
+
+.alert-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text-main);
+  margin-bottom: 6px;
+  line-height: 1.35;
+}
+
+.alert-desc {
+  font-size: 0.92rem;
+  color: #334155;
+  margin-bottom: 12px;
+  line-height: 1.5;
+}
+
+.alert-meta {
+  display: flex;
+  gap: 14px;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.alert-advice-box {
+  margin-top: 12px;
+  padding: 10px 12px;
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px dashed #cbd5e1;
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+  color: #1e293b;
+  line-height: 1.45;
+}
+
+.alert-empty-state {
+  text-align: center;
+  padding: 36px 20px;
+  color: var(--text-muted);
+}
+
