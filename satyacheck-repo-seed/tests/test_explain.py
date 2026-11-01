@@ -259,3 +259,4 @@ def test_lookup_endpoint_includes_explain_and_under_500ms(client):
     data_unknown = resp_unknown.json()
     assert "explain" in data_unknown
     assert data_unknown["explain"]["headline_key"] == "explain_headline_no_reports"
+

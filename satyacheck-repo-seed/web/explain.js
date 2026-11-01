@@ -145,3 +145,4 @@ export function setupExplainSpeech(explain, scamType = "other") {
     window.speechSynthesis.speak(utterance);
   };
 }
+
