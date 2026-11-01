@@ -1613,19 +1613,23 @@ body {
 }
 
 .official-meta {
-  flex: 1;
+  flex: 1 1 auto;
   min-width: 0;
+  overflow: hidden;
 }
 
 .official-name {
-  font-size: 0.84rem;
+  font-size: 0.82rem;
   font-weight: 700;
   color: var(--text-main);
   line-height: 1.25;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .official-desc {
-  font-size: 0.76rem;
+  font-size: 0.74rem;
   color: var(--text-muted);
   margin-top: 2px;
   line-height: 1.3;
@@ -1636,18 +1640,19 @@ body {
   white-space: nowrap;
   background: var(--primary);
   color: #ffffff !important;
-  font-size: 0.76rem;
+  font-size: 0.70rem;
   font-weight: 600;
-  padding: 5px 11px;
-  border-radius: 5px;
+  padding: 3px 8px;
+  border-radius: 4px;
   transition: all 0.15s ease;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  min-width: 96px;
+  min-width: auto;
   text-align: center;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  line-height: 1.3;
 }
 
 .btn-official:hover {
@@ -1666,12 +1671,12 @@ body {
 @media (max-width: 480px) {
   .official-item {
     gap: 8px;
-    padding: 8px 10px;
+    padding: 6px 10px;
   }
   .btn-official {
-    font-size: 0.72rem;
-    padding: 5px 8px;
-    min-width: 82px;
+    font-size: 0.68rem;
+    padding: 3px 6px;
+    min-width: auto;
   }
 }
 
