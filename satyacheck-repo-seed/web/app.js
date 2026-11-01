@@ -12,6 +12,7 @@ import {
   updateSummaryLine,
 } from "./timepicker.js";
 import { renderExplainCard, setupExplainSpeech } from "./explain.js";
+import { renderOfficialCard } from "./official.js";
 
 // ── 25 Seeded Areas (Embedded per docs/07 to avoid extra latency) ───────────
 const AREAS = [
@@ -325,6 +326,15 @@ function renderLookupResult(data, type, rawValue) {
 
   const explainCardHtml = renderExplainCard(data.explain, data.scam_type);
 
+  let officialCardHtml = "";
+  if (verdict === "KNOWN_SCAM" || verdict === "SUSPICIOUS") {
+    officialCardHtml = renderOfficialCard({
+      verdict: verdict,
+      amountLost: null,
+      isSuccessScreen: false,
+    });
+  }
+
   container.innerHTML = `
     <div class="card result-card verdict-${verdict}">
       <div class="verdict-badge badge-${verdict}">
@@ -335,6 +345,9 @@ function renderLookupResult(data, type, rawValue) {
 
       <!-- Task F1 Explain Card -->
       ${explainCardHtml}
+
+      <!-- Task F2: Also tell the authorities -->
+      ${officialCardHtml}
 
       <div style="margin-top: 14px; font-size: 0.85rem;">
         <a href="#/about" style="color: var(--primary); text-decoration: underline;">
@@ -551,6 +564,14 @@ function setupReportView() {
         if (caseIdEl) {
           caseIdEl.textContent = data.case_id || "RECORDED";
         }
+        const officialContainer = document.getElementById("report-success-official-container");
+        if (officialContainer) {
+          officialContainer.innerHTML = renderOfficialCard({
+            verdict: "SUSPICIOUS",
+            amountLost: payload.amount_lost_inr,
+            isSuccessScreen: true,
+          });
+        }
       } else {
         const err = await res.json().catch(() => ({}));
         let msg = "Submission failed. Please check your inputs.";
@@ -577,6 +598,8 @@ function setupReportView() {
     if (reportIdEl) reportIdEl.textContent = "";
     const caseIdEl = document.getElementById("res-case-id");
     if (caseIdEl) caseIdEl.textContent = "";
+    const officialContainer = document.getElementById("report-success-official-container");
+    if (officialContainer) officialContainer.innerHTML = "";
 
     // Reset default grid and chip selections
     reportSelectedChannel = "phone call";

@@ -1,0 +1,35 @@
+[
+  {
+    "id": "helpline-1930",
+    "name_en": "National Cyber Crime Helpline 1930",
+    "name_hi": "राष्ट्रीय साइबर अपराध हेल्पलाइन 1930",
+    "url": "tel:1930",
+    "desc_en": "Call immediately if you lost money to request a freeze on fraudulent bank transactions.",
+    "desc_hi": "अगर आपने पैसे गंवाए हैं, तो बैंक लेन-देन रुकवाने के लिए तुरंत 1930 पर कॉल करें।",
+    "action_en": "Call 1930",
+    "action_hi": "1930 पर कॉल करें",
+    "for_loss": true
+  },
+  {
+    "id": "cybercrime-portal",
+    "name_en": "National Cyber Crime Reporting Portal",
+    "name_hi": "राष्ट्रीय साइबर अपराध रिपोर्टिंग पोर्टल",
+    "url": "https://cybercrime.gov.in",
+    "desc_en": "File a formal cybercrime complaint or police FIR online with digital evidence.",
+    "desc_hi": "डिजिटल साक्ष्यों के साथ ऑनलाइन औपचारिक साइबर अपराध शिकायत या एफआईआर दर्ज करें।",
+    "action_en": "File Complaint",
+    "action_hi": "शिकायत दर्ज करें",
+    "for_loss": true
+  },
+  {
+    "id": "chakshu-portal",
+    "name_en": "Chakshu Portal (Sanchar Saathi)",
+    "name_hi": "चक्षु पोर्टल (संचार साथी)",
+    "url": "https://sancharsaathi.gov.in/sfc/",
+    "desc_en": "Report suspected fraud calls, SMS or WhatsApp messages, even if no money was lost.",
+    "desc_hi": "संदिग्ध कॉल, एसएमएस या व्हाट्सएप संदेशों की रिपोर्ट करें, भले ही पैसे का कोई नुकसान न हुआ हो।",
+    "action_en": "Report on Chakshu",
+    "action_hi": "चक्षु पर रिपोर्ट करें",
+    "for_loss": false
+  }
+]

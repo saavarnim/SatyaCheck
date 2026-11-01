@@ -23,6 +23,7 @@ from app.routes_reports import router as reports_router
 from app.routes_map import router as map_router
 from app.routes_licence import router as licence_router
 from app.routes_challenges import router as challenges_router
+from app.routes_export import router as export_router
 
 # ── Logging: only method, path (no query string), status, duration ────────────
 logger = logging.getLogger("satyacheck")
@@ -87,6 +88,7 @@ app.include_router(reports_router)
 app.include_router(map_router)
 app.include_router(licence_router)
 app.include_router(challenges_router)
+app.include_router(export_router)
 
 
 # ── Startup: create tables + seed ────────────────────────────────────────────
