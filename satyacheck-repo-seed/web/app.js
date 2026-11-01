@@ -349,17 +349,9 @@ function renderLookupResult(data, type, rawValue) {
       <!-- Task F2: Also tell the authorities -->
       ${officialCardHtml}
 
-      <!-- Prominent Business Verification & Dispute Callout -->
-      <div class="dispute-callout-card" id="dispute-callout">
-        <div class="dispute-callout-body">
-          <div class="dispute-callout-icon" aria-hidden="true">🏢</div>
-          <div class="dispute-callout-text">
-            <strong class="dispute-callout-title">${t("disputeLink")}?</strong>
-            <p class="dispute-callout-sub">${t("disputeCalloutSub")}</p>
-          </div>
-        </div>
-        <a href="#/about" class="btn btn-dispute-action" id="btn-goto-dispute">
-          <span>${t("disputeActionBtn")}</span> ➔
+      <div style="margin-top: 14px; font-size: 0.85rem;">
+        <a href="#/about" style="color: var(--primary); text-decoration: underline;">
+          ${t("disputeLink")}
         </a>
       </div>
 
@@ -385,20 +377,6 @@ function renderLookupResult(data, type, rawValue) {
   `;
 
   setupExplainSpeech(data.explain, data.scam_type);
-
-  const disputeBtn = container.querySelector("#btn-goto-dispute");
-  if (disputeBtn) {
-    disputeBtn.addEventListener("click", () => {
-      const typeSelect = document.getElementById("dispute-identifier-type");
-      const valInput = document.getElementById("dispute-identifier-value");
-      if (typeSelect && type) typeSelect.value = type;
-      if (valInput) valInput.value = data.canonical_value || displayVal || "";
-      setTimeout(() => {
-        const disputeForm = document.getElementById("form-dispute");
-        if (disputeForm) disputeForm.scrollIntoView({ behavior: "smooth" });
-      }, 150);
-    });
-  }
 
   document.getElementById("btn-toggle-tech").addEventListener("click", () => {
     const box = document.getElementById("tech-details-box");
@@ -1001,216 +979,6 @@ async function loadAlertsData() {
 }
 
 // ── About & Dispute Flow Logic ──────────────────────────────────────────────
-
-// ── Evaluation Licence & Live Demo UI ───────────────────────────────────────
-async function loadLicenceStatusUI() {
-  try {
-    const res = await fetch("/license");
-    if (!res.ok) return;
-    const data = await res.json();
-    const licenseeEl = document.getElementById("about-licence-licensee");
-    const badgeEl = document.getElementById("about-licence-status-badge");
-    const expiryEl = document.getElementById("about-licence-expiry");
-    const remainingEl = document.getElementById("about-licence-remaining");
-
-    if (licenseeEl) licenseeEl.textContent = data.licensee || "None";
-    if (expiryEl) expiryEl.textContent = data.expires_at || "Not set";
-
-    const isExpired = data.status === "EXPIRED" || (data.seconds_remaining !== undefined && data.seconds_remaining <= 0);
-    if (badgeEl) {
-      badgeEl.textContent = isExpired ? "EXPIRED" : "ACTIVE";
-      badgeEl.style.background = isExpired ? "#fee2e2" : "#e0f2fe";
-      badgeEl.style.color = isExpired ? "#b91c1c" : "#0369a1";
-    }
-
-    if (remainingEl) {
-      if (isExpired) {
-        remainingEl.textContent = "0s remaining";
-      } else {
-        const secs = Math.max(0, Math.round(data.seconds_remaining || 0));
-        const mins = Math.floor(secs / 60);
-        const hours = Math.floor(mins / 60);
-        const days = Math.floor(hours / 24);
-        if (days > 0) remainingEl.textContent = `${days}d ${hours % 24}h remaining`;
-        else if (hours > 0) remainingEl.textContent = `${hours}h ${mins % 60}m remaining`;
-        else remainingEl.textContent = `${mins}m ${secs % 60}s remaining`;
-      }
-    }
-  } catch (e) {}
-}
-
-function setupLicenceManager() {
-  loadLicenceStatusUI();
-
-  async function activateLicence(payloadStr, feedbackEl, onSuccess) {
-    if (!feedbackEl) return;
-    feedbackEl.style.display = "block";
-    feedbackEl.style.background = "#f8fafc";
-    feedbackEl.style.color = "#475569";
-    feedbackEl.textContent = "Verifying & activating licence...";
-
-    let bodyData;
-    try {
-      bodyData = JSON.parse(payloadStr.trim());
-    } catch (e) {
-      feedbackEl.style.background = "#fee2e2";
-      feedbackEl.style.color = "#b91c1c";
-      feedbackEl.textContent = "Invalid format: Please enter valid JSON with licensee, expires_at, and signature.";
-      return;
-    }
-
-    // Auto-resolve active slot if a multi-slot bundle is provided
-    if (bodyData && bodyData.slots && Array.isArray(bodyData.slots)) {
-      const nowMs = Date.now();
-      const activeSlot = bodyData.slots.find(s => {
-        const exp = new Date(s.expires_at).getTime();
-        return (exp - nowMs) >= 60000;
-      }) || bodyData.slots[bodyData.slots.length - 1];
-      if (activeSlot) {
-        bodyData = {
-          licensee: activeSlot.licensee,
-          expires_at: activeSlot.expires_at,
-          signature: activeSlot.signature,
-        };
-      }
-    }
-
-    try {
-      const res = await fetch("/license", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(bodyData),
-      });
-
-      if (res.ok) {
-        feedbackEl.style.background = "#f0fdf4";
-        feedbackEl.style.color = "#166534";
-        feedbackEl.textContent = `✓ Licence activated: ${bodyData.licensee || "Active"}`;
-        hideLicenceExpired();
-        loadLicenceStatusUI();
-        if (onSuccess) onSuccess();
-      } else {
-        const err = await res.json().catch(() => ({}));
-        feedbackEl.style.background = "#fee2e2";
-        feedbackEl.style.color = "#b91c1c";
-        let msg = "Activation failed. Please check licence validity.";
-        if (err.error === "INVALID_SIGNATURE") msg = "Signature verification failed. Key or payload invalid.";
-        else if (err.error === "ALREADY_EXPIRED") msg = "Licence has already expired.";
-        feedbackEl.textContent = `❌ ${msg}`;
-      }
-    } catch (err) {
-      feedbackEl.style.background = "#fee2e2";
-      feedbackEl.style.color = "#b91c1c";
-      feedbackEl.textContent = "Network error activating licence.";
-    }
-  }
-
-  function bindFileToTextarea(fileInput, textarea) {
-    if (!fileInput || !textarea) return;
-    fileInput.addEventListener("change", (e) => {
-      const file = e.target.files && e.target.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = (ev) => {
-        textarea.value = ev.target.result;
-      };
-      reader.readAsText(file);
-    });
-  }
-
-  // 1. Overlay bindings
-  const overlayInput = document.getElementById("overlay-licence-input");
-  const overlayFile = document.getElementById("overlay-licence-file");
-  const overlayBtn = document.getElementById("btn-overlay-upload-licence");
-  const overlayLoadLong = document.getElementById("btn-overlay-load-long");
-  const overlayFeedback = document.getElementById("overlay-licence-feedback");
-
-  bindFileToTextarea(overlayFile, overlayInput);
-
-  if (overlayLoadLong && overlayInput) {
-    overlayLoadLong.addEventListener("click", async () => {
-      try {
-        const res = await fetch("/license/demo-long");
-        const json = await res.json();
-        overlayInput.value = JSON.stringify(json, null, 2);
-      } catch (e) {
-        overlayInput.value = JSON.stringify({
-          licensee: "Demo Bank",
-          expires_at: "2026-11-30T16:18:29.141842+00:00",
-          signature: "F4JtrV95BDI4dZCrrO3aUmwYrXNcJ0s5uOT7vqGU6LVssdvF9WdzyZJho4Dr+qlJLPrHt17HVCJdwS+AcXwVCg=="
-        }, null, 2);
-      }
-    });
-  }
-
-  if (overlayBtn && overlayInput) {
-    overlayBtn.addEventListener("click", () => {
-      activateLicence(overlayInput.value, overlayFeedback, () => {
-        setTimeout(() => {
-          if (overlayFeedback) overlayFeedback.style.display = "none";
-        }, 3000);
-      });
-    });
-  }
-
-  // 2. About View bindings
-  const aboutInput = document.getElementById("about-licence-input");
-  const aboutFile = document.getElementById("about-licence-file");
-  const aboutBtn = document.getElementById("btn-about-upload-licence");
-  const aboutLoad5min = document.getElementById("btn-about-load-5min");
-  const aboutLoadLong = document.getElementById("btn-about-load-long");
-  const aboutFeedback = document.getElementById("about-licence-feedback");
-
-  bindFileToTextarea(aboutFile, aboutInput);
-
-  if (aboutLoadLong && aboutInput) {
-    aboutLoadLong.addEventListener("click", async () => {
-      try {
-        const res = await fetch("/license/demo-long");
-        const json = await res.json();
-        aboutInput.value = JSON.stringify(json, null, 2);
-      } catch (e) {
-        aboutInput.value = JSON.stringify({
-          licensee: "Demo Bank",
-          expires_at: "2026-11-30T16:18:29.141842+00:00",
-          signature: "F4JtrV95BDI4dZCrrO3aUmwYrXNcJ0s5uOT7vqGU6LVssdvF9WdzyZJho4Dr+qlJLPrHt17HVCJdwS+AcXwVCg=="
-        }, null, 2);
-      }
-    });
-  }
-
-  if (aboutLoad5min && aboutInput) {
-    aboutLoad5min.addEventListener("click", async () => {
-      try {
-        const res = await fetch("/license/demo-5min");
-        if (res.ok) {
-          const json = await res.json();
-          aboutInput.value = JSON.stringify(json, null, 2);
-        } else {
-          throw new Error("Unable to generate 5-min licence");
-        }
-      } catch (e) {
-        if (aboutFeedback) {
-          aboutFeedback.style.display = "block";
-          aboutFeedback.style.background = "#fee2e2";
-          aboutFeedback.style.color = "#b91c1c";
-          aboutFeedback.textContent = "Please upload licences/5min.json or sign one with tools/sign_licence.py.";
-        }
-      }
-    });
-  }
-
-  if (aboutBtn && aboutInput) {
-    aboutBtn.addEventListener("click", () => {
-      activateLicence(aboutInput.value, aboutFeedback, () => {
-        setTimeout(() => {
-          if (aboutFeedback) aboutFeedback.style.display = "none";
-        }, 4000);
-      });
-    });
-  }
-}
-
 function setupAboutView() {
   const form = document.getElementById("form-dispute");
   const feedback = document.getElementById("dispute-feedback");
@@ -1292,7 +1060,6 @@ window.addEventListener("DOMContentLoaded", () => {
   setupMapView();
   setupAlertsView();
   setupAboutView();
-  setupLicenceManager();
 
   // Route according to initial hash
   const initialHash = window.location.hash.replace("#/", "");
