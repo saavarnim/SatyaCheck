@@ -1,5 +1,10 @@
 // web/app.js – Vanilla JS ES module application logic per docs/07-frontend.md
 import { translations, getLanguage, setLanguage, t } from "./i18n.js";
+import {
+  renderHeatmapView,
+  updateMapLegend,
+  renderClustersList,
+} from "./heatmap.js";
 
 // ── 25 Seeded Areas (Embedded per docs/07 to avoid extra latency) ───────────
 const AREAS = [
@@ -134,6 +139,16 @@ function renderTranslations() {
   });
 
   renderScamAdviceDirectory();
+
+  // If map clusters were loaded, re-render map legend and cluster list with new language
+  if (lastLoadedClusters && lastLoadedClusters.length > 0) {
+    if (window.L && leafletMap) {
+      updateMapLegend(leafletMap, lang);
+      renderClustersList(lastLoadedClusters, lang, leafletMap);
+    } else {
+      renderClustersList(lastLoadedClusters, lang, null);
+    }
+  }
 }
 
 function renderScamAdviceDirectory() {
@@ -579,95 +594,77 @@ function setupReportView() {
 
 // ── Map View Logic ──────────────────────────────────────────────────────────
 let leafletMap = null;
-let mapCirclesLayer = null;
+let lastLoadedClusters = [];
+let currentMapDays = 7;
 
 function setupMapView() {
-  document.getElementById("map-filter-days").addEventListener("change", loadMapData);
-  document.getElementById("map-filter-radius").addEventListener("change", loadMapData);
+  const chipsContainer = document.getElementById("map-time-chips");
+  if (chipsContainer) {
+    chipsContainer.addEventListener("click", (e) => {
+      const chip = e.target.closest(".chip");
+      if (!chip) return;
+      const days = parseInt(chip.getAttribute("data-days"), 10);
+      if (isNaN(days) || days > 7) return; // Never offer more than 7
+
+      chipsContainer.querySelectorAll(".chip").forEach((c) => c.classList.remove("active"));
+      chip.classList.add("active");
+      currentMapDays = days;
+      loadMapData();
+    });
+  }
+
+  const radiusSelect = document.getElementById("map-filter-radius");
+  if (radiusSelect) {
+    radiusSelect.addEventListener("change", loadMapData);
+  }
 }
 
 async function loadMapData() {
   const mapContainer = document.getElementById("leaflet-map");
-  if (!leafletMap && window.L) {
-    leafletMap = L.map("leaflet-map").setView([12.9716, 77.5946], 11);
-    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-      maxZoom: 18,
-      attribution: "© OpenStreetMap contributors",
-    }).addTo(leafletMap);
-  }
+  const blockedNotice = document.getElementById("map-blocked-message");
 
-  if (leafletMap) {
+  // Check if map library is blocked
+  if (!window.L) {
+    if (mapContainer) mapContainer.style.display = "none";
+    if (blockedNotice) blockedNotice.style.display = "flex";
+  } else {
+    if (mapContainer) mapContainer.style.display = "block";
+    if (blockedNotice) blockedNotice.style.display = "none";
+
+    if (!leafletMap) {
+      leafletMap = L.map("leaflet-map").setView([12.9716, 77.5946], 11);
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        maxZoom: 18,
+        attribution: "© OpenStreetMap contributors",
+      }).addTo(leafletMap);
+    }
+
     setTimeout(() => leafletMap.invalidateSize(), 150);
   }
 
-  const days = document.getElementById("map-filter-days").value || "7";
-  const radius = document.getElementById("map-filter-radius").value || "";
-  let url = `/map?days=${days}`;
+  const radius = document.getElementById("map-filter-radius")?.value || "";
+  let url = `/map?days=${currentMapDays}`;
   if (radius) url += `&radius_km=${radius}`;
+
+  const listContainer = document.getElementById("map-clusters-list");
+  if (listContainer) {
+    listContainer.innerHTML = `<p style="color: var(--text-muted); font-size: 0.88rem;">${t("loadingText") || "Loading map data..."}</p>`;
+  }
 
   try {
     const res = await apiFetch(url);
     const data = await res.json();
-    renderMapClusters(data.clusters || []);
-  } catch (e) {
-    document.getElementById("map-clusters-list").innerHTML = "<p>Error loading map clusters.</p>";
-  }
-}
+    lastLoadedClusters = data.clusters || [];
 
-function renderMapClusters(clusters) {
-  if (mapCirclesLayer && leafletMap) {
-    leafletMap.removeLayer(mapCirclesLayer);
-  }
-
-  if (leafletMap) {
-    mapCirclesLayer = L.layerGroup().addTo(leafletMap);
-  }
-
-  const listContainer = document.getElementById("map-clusters-list");
-  if (!clusters || clusters.length === 0) {
-    listContainer.innerHTML = `<p style="color: var(--text-muted); font-size: 0.88rem;">${t("noneText")}</p>`;
-    return;
-  }
-
-  const bounds = [];
-  listContainer.innerHTML = clusters.map((c) => {
-    const sev = c.severity || "MED";
-    const sevLabel = t(`severity${sev.charAt(0) + sev.slice(1).toLowerCase()}`) || sev;
-
-    // Place circle on Leaflet map if coordinates present
-    if (leafletMap && c.lat && c.lng) {
-      bounds.push([c.lat, c.lng]);
-      const color = sev === "CRIT" ? "#dc2626" : (sev === "HIGH" ? "#f59e0b" : "#0284c7");
-      const radiusMeters = 300 + Math.min(c.count * 120, 2000);
-
-      const circle = L.circle([c.lat, c.lng], {
-        color: color,
-        fillColor: color,
-        fillOpacity: 0.45,
-        radius: radiusMeters,
-      }).addTo(mapCirclesLayer);
-
-      circle.bindPopup(`
-        <strong>${escapeHtml(c.locality)}, ${escapeHtml(c.city)}</strong><br>
-        Sightings: <b>${c.count}</b><br>
-        Top Scam: <i>${escapeHtml(c.top_scam_type)}</i><br>
-        Severity: <span style="color:${color}; font-weight:bold;">${sev}</span>
-      `);
+    if (window.L && leafletMap) {
+      renderHeatmapView(leafletMap, lastLoadedClusters, AREAS, getLanguage());
+    } else {
+      renderClustersList(lastLoadedClusters, getLanguage(), null);
     }
-
-    return `
-      <div class="cluster-item">
-        <div>
-          <div class="cluster-name">${escapeHtml(c.locality)}, ${escapeHtml(c.city)} (${c.pincode})</div>
-          <div class="cluster-meta">Top Sighting: ${escapeHtml(c.top_scam_type)} • ${c.count} independent reports</div>
-        </div>
-        <span class="cluster-badge cluster-${sev}">${sevLabel}</span>
-      </div>
-    `;
-  }).join("");
-
-  if (leafletMap && bounds.length > 0) {
-    leafletMap.fitBounds(bounds, { padding: [30, 30], maxZoom: 13 });
+  } catch (e) {
+    if (listContainer) {
+      listContainer.innerHTML = `<p style="color: #b91c1c; font-size: 0.88rem;">Error loading map clusters.</p>`;
+    }
   }
 }
 

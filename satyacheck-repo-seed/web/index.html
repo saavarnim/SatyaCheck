@@ -226,13 +226,19 @@
         </div>
 
         <div class="map-filters">
-          <div style="display: flex; align-items: center; gap: 6px;">
-            <label style="font-size: 0.85rem; font-weight: 600;" data-i18n="mapFilterDays">Days:</label>
-            <select id="map-filter-days" class="form-select" style="padding: 6px 10px; min-height: 36px;">
-              <option value="7" selected>7 days</option>
-              <option value="14">14 days</option>
-              <option value="30">30 days</option>
-            </select>
+          <div class="map-time-filter-wrap">
+            <label class="filter-label" data-i18n="mapFilterDays">Time Window:</label>
+            <div class="chips-row" id="map-time-chips" role="group" aria-label="Map time window">
+              <button type="button" class="chip" data-days="1" id="chip-days-1">
+                <span data-i18n="timeChip24h">24 hours</span>
+              </button>
+              <button type="button" class="chip" data-days="3" id="chip-days-3">
+                <span data-i18n="timeChip3d">3 days</span>
+              </button>
+              <button type="button" class="chip active" data-days="7" id="chip-days-7">
+                <span data-i18n="timeChip7d">7 days</span>
+              </button>
+            </div>
           </div>
 
           <div style="display: flex; align-items: center; gap: 6px;">
@@ -243,6 +249,17 @@
               <option value="5">5 km</option>
               <option value="10">10 km</option>
             </select>
+          </div>
+        </div>
+
+        <!-- Fallback notice if map library blocked -->
+        <div id="map-blocked-message" class="map-blocked-notice" style="display: none;" role="alert">
+          <span style="font-size: 1.3rem;">ℹ️</span>
+          <div>
+            <strong data-i18n="mapBlockedTitle">Map view unavailable</strong>
+            <p data-i18n="mapBlockedMsg" style="margin: 2px 0 0; font-size: 0.85rem; color: var(--text-muted);">
+              Interactive map blocked by browser/network. Viewing cluster reports list below.
+            </p>
           </div>
         </div>
 
@@ -385,7 +402,9 @@
 
   <!-- Pinned Leaflet JS CDN -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <!-- Pinned Leaflet.heat 0.2.0 CDN per Task F3 -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.heat/0.2.0/leaflet-heat.js"></script>
   <!-- Application JS -->
-  <script type="module" src="app.js?v=3"></script>
+  <script type="module" src="app.js?v=4"></script>
 </body>
 </html>
