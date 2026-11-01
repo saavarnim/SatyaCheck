@@ -21,6 +21,7 @@ from app.normalise import normalise, normalise_channel, normalise_scam_type, Inv
 from app.redact import redact
 from app.trust import EventRow, compute_indicator_trust
 from app.verdict import mask_display_value, verdict, resolve_display_value
+from app.explain import build_explain
 
 router = APIRouter()
 
@@ -233,6 +234,15 @@ async def get_lookup(
         else:
             v_str = "NO_REPORTS"
             disp_val = mask_display_value(type, canon_val)
+        expl = build_explain(
+            verdict=v_str,
+            cohort_count=0,
+            score=0.0,
+            scam_type=None,
+            last_seen=None,
+            challenged=False,
+            now=clock.now(),
+        )
         return {
             "verdict": v_str,
             "report_count": 0,
@@ -243,6 +253,7 @@ async def get_lookup(
             "display_value": disp_val,
             "evidence": [],
             "challenged": False,
+            "explain": expl,
         }
 
     # 5. Indicator exists -> retrieve reports and active challenges
@@ -312,6 +323,16 @@ async def get_lookup(
         for u in latest_units
     ]
 
+    last_seen_dt = reports[-1].occurred_at if reports else None
+    expl = build_explain(
+        verdict=v_str,
+        cohort_count=distinct_reporters,
+        score=trust.score,
+        scam_type=top_scam_type,
+        last_seen=last_seen_dt,
+        challenged=is_challenged,
+        now=clock.now(),
+    )
     return {
         "verdict": v_str,
         "report_count": report_count,
@@ -322,4 +343,5 @@ async def get_lookup(
         "display_value": disp_val,
         "evidence": evidence,
         "challenged": is_challenged,
+        "explain": expl,
     }

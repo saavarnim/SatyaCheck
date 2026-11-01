@@ -5,6 +5,7 @@ import {
   updateMapLegend,
   renderClustersList,
 } from "./heatmap.js";
+import { renderExplainCard, setupExplainSpeech } from "./explain.js";
 
 // ── 25 Seeded Areas (Embedded per docs/07 to avoid extra latency) ───────────
 const AREAS = [
@@ -297,27 +298,14 @@ function renderLookupResult(data, type, rawValue) {
   const reports = data.report_count || 0;
   const distinct = data.distinct_reporters || 0;
 
-  // Explanation line
-  let explanation = "";
-  if (verdict === "VERIFIED_BUSINESS") {
-    explanation = t("verifiedDesc");
-  } else if (verdict === "NO_REPORTS") {
-    explanation = t("noReportsDesc");
-  } else if (distinct > 1) {
-    explanation = t("reportedByCount", { count: distinct, reports: reports });
-  } else {
-    explanation = t("reportedBySingular", { reports: reports });
-  }
-
-  // Recommended action text
-  const whatToDo = t(`whatToDo_${verdict}`) || t("whatToDo_NO_REPORTS");
-
   // Dispute banner if active challenge
   const challengedBanner = data.challenged
     ? `<div style="background: #fffbeb; border: 1px solid #fde68a; border-radius: 8px; padding: 10px; margin-bottom: 12px; font-size: 0.85rem; color: #b45309;">
          ⚖️ ${t("challengedNotice")}
        </div>`
     : "";
+
+  const explainCardHtml = renderExplainCard(data.explain, data.scam_type);
 
   container.innerHTML = `
     <div class="card result-card verdict-${verdict}">
@@ -326,12 +314,9 @@ function renderLookupResult(data, type, rawValue) {
       </div>
       <div class="display-value-box">${escapeHtml(displayVal)}</div>
       ${challengedBanner}
-      <p class="explanation-text">${explanation}</p>
 
-      <div class="advice-box">
-        <h4>💡 ${t("whatToDoTitle")}</h4>
-        <p>${whatToDo}</p>
-      </div>
+      <!-- Task F1 Explain Card -->
+      ${explainCardHtml}
 
       <div style="margin-top: 14px; font-size: 0.85rem;">
         <a href="#/about" style="color: var(--primary); text-decoration: underline;">
@@ -359,6 +344,8 @@ function renderLookupResult(data, type, rawValue) {
       </div>
     </div>
   `;
+
+  setupExplainSpeech(data.explain, data.scam_type);
 
   document.getElementById("btn-toggle-tech").addEventListener("click", () => {
     const box = document.getElementById("tech-details-box");
