@@ -643,6 +643,11 @@ export function renderClustersList(
               </div>
             </div>
             <div class="cluster-badges-group">
+              ${(window.satyacheckAlerts || []).some((al) => al.pincode === c.pincode && al.type === "SPIKE") 
+                ? '<span class="cluster-badge" style="background:#fee2e2; color:#b91c1c; border:1px solid #fca5a5; font-weight:800;">🚨 SPIKE ALERT</span>' 
+                : (window.satyacheckAlerts || []).some((al) => al.pincode === c.pincode && al.type === "NEW_TYPE")
+                ? '<span class="cluster-badge" style="background:#ffedd5; color:#c2410c; border:1px solid #fdba74; font-weight:800;">⚠️ NEW PATTERN</span>'
+                : ''}
               <span class="cluster-badge cluster-${sevInfo.severity}">${sevInfo.severity}</span>
               <span class="cluster-text-badge text-badge-${sevInfo.severity}">${sevInfo.badge}</span>
               <span class="zoom-cue">${zoomCue}</span>

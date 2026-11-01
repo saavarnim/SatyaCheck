@@ -99,6 +99,14 @@ def on_startup():
     from app.seed import seed
     with SessionLocal() as db:
         seed(db)
+        from app.models import Report
+        if db.query(Report).count() == 0:
+            try:
+                from tools.seed_demo_reports import seed_demo_reports
+                seed_demo_reports(db)
+            except Exception:
+                pass
+
 
 
 

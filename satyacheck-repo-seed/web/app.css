@@ -1508,3 +1508,40 @@ body {
   color: var(--text-muted);
 }
 
+.nav-alert-badge {
+  background: #dc2626;
+  color: #fff;
+  font-size: 0.68rem;
+  font-weight: 800;
+  padding: 1px 6px;
+  border-radius: 999px;
+  margin-left: 5px;
+  display: inline-block;
+  line-height: 1.4;
+  vertical-align: middle;
+  animation: pulse-badge 2s infinite ease-in-out;
+}
+
+@keyframes pulse-badge {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.1); opacity: 0.9; }
+}
+
+.alert-preview-item {
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  background: #f8fafc;
+  border-left: 4px solid #dc2626;
+  margin-bottom: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.alert-preview-item.preview-NEW_TYPE {
+  border-left-color: #ea580c;
+  background: #fffaf5;
+}
+

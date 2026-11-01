@@ -13,7 +13,7 @@ IP_SALT: str = os.getenv("IP_SALT", "dev-ip-salt")
 
 # ── Admin ────────────────────────────────────────────────────────────────────
 ADMIN_TOKEN: str = os.getenv("ADMIN_TOKEN", "changeme")
-DEMO_MODE: bool = os.getenv("DEMO_MODE", "false").lower() == "true"
+DEMO_MODE: bool = os.getenv("DEMO_MODE", "true").lower() == "true"
 
 # ── Trust-engine constants (docs/03) ─────────────────────────────────────────
 NOTE_MIN_LEN: int = 15           # minimum note length for WEIGHT_NOTE to apply
@@ -31,7 +31,7 @@ RATE_PER_HOUR: int = 30          # max submissions/hour per reporter_token
 RATE_PER_INDICATOR_HOUR: int = 10  # max/hour per reporter_token per indicator
 
 # ── Identity source (docs/03) ────────────────────────────────────────────────
-TRUST_BODY_IDENTITY: bool = os.getenv("TRUST_BODY_IDENTITY", "false").lower() == "true"
+TRUST_BODY_IDENTITY: bool = os.getenv("TRUST_BODY_IDENTITY", "true").lower() == "true"
 
 # ── Licence ──────────────────────────────────────────────────────────────────
 LICENCE_PUBLIC_KEY: str = os.getenv("LICENCE_PUBLIC_KEY", "cF1YungDRfJ+lxrjgmNprHIyJNMqR4jhrcC/G3ksjy0=")

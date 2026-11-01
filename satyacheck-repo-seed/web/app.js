@@ -152,6 +152,15 @@ function renderTranslations() {
     renderFilteredMap();
   }
 
+  // If alerts were loaded, re-render alerts preview and list with new language
+  if (lastLoadedAlerts && lastLoadedAlerts.length > 0) {
+    renderAlertsPreview(lastLoadedAlerts);
+    const container = document.getElementById("alerts-list-container");
+    if (container && document.getElementById("view-alerts")?.classList.contains("active")) {
+      loadAlertsData();
+    }
+  }
+
   // Update timepicker summary line in the active language
   updateSummaryLine();
 }
@@ -779,6 +788,61 @@ async function loadMapData() {
 // ── Alerts View Logic ───────────────────────────────────────────────────────
 // ── Alerts View Logic ───────────────────────────────────────────────────────
 let alertsSelectedPincode = "";
+let lastLoadedAlerts = [];
+
+function updateNavAlertsBadge(count) {
+  const dBadge = document.getElementById("badge-d-alerts");
+  const mBadge = document.getElementById("badge-m-alerts");
+  [dBadge, mBadge].forEach((b) => {
+    if (b) {
+      if (count > 0) {
+        b.textContent = count;
+        b.style.display = "inline-block";
+      } else {
+        b.style.display = "none";
+      }
+    }
+  });
+}
+
+function renderAlertsPreview(alerts) {
+  const container = document.getElementById("check-alerts-preview-container");
+  if (!container) return;
+
+  if (!alerts || alerts.length === 0) {
+    container.innerHTML = `
+      <div style="padding: 6px 0; color: var(--text-muted); font-size: 0.88rem; display: flex; align-items: center; gap: 8px;">
+        <span>🛡️</span> <span>${t("noAlertsActive")}</span>
+      </div>
+    `;
+    return;
+  }
+
+  const topAlerts = alerts.slice(0, 3);
+  container.innerHTML = topAlerts.map((a) => {
+    const isSpike = a.type === "SPIKE";
+    const tagClass = isSpike ? "tag-SPIKE" : "tag-NEW_TYPE";
+    const badgeText = isSpike ? t("alertSpikeBadge") : t("alertNewTypeBadge");
+    const area = AREAS.find((ar) => ar.pincode === a.pincode);
+    const locText = area ? `${area.locality}, ${area.city}` : `Pincode ${a.pincode}`;
+    const scamTypeKey = "scam_" + (a.scam_type || "").replaceAll("-", "_");
+    const scamTypeLabel = t(scamTypeKey) || a.scam_type;
+
+    const title = isSpike
+      ? `${locText}: ${a.count} sightings in last 24h (prior: ${a.baseline_per_day}/day)`
+      : `${locText}: New tactic '${scamTypeLabel}' emerged`;
+
+    return `
+      <div class="alert-preview-item preview-${a.type}">
+        <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+          <span class="alert-tag ${tagClass}" style="font-size: 0.7rem; padding: 2px 7px;">${badgeText}</span>
+          <span style="font-weight: 600; font-size: 0.88rem; color: var(--text-main);">${escapeHtml(title)}</span>
+        </div>
+        <a href="#/alerts" style="font-size: 0.82rem; font-weight: 600; color: #0284c7; text-decoration: none; white-space: nowrap;">Details ➔</a>
+      </div>
+    `;
+  }).join("");
+}
 
 function setupAlertsView() {
   const select = document.getElementById("alerts-pincode-select");
@@ -807,8 +871,9 @@ function setupAlertsView() {
 
 async function loadAlertsData() {
   const container = document.getElementById("alerts-list-container");
-  if (!container) return;
-  container.innerHTML = `<p style="color: var(--text-muted); font-size: 0.88rem;">Loading alerts...</p>`;
+  if (container) {
+    container.innerHTML = `<p style="color: var(--text-muted); font-size: 0.88rem;">Loading alerts from database...</p>`;
+  }
 
   const url = alertsSelectedPincode
     ? `/alerts?pincode=${encodeURIComponent(alertsSelectedPincode)}`
@@ -818,6 +883,15 @@ async function loadAlertsData() {
     const res = await apiFetch(url);
     const data = await res.json();
     const alerts = data.alerts || [];
+
+    if (!alertsSelectedPincode) {
+      lastLoadedAlerts = alerts;
+      window.satyacheckAlerts = alerts;
+      updateNavAlertsBadge(alerts.length);
+      renderAlertsPreview(alerts);
+    }
+
+    if (!container) return;
 
     if (alerts.length === 0) {
       container.innerHTML = `
@@ -875,7 +949,9 @@ async function loadAlertsData() {
       `;
     }).join("");
   } catch (e) {
-    container.innerHTML = "<p>Error loading alerts.</p>";
+    if (container) {
+      container.innerHTML = "<p>Error loading alerts from database.</p>";
+    }
   }
 }
 
@@ -965,4 +1041,7 @@ window.addEventListener("DOMContentLoaded", () => {
   // Route according to initial hash
   const initialHash = window.location.hash.replace("#/", "");
   navigateTo(initialHash || "check");
+
+  // Fetch active threat alerts immediately so badges and preview reflect database state
+  loadAlertsData();
 });

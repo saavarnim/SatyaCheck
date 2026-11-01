@@ -27,7 +27,7 @@
         <a href="#/check" id="nav-d-check" class="active">🔍 <span data-i18n="navCheck">Check</span></a>
         <a href="#/report" id="nav-d-report">📢 <span data-i18n="navReport">Report</span></a>
         <a href="#/map" id="nav-d-map">🗺️ <span data-i18n="navMap">Map</span></a>
-        <a href="#/alerts" id="nav-d-alerts">⚠️ <span data-i18n="navAlerts">Alerts</span></a>
+        <a href="#/alerts" id="nav-d-alerts">⚠️ <span data-i18n="navAlerts">Alerts</span><span class="nav-alert-badge" id="badge-d-alerts" style="display: none;">0</span></a>
         <a href="#/about" id="nav-d-about">ℹ️ <span data-i18n="navAbout">About</span></a>
       </nav>
 
@@ -77,6 +77,26 @@
           <a href="#/report" class="btn btn-secondary" id="btn-goto-report">
             📢 <span data-i18n="reportCTA" style="margin-left: 6px;">Report a Scam</span>
           </a>
+        </div>
+      </div>
+
+      <!-- Recent Emerging Alerts Preview Card on Check Page -->
+      <div class="card" id="check-recent-alerts-card" style="margin-top: 20px;">
+        <div class="card-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+          <div>
+            <h3 class="card-title" style="font-size: 1.05rem; display: flex; align-items: center; gap: 8px; margin: 0;">
+              <span>🚨</span> <span data-i18n="recentAlertsPreview">Recent Area Alerts</span>
+            </h3>
+            <p class="card-subtitle" style="font-size: 0.82rem; margin-top: 2px;">
+              Live warnings for sudden local spikes and newly emerging scam tactics.
+            </p>
+          </div>
+          <a href="#/alerts" class="btn btn-secondary btn-sm" style="font-size: 0.82rem; padding: 6px 12px; text-decoration: none;">
+            View All Alerts ➔
+          </a>
+        </div>
+        <div id="check-alerts-preview-container">
+          <p style="color: var(--text-muted); font-size: 0.88rem;">Loading recent alerts from database...</p>
         </div>
       </div>
 
@@ -519,6 +539,7 @@
     <a href="#/alerts" class="bottom-nav-item" id="nav-m-alerts">
       <span class="nav-icon" aria-hidden="true">⚠️</span>
       <span data-i18n="navAlerts">Alerts</span>
+      <span class="nav-alert-badge" id="badge-m-alerts" style="display: none;">0</span>
     </a>
     <a href="#/about" class="bottom-nav-item" id="nav-m-about">
       <span class="nav-icon" aria-hidden="true">ℹ️</span>
