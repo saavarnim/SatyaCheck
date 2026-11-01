@@ -1,6 +1,5 @@
 # SatyaCheck — Community Scam Map & Privacy-First Intelligence
 
-[![Tests](https://img.shields.io/badge/tests-165%20passed-brightgreen.svg)]()
 [![Privacy](https://img.shields.io/badge/privacy-zero--PII%20guarantee-blue.svg)]()
 [![Licence](https://img.shields.io/badge/licence-Ed25519%20signed-emerald.svg)]()
 [![i18n](https://img.shields.io/badge/languages-English%20%7C%20%E0%A4%B9%E0%A4%BF%E0%A4%A8%E0%A5%8D%E0%A4%A6%E0%A5%80-orange.svg)]()
@@ -8,6 +7,7 @@
 > **Core Philosophy:** *A report is a sighting, not a verdict.*  
 > A single report never convicts an identifier. SatyaCheck aggregates community reports, detects coordinated submission waves, requires independent corroboration across networks, and provides area-level scam visualisations and alerts while strictly protecting reporter privacy.
 
+🌐 Live Website: https://satyacheck-n6h9.onrender.com/
 ---
 
 ## 1. Project Essentials & Features
@@ -26,8 +26,7 @@ SatyaCheck is deliberately engineered with **zero external runtime bloat**:
 4. **Emerging Scam Alerts (`#/alerts`):** Real-time anomaly detection identifying sudden area report spikes ($\ge 2\times$ daily baseline) and newly emerging scam tactics.
 5. **Business Dispute & Due Process (`#/about`):** Legitimate entities can file dispute challenges. Active challenges immediately cap the indicator verdict at `SUSPICIOUS` to prevent wrongful damage.
 6. **Admin Review Desk (`/admin/reviews`):** Web portal and JSON endpoint for trust & safety reviewers to inspect challenges, view community sighting counts, contact claimants via pre-filled email, and uphold or reject disputes with 1 click.
-7. **Threat Intelligence Export (`/admin/export/known-scams`):** Exports confirmed `KNOWN_SCAM` threat feeds in JSON or CSV for law enforcement and partner integration without leaking reporter data.
-8. **Cryptographic Software Licensing:** Ed25519 signed software licences with clock-rollback protection and zero-restart dynamic renewals.
+7. **Cryptographic Software Licensing:** Ed25519 signed software licences with clock-rollback protection and zero-restart dynamic renewals.
 
 ---
 
@@ -141,132 +140,7 @@ http://localhost:8000/admin/reviews?token=changeme
 
 ---
 
-### 3.5 Environment Variables
-
-Configuration is loaded from environment variables or a local `.env` file (see [`.env.example`](file:///.env.example)):
-
-| Variable | Default | Purpose |
-|---|---|---|
-| `DATABASE_URL` | `sqlite:///./satyacheck.db` | SQLAlchemy connection string (SQLite for dev; PostgreSQL for production). |
-| `ADMIN_TOKEN` | `changeme` | Token for `/admin/*` operations (reviews portal, challenges, export). |
-| `DEMO_MODE` | `true` | Allows calling `POST /admin/reset` to restore clean state during judging/demos. |
-| `TRUST_BODY_IDENTITY` | `true` | Permits `reporter_id` and `ip_prefix` overrides in request body for simulation tests. |
-| `REPORTER_SALT` | `dev-reporter-salt` | Secret salt for HMAC-SHA256 pseudonymisation of device identifiers. |
-| `IP_SALT` | `dev-ip-salt` | Secret salt for HMAC-SHA256 pseudonymisation of network subnets. |
-| `LICENCE_PUBLIC_KEY` | *(seed key)* | Base64/Hex 32-byte Ed25519 public key verifying software licences. |
-
----
-
-## 4. API Reference & Exact CURL Commands
-
-### 4.1 Lookup an Identifier
-```bash
-curl -X GET "http://localhost:8000/lookup?type=phone&value=%2B919876543210"
-```
-**Response:**
-```json
-{
-  "verdict": "SUSPICIOUS",
-  "report_count": 2,
-  "distinct_reporters": 2,
-  "first_seen": "2026-10-31T12:00:00+05:30",
-  "last_seen": "2026-10-31T14:30:00+05:30",
-  "scam_type": "fake-kyc-link",
-  "display_value": "98XXXXX210",
-  "evidence": [
-    {
-      "occurred_at": "2026-10-31T12:00:00+05:30",
-      "channel": "phone call",
-      "scam_type": "fake-kyc-link",
-      "pincode": "560102"
-    }
-  ],
-  "challenged": false
-}
-```
-
-### 4.2 Submit a Scam Report
-```bash
-curl -X POST http://localhost:8000/reports \
-  -H "Content-Type: application/json" \
-  -H "X-Device-Id: client_device_token" \
-  -d '{
-    "identifier_type": "phone",
-    "identifier_value": "+91 98765 43210",
-    "channel": "phone call",
-    "scam_type": "fake-kyc-link",
-    "pincode": "560102",
-    "note": "Caller claimed my electricity connection would be disconnected without immediate payment",
-    "occurred_at": "2026-10-31T14:00:00+05:30"
-  }'
-```
-
-### 4.3 Submit a Business Dispute Challenge
-```bash
-curl -X POST http://localhost:8000/challenges \
-  -H "Content-Type: application/json" \
-  -d '{
-    "identifier_type": "phone",
-    "identifier_value": "9876543210",
-    "claimant_name": "Apex Hospital Helpline",
-    "contact_email": "ops@apexhospital.org",
-    "proof_note": "Official registered hospital emergency helpline"
-  }'
-```
-
-### 4.4 Admin Review Operations
-```bash
-# 1. Fetch challenged reviews (JSON)
-curl -X GET "http://localhost:8000/admin/reviews?token=changeme&format=json"
-
-# 2. Resolve a challenge (upheld or rejected)
-curl -X POST "http://localhost:8000/admin/challenges/CH-000001/resolve?token=changeme" \
-  -H "Content-Type: application/json" \
-  -d '{"decision": "upheld"}'
-```
-
-### 4.5 Export Confirmed Known Scams (Threat Intel Feed)
-```bash
-# Export as JSON
-curl -X GET "http://localhost:8000/admin/export/known-scams?format=json" \
-  -H "X-Admin-Token: changeme"
-
-# Export as CSV
-curl -X GET "http://localhost:8000/admin/export/known-scams?format=csv" \
-  -H "X-Admin-Token: changeme"
-```
-
-### 4.6 Software Licence Status & Dynamic Renewal
-```bash
-# Check current licence status
-curl -X GET http://localhost:8000/license
-
-# Upload cryptographically signed licence
-curl -X POST http://localhost:8000/license \
-  -H "Content-Type: application/json" \
-  -d '{"licensee":"Demo Bank","expires_at":"2026-12-31T23:59:59Z","signature":"..."}'
-```
-
----
-
-## 5. Automated Tests & Judge Simulator
-
-SatyaCheck includes a comprehensive automated test suite and hackathon evaluation simulation tool:
-
-### Run the Unit & Integration Tests (165 Tests)
-```bash
-pytest -v
-```
-
-### Run the Judge Simulator
-The simulator benchmarks adversarial report-bombing defenses, lookup accuracy, heatmap clustering, privacy leaks, dispute workflows, and licence compliance:
-```bash
-python tools/judge_sim.py --base http://127.0.0.1:8000
-```
-
----
-
-## 6. Privacy & Security Commitments
+## 4. Privacy & Security Commitments
 
 1. **Zero Raw PII Storage:** Raw IP addresses and device IDs are never stored; they are hashed with secret salts into 16-hex HMAC tokens immediately in memory.
 2. **Scrubbed Notes:** Contact numbers, emails, and card numbers are redacted using regex filters before saving. Raw notes are never exposed on any public endpoint.
