@@ -238,3 +238,82 @@ def test_admin_reset_flow(client, monkeypatch, test_db):
     # Seeded areas and verified remain
     assert test_db.query(Area).count() == 25
     assert test_db.query(VerifiedIndicator).count() == 19
+
+
+def test_admin_reviews_portal_auth(client):
+    """Admin reviews portal requires valid authentication."""
+    # JSON request with missing token -> 403 JSON
+    r_json_no_auth = client.get("/admin/reviews", headers={"Accept": "application/json"})
+    assert r_json_no_auth.status_code == 403
+    assert r_json_no_auth.json() == {"error": "FORBIDDEN"}
+
+    # Browser request with missing token -> 200 HTML with auth input form
+    r_html_no_auth = client.get("/admin/reviews")
+    assert r_html_no_auth.status_code == 200
+    assert "Admin Review Portal" in r_html_no_auth.text
+    assert "<form method=\"GET\" action=\"/admin/reviews\">" in r_html_no_auth.text
+
+    # Browser request with invalid token -> 403 HTML with error note
+    r_html_wrong = client.get("/admin/reviews?token=wrongtoken")
+    assert r_html_wrong.status_code == 403
+    assert "Invalid administrative token" in r_html_wrong.text
+
+
+def test_admin_reviews_portal_json_and_html(client):
+    """Admin reviews portal returns reviews data in JSON and HTML formats."""
+    # Create challenge
+    client.post("/challenges", json={
+        "identifier_type": "phone",
+        "identifier_value": "9123456789",
+        "claimant_name": "Test Claimant Corp",
+        "contact_email": "desk@claimant.com",
+        "proof_note": "Legitimate enterprise customer care number.",
+    })
+
+    # Fetch JSON format
+    resp_json = client.get(f"/admin/reviews?token={config.ADMIN_TOKEN}&format=json")
+    assert resp_json.status_code == 200
+    data = resp_json.json()
+    assert "reviews" in data
+    assert len(data["reviews"]) >= 1
+    rev = data["reviews"][0]
+    assert rev["claimant_name"] == "Test Claimant Corp"
+    assert rev["contact_email"] == "desk@claimant.com"
+    assert rev["proof_note"] == "Legitimate enterprise customer care number."
+    assert rev["status"] == "under_review"
+
+    # Fetch HTML dashboard
+    resp_html = client.get(f"/admin/reviews?token={config.ADMIN_TOKEN}")
+    assert resp_html.status_code == 200
+    assert "SatyaCheck • Trust & Safety Review" in resp_html.text
+    assert "Test Claimant Corp" in resp_html.text
+    assert "desk@claimant.com" in resp_html.text
+    assert "mailto:desk@claimant.com" in resp_html.text
+    assert "Uphold" in resp_html.text
+    assert "Reject" in resp_html.text
+
+
+def test_admin_resolve_challenge_with_query_token(client):
+    """Admin challenge resolution works seamlessly via query parameter token."""
+    post_res = client.post("/challenges", json={
+        "identifier_type": "phone",
+        "identifier_value": "9988776655",
+        "claimant_name": "Verified Org",
+        "contact_email": "ops@verified.org",
+        "proof_note": "Hospital emergency line.",
+    })
+    ch_id = post_res.json()["challenge_id"]
+
+    # Resolve using ?token= query parameter without X-Admin-Token header
+    resolve_res = client.post(
+        f"/admin/challenges/{ch_id}/resolve?token={config.ADMIN_TOKEN}",
+        json={"decision": "upheld"},
+    )
+    assert resolve_res.status_code == 200
+    assert resolve_res.json() == {"challenge_id": ch_id, "status": "upheld"}
+
+    # Verify lookup reflects verified status
+    lookup_res = client.get("/lookup?type=phone&value=9988776655")
+    assert lookup_res.status_code == 200
+    assert lookup_res.json()["verdict"] == "VERIFIED_BUSINESS"
+
