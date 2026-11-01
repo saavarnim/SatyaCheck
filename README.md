@@ -127,10 +127,8 @@ Open your browser at **`http://localhost:8000`**.
 
 Authorities and reviewers can access the admin review dashboard in their browser:
 ```
-http://localhost:8000/admin/reviews?token=changeme
+http://localhost:8000/admin/reviews?token=xxxx
 ```
-*(Replace `changeme` with your configured `ADMIN_TOKEN`)*
-
 **Features available in the Admin Portal:**
 - **Overview Stat Cards:** Total challenges, pending reviews, upheld verifications, and rejected disputes.
 - **Filter Tabs:** Filter rows by `All`, `Under Review`, `Upheld`, and `Rejected`.
