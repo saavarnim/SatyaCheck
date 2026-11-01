@@ -5,11 +5,11 @@ import { getLanguage, t } from "./i18n.js";
 export const OFFICIAL_PORTALS = [
   {
     id: "helpline-1930",
-    name_en: "National Cyber Crime Helpline 1930",
-    name_hi: "राष्ट्रीय साइबर अपराध हेल्पलाइन 1930",
+    name_en: "1930 Cyber Fraud Helpline",
+    name_hi: "1930 साइबर अपराध हेल्पलाइन",
     url: "tel:1930",
-    desc_en: "Call immediately if you lost money to request a freeze on fraudulent bank transactions.",
-    desc_hi: "अगर आपने पैसे गंवाए हैं, तो बैंक लेन-देन रुकवाने के लिए तुरंत 1930 पर कॉल करें।",
+    desc_en: "Immediate freeze on fraudulent bank transactions",
+    desc_hi: "धोखाधड़ी वाले लेन-देन तुरंत रुकवाने हेतु कॉल करें",
     action_en: "📞 Call 1930",
     action_hi: "📞 1930 पर कॉल करें",
     for_loss: true,
@@ -17,13 +17,13 @@ export const OFFICIAL_PORTALS = [
   },
   {
     id: "cybercrime-portal",
-    name_en: "National Cyber Crime Reporting Portal",
-    name_hi: "राष्ट्रीय साइबर अपराध रिपोर्टिंग पोर्टल",
+    name_en: "National Cybercrime Portal",
+    name_hi: "राष्ट्रीय साइबर अपराध पोर्टल",
     url: "https://cybercrime.gov.in",
-    desc_en: "File a formal cybercrime complaint or police FIR online with digital evidence.",
-    desc_hi: "डिजिटल साक्ष्यों के साथ ऑनलाइन औपचारिक साइबर अपराध शिकायत या एफआईआर दर्ज करें।",
-    action_en: "🌐 cybercrime.gov.in",
-    action_hi: "🌐 cybercrime.gov.in",
+    desc_en: "Official complaint & police FIR online",
+    desc_hi: "ऑनलाइन औपचारिक साइबर शिकायत या एफआईआर",
+    action_en: "File FIR ↗",
+    action_hi: "शिकायत दर्ज करें ↗",
     for_loss: true,
     is_tel: false,
   },
@@ -32,14 +32,15 @@ export const OFFICIAL_PORTALS = [
     name_en: "Chakshu (Sanchar Saathi)",
     name_hi: "चक्षु (संचार साथी)",
     url: "https://sancharsaathi.gov.in/sfc/",
-    desc_en: "Report suspected fraud calls, SMS or WhatsApp messages, even if no money was lost.",
-    desc_hi: "संदिग्ध कॉल, एसएमएस या व्हाट्सएप संदेशों की रिपोर्ट करें, भले ही पैसे का कोई नुकसान न हुआ हो।",
-    action_en: "🌐 sancharsaathi.gov.in/sfc",
-    action_hi: "🌐 sancharsaathi.gov.in/sfc",
+    desc_en: "Report suspected spam, fraud calls and SMS",
+    desc_hi: "संदिग्ध स्पैम कॉल, एसएमएस व संदेशों की रिपोर्ट करें",
+    action_en: "Report Spam ↗",
+    action_hi: "स्पैम रिपोर्ट करें ↗",
     for_loss: false,
     is_tel: false,
   },
 ];
+
 
 /**
  * Render the "Also tell the authorities" card.

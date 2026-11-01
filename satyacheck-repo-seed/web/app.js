@@ -349,9 +349,17 @@ function renderLookupResult(data, type, rawValue) {
       <!-- Task F2: Also tell the authorities -->
       ${officialCardHtml}
 
-      <div style="margin-top: 14px; font-size: 0.85rem;">
-        <a href="#/about" style="color: var(--primary); text-decoration: underline;">
-          ${t("disputeLink")}
+      <!-- Prominent Business Verification & Dispute Callout -->
+      <div class="dispute-callout-card" id="dispute-callout">
+        <div class="dispute-callout-body">
+          <div class="dispute-callout-icon" aria-hidden="true">🏢</div>
+          <div class="dispute-callout-text">
+            <strong class="dispute-callout-title">${t("disputeLink")}?</strong>
+            <p class="dispute-callout-sub">${t("disputeCalloutSub")}</p>
+          </div>
+        </div>
+        <a href="#/about" class="btn btn-dispute-action" id="btn-goto-dispute">
+          <span>${t("disputeActionBtn")}</span> ➔
         </a>
       </div>
 
@@ -377,6 +385,20 @@ function renderLookupResult(data, type, rawValue) {
   `;
 
   setupExplainSpeech(data.explain, data.scam_type);
+
+  const disputeBtn = container.querySelector("#btn-goto-dispute");
+  if (disputeBtn) {
+    disputeBtn.addEventListener("click", () => {
+      const typeSelect = document.getElementById("dispute-identifier-type");
+      const valInput = document.getElementById("dispute-identifier-value");
+      if (typeSelect && type) typeSelect.value = type;
+      if (valInput) valInput.value = data.canonical_value || displayVal || "";
+      setTimeout(() => {
+        const disputeForm = document.getElementById("form-dispute");
+        if (disputeForm) disputeForm.scrollIntoView({ behavior: "smooth" });
+      }, 150);
+    });
+  }
 
   document.getElementById("btn-toggle-tech").addEventListener("click", () => {
     const box = document.getElementById("tech-details-box");

@@ -43,6 +43,8 @@ export const translations = {
     verifiedDesc: "Official verified identifier belonging to a registered organisation or government service.",
     challengedNotice: "The owner has disputed this. It is under review.",
     disputeLink: "This is my number / organisation",
+    disputeCalloutSub: "Flagged by mistake? Submit an official verification challenge to clear this status.",
+    disputeActionBtn: "Verify / Dispute",
 
     // What to do
     whatToDoTitle: "Recommended Action",
@@ -427,6 +429,8 @@ export const translations = {
     verifiedDesc: "पंजीकृत संगठन या सरकारी सेवा से जुड़ा आधिकारिक सत्यापित पहचानकर्ता।",
     challengedNotice: "मालिक ने इस पर आपत्ति दर्ज की है। यह वर्तमान में समीक्षाधीन है।",
     disputeLink: "यह मेरा नंबर / संगठन है",
+    disputeCalloutSub: "गलती से रिपोर्ट हुई? इस स्थिति को हटाने के लिए आधिकारिक सत्यापन चुनौती दर्ज करें।",
+    disputeActionBtn: "सत्यापित करें / चुनौती",
 
     // What to do
     whatToDoTitle: "सलाह",
