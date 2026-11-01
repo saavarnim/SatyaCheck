@@ -83,3 +83,14 @@ def test_task_f3_heatmap_and_map_view(client):
     assert "Very many" in i18n and "अत्यधिक रिपोर्टें" in i18n
     assert "no reports in this period" in i18n and "कोई रिपोर्ट नहीं" in i18n
 
+    # 5. Interactive filters, search, city chips, and listing tabs
+    assert "map-search-input" in html
+    assert "map-filter-scam-type" in html
+    assert "map-filter-severity" in html
+    assert "map-city-chips" in html
+    assert "btn-map-fit-all" in html
+    assert "cluster-tab-filters" in html
+    assert "flyToLocality" in content
+    assert "markerPulse" in css or "marker-highlight-pulse" in css
+
+

@@ -142,12 +142,7 @@ function renderTranslations() {
 
   // If map clusters were loaded, re-render map legend and cluster list with new language
   if (lastLoadedClusters && lastLoadedClusters.length > 0) {
-    if (window.L && leafletMap) {
-      updateMapLegend(leafletMap, lang);
-      renderClustersList(lastLoadedClusters, lang, leafletMap);
-    } else {
-      renderClustersList(lastLoadedClusters, lang, null);
-    }
+    renderFilteredMap();
   }
 }
 
@@ -596,8 +591,37 @@ function setupReportView() {
 let leafletMap = null;
 let lastLoadedClusters = [];
 let currentMapDays = 7;
+let currentMapFilterCriteria = {
+  search: "",
+  scamType: "",
+  severity: "",
+  city: "all",
+};
+let currentMapListingTab = "all";
+
+function renderFilteredMap() {
+  if (window.L && leafletMap) {
+    renderHeatmapView(
+      leafletMap,
+      lastLoadedClusters,
+      AREAS,
+      getLanguage(),
+      currentMapFilterCriteria,
+      currentMapListingTab
+    );
+  } else {
+    renderClustersList(
+      lastLoadedClusters,
+      AREAS,
+      getLanguage(),
+      null,
+      currentMapListingTab
+    );
+  }
+}
 
 function setupMapView() {
+  // Time window chips (24 hours, 3 days, 7 days)
   const chipsContainer = document.getElementById("map-time-chips");
   if (chipsContainer) {
     chipsContainer.addEventListener("click", (e) => {
@@ -613,9 +637,97 @@ function setupMapView() {
     });
   }
 
+  // Radius select
   const radiusSelect = document.getElementById("map-filter-radius");
   if (radiusSelect) {
     radiusSelect.addEventListener("change", loadMapData);
+  }
+
+  // Live search input
+  const searchInput = document.getElementById("map-search-input");
+  if (searchInput) {
+    searchInput.addEventListener("input", (e) => {
+      currentMapFilterCriteria.search = e.target.value;
+      renderFilteredMap();
+    });
+  }
+
+  // Scam type filter
+  const scamSelect = document.getElementById("map-filter-scam-type");
+  if (scamSelect) {
+    scamSelect.addEventListener("change", (e) => {
+      currentMapFilterCriteria.scamType = e.target.value;
+      renderFilteredMap();
+    });
+  }
+
+  // Severity filter
+  const sevSelect = document.getElementById("map-filter-severity");
+  if (sevSelect) {
+    sevSelect.addEventListener("change", (e) => {
+      currentMapFilterCriteria.severity = e.target.value;
+      renderFilteredMap();
+    });
+  }
+
+  // City quick jump chips
+  const cityChipsContainer = document.getElementById("map-city-chips");
+  if (cityChipsContainer) {
+    cityChipsContainer.addEventListener("click", (e) => {
+      const chip = e.target.closest(".chip");
+      if (!chip) return;
+      const city = chip.getAttribute("data-city") || "all";
+
+      cityChipsContainer.querySelectorAll(".chip").forEach((c) => c.classList.remove("active"));
+      chip.classList.add("active");
+      currentMapFilterCriteria.city = city;
+
+      if (city !== "all" && leafletMap) {
+        const cityArea = AREAS.find((a) => a.city === city);
+        if (cityArea && cityArea.lat != null && cityArea.lng != null) {
+          leafletMap.flyTo([cityArea.lat, cityArea.lng], 12, {
+            animate: true,
+            duration: 1.1,
+            easeLinearity: 0.25,
+          });
+        }
+      }
+      renderFilteredMap();
+    });
+  }
+
+  // Reset / Fit All view button
+  const fitAllBtn = document.getElementById("btn-map-fit-all");
+  if (fitAllBtn) {
+    fitAllBtn.addEventListener("click", () => {
+      currentMapFilterCriteria = { search: "", scamType: "", severity: "", city: "all" };
+      if (searchInput) searchInput.value = "";
+      if (scamSelect) scamSelect.value = "";
+      if (sevSelect) sevSelect.value = "";
+      if (cityChipsContainer) {
+        cityChipsContainer.querySelectorAll(".chip").forEach((c, idx) => c.classList.toggle("active", idx === 0));
+      }
+
+      renderFilteredMap();
+
+      if (leafletMap) {
+        const bounds = AREAS.map((a) => [a.lat, a.lng]);
+        leafletMap.fitBounds(bounds, { padding: [35, 35], maxZoom: 12 });
+      }
+    });
+  }
+
+  // Listing filter tabs (All Localities | Active Hotspots | Calm Areas)
+  const tabFilterContainer = document.getElementById("cluster-tab-filters");
+  if (tabFilterContainer) {
+    tabFilterContainer.addEventListener("click", (e) => {
+      const tabBtn = e.target.closest(".tab-btn");
+      if (!tabBtn) return;
+      tabFilterContainer.querySelectorAll(".tab-btn").forEach((b) => b.classList.remove("active"));
+      tabBtn.classList.add("active");
+      currentMapListingTab = tabBtn.getAttribute("data-tab") || "all";
+      renderFilteredMap();
+    });
   }
 }
 
@@ -655,12 +767,7 @@ async function loadMapData() {
     const res = await apiFetch(url);
     const data = await res.json();
     lastLoadedClusters = data.clusters || [];
-
-    if (window.L && leafletMap) {
-      renderHeatmapView(leafletMap, lastLoadedClusters, AREAS, getLanguage());
-    } else {
-      renderClustersList(lastLoadedClusters, getLanguage(), null);
-    }
+    renderFilteredMap();
   } catch (e) {
     if (listContainer) {
       listContainer.innerHTML = `<p style="color: #b91c1c; font-size: 0.88rem;">Error loading map clusters.</p>`;

@@ -241,14 +241,70 @@
             </div>
           </div>
 
-          <div style="display: flex; align-items: center; gap: 6px;">
-            <label style="font-size: 0.85rem; font-weight: 600;" data-i18n="mapFilterRadius">Radius:</label>
-            <select id="map-filter-radius" class="form-select" style="padding: 6px 10px; min-height: 36px;">
-              <option value="" selected>All Areas</option>
-              <option value="2">2 km</option>
-              <option value="5">5 km</option>
-              <option value="10">10 km</option>
+          <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+            <div style="display: flex; align-items: center; gap: 6px;">
+              <label style="font-size: 0.85rem; font-weight: 600;" data-i18n="mapFilterRadius">Radius:</label>
+              <select id="map-filter-radius" class="form-select" style="padding: 6px 10px; min-height: 36px;">
+                <option value="" selected>All Areas</option>
+                <option value="2">2 km</option>
+                <option value="5">5 km</option>
+                <option value="10">10 km</option>
+              </select>
+            </div>
+            <button type="button" id="btn-map-fit-all" class="btn btn-secondary btn-sm" style="min-height: 36px; padding: 6px 12px; font-size: 0.82rem;" title="Reset zoom to view all 25 localities">
+              🗺️ <span data-i18n="btnFitAll">Reset View</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Heatmap Search & Multi-Filter Toolbar -->
+        <div class="map-interactive-toolbar">
+          <div class="map-search-wrap">
+            <input type="search" id="map-search-input" class="form-input" placeholder="🔍 Search locality, city, or pincode (e.g. HSR, Bandra, 560102)..." data-i18n-ph="searchMapPlaceholder">
+          </div>
+          <div class="map-dropdown-filters">
+            <select id="map-filter-scam-type" class="form-select" style="min-height: 36px; padding: 6px 10px; font-size: 0.84rem;">
+              <option value="">All Scam Types</option>
+              <option value="digital-arrest">👮 Digital Arrest</option>
+              <option value="fake-kyc-link">🔗 Fake KYC Link</option>
+              <option value="upi-refund-qr">💸 UPI Refund QR</option>
+              <option value="investment-group">📈 Investment Scam</option>
+              <option value="courier-customs">📦 Courier / Customs</option>
+              <option value="job-offer">💼 Fake Job Offer</option>
+              <option value="electricity-disconnection">⚡ Electricity Threat</option>
+              <option value="fake-customer-care">🎧 Fake Customer Care</option>
+              <option value="otp-call">🔢 OTP / PIN Call</option>
+              <option value="loan-app-harassment">📱 Loan Harassment</option>
+              <option value="sextortion">📹 Video Blackmail</option>
+              <option value="other">⚠️ Other Scams</option>
             </select>
+
+            <select id="map-filter-severity" class="form-select" style="min-height: 36px; padding: 6px 10px; font-size: 0.84rem;">
+              <option value="">All Severities</option>
+              <option value="CRIT">🚨 Critical (10+ reports)</option>
+              <option value="HIGH">⚠️ High (5–9 reports)</option>
+              <option value="MED">🟡 Moderate (&lt;5 reports)</option>
+              <option value="ZERO">🟢 Calm / No Reports (0)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- City Quick-Jump Filter Chips -->
+        <div class="city-chips-wrap">
+          <span style="font-size: 0.78rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Quick Jump:</span>
+          <div class="chips-row" id="map-city-chips">
+            <button type="button" class="chip active" data-city="all">All Cities</button>
+            <button type="button" class="chip" data-city="Bengaluru">Bengaluru</button>
+            <button type="button" class="chip" data-city="Mumbai">Mumbai</button>
+            <button type="button" class="chip" data-city="Delhi">Delhi</button>
+            <button type="button" class="chip" data-city="Hyderabad">Hyderabad</button>
+            <button type="button" class="chip" data-city="Pune">Pune</button>
+            <button type="button" class="chip" data-city="Chennai">Chennai</button>
+            <button type="button" class="chip" data-city="Kolkata">Kolkata</button>
+            <button type="button" class="chip" data-city="Ahmedabad">Ahmedabad</button>
+            <button type="button" class="chip" data-city="Jaipur">Jaipur</button>
+            <button type="button" class="chip" data-city="Lucknow">Lucknow</button>
+            <button type="button" class="chip" data-city="Kochi">Kochi</button>
           </div>
         </div>
 
@@ -267,8 +323,25 @@
         <div id="leaflet-map"></div>
 
         <!-- Clusters list under map -->
-        <div class="card-header" style="margin-top: 14px;">
-          <h3 style="font-size: 1rem; font-weight: 700;" data-i18n="mapClustersList">Active Locality Clusters</h3>
+        <div class="card-header" style="margin-top: 14px; flex-wrap: wrap; gap: 10px; align-items: baseline;">
+          <div>
+            <h3 style="font-size: 1.05rem; font-weight: 700;" data-i18n="mapClustersList">Locality Intelligence & Sightings</h3>
+            <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 2px;">
+              Press any locality to automatically zoom and inspect on the map.
+            </p>
+          </div>
+          <!-- Tabs: All Localities | Active Hotspots | Calm Areas -->
+          <div class="clusters-tab-filter" id="cluster-tab-filters" role="tablist">
+            <button type="button" class="tab-btn active" data-tab="all">
+              <span data-i18n="tabAllLocalities">All Localities</span> (<span id="count-all-localities">25</span>)
+            </button>
+            <button type="button" class="tab-btn" data-tab="active">
+              <span data-i18n="tabActiveHotspots">Active Hotspots</span> (<span id="count-active-clusters">0</span>)
+            </button>
+            <button type="button" class="tab-btn" data-tab="calm">
+              <span data-i18n="tabCalmAreas">Calm Areas</span> (<span id="count-calm-areas">0</span>)
+            </button>
+          </div>
         </div>
         <div id="map-clusters-list">
           <p style="color: var(--text-muted); font-size: 0.88rem;">Loading map data...</p>
